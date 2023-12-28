@@ -25,7 +25,7 @@ class SplashFragment : Fragment() {
         val handler = Handler(Looper.getMainLooper())
 
         // 1초(1000 milliseconds) 후에 다른 화면으로 이동
-        handler.postDelayed({findNavController().navigate(R.id.loginFragment)},1000)
+        handler.postDelayed({findNavController().navigate(R.id.loginFragment)},1500)
         return binding.root
     }
 
