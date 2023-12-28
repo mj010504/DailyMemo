@@ -7,4 +7,9 @@
     <color name="point_color">#FF9900</color>
     <color name="point_color2">#F7C475</color>
     <color name="transparent">#00000000</color>
+    <color name="board_color">#606060</color>
+    <color name="diary_edit_text">#E8E6DA</color>
+    <color name="functon_button_color">#E5E3D9</color>
+    <color name="menu_title_color">#583B1C</color>
+    <color name="delete_color">#CC2229</color>
 </resources>
