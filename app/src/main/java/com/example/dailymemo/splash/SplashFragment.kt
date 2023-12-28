@@ -21,7 +21,7 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSplashBinding.inflate(inflater,container,false)
-
+das
         val handler = Handler(Looper.getMainLooper())
 
         // 1초(1000 milliseconds) 후에 다른 화면으로 이동
