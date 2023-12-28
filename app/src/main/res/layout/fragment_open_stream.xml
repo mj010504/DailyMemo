@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OpenStream.OpenStreamFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".OpenStream.OpenStreamFragment"
+    android:background="@color/main_color">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:id="@+id/alert_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/alert_ic"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/openStream_title_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/oepnstreamtitle"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/alert_iv"/>
+
+    <ImageView
+        android:id="@+id/searching_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/searching_ic"
+        android:layout_marginEnd="24.49dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/alert_iv"/>
+
+    <View
+        android:id="@+id/under_bar"
+        android:layout_width="0dp"
+        android:layout_height="1.5dp"
+        android:background="@color/sub_color"
+        android:layout_marginTop="18.79dp"
+        app:layout_constraintTop_toBottomOf="@id/alert_iv"
+        app:layout_constraintStart_toStartOf="@id/alert_iv"
+        app:layout_constraintEnd_toEndOf="@id/searching_iv"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

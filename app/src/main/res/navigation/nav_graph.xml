@@ -60,4 +60,9 @@
         android:name="com.example.dailymemo.OpenStream.OpenStreamFragment"
         android:label="fragment_open_stream"
         tools:layout="@layout/fragment_open_stream" />
+    <fragment
+        android:id="@+id/premiumSettingFragment"
+        android:name="com.example.dailymemo.Setting.PremiumSettingFragment"
+        android:label="fragment_premium_setting"
+        tools:layout="@layout/fragment_premium_setting" />
 </navigation>
