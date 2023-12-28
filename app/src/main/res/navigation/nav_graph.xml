@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.dailymemo.Auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/searchingIdFragment"
+        android:name="com.example.dailymemo.Auth.SearchingIdFragment"
+        android:label="fragment_searching_id"
+        tools:layout="@layout/fragment_searching_id" />
+    <fragment
+        android:id="@+id/searchingPasswordFragment"
+        android:name="com.example.dailymemo.Auth.SearchingPasswordFragment"
+        android:label="fragment_searching_password"
+        tools:layout="@layout/fragment_searching_password" />
+    <fragment
+        android:id="@+id/searchingPasswordInputFragment"
+        android:name="com.example.dailymemo.Auth.SearchingPasswordInputFragment"
+        android:label="fragment_searching_password_input"
+        tools:layout="@layout/fragment_searching_password_input" />
+    <fragment
+        android:id="@+id/searchingPasswordResetFragment"
+        android:name="com.example.dailymemo.Auth.SearchingPasswordResetFragment"
+        android:label="fragment_searching_password_reset"
+        tools:layout="@layout/fragment_searching_password_reset" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.dailymemo.Auth.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.dailymemo.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" />
+    <fragment
+        android:id="@+id/dailyBoardFragment"
+        android:name="com.example.dailymemo.DailyBoard.DailyBoardFragment"
+        android:label="fragment_daily_board"
+        tools:layout="@layout/fragment_daily_board" />
+    <fragment
+        android:id="@+id/myStreamFragment"
+        android:name="com.example.dailymemo.MyStream.MyStreamFragment"
+        android:label="fragment_my_stream"
+        tools:layout="@layout/fragment_my_stream" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.dailymemo.Setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/openStreamFragment"
+        android:name="com.example.dailymemo.OpenStream.OpenStreamFragment"
+        android:label="fragment_open_stream"
+        tools:layout="@layout/fragment_open_stream" />
+</navigation>

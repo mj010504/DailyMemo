@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/openStreamFragment"
+        android:title="공개스트림"
+        android:icon="@drawable/menu_selector_openstream"/>
+
+    <item
+        android:id="@+id/myStreamFragment"
+        android:title="마이스트림"
+        android:icon="@drawable/menu_selector_mystream"/>
+
+    <item
+        android:id="@+id/cameraFragment"
+        android:title="카메라"
+        android:icon="@drawable/camera_ic"/>
+
+    <item
+        android:id="@+id/dailyBoardFragment"
+        android:title="일기보드"
+        android:icon="@drawable/menu_selector_dailyboard"/>
+
+    <item
+        android:id="@+id/settingFragment"
+        android:title="설정"
+        android:icon="@drawable/menu_selector_setting"/>
+
+
+</menu>
