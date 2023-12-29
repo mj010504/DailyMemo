@@ -9,9 +9,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentDailyBoardBinding
@@ -38,13 +43,20 @@ class DailyBoardFragment : Fragment() {
             add(R.drawable.daily3)
         }
 
-        binding.userProfileIv.setOnClickListener {
-            uploadPhoto()
+
+        binding.apply {
+            // 사진 업로드(미완성)
+            userProfileIv.setOnClickListener {
+                uploadPhoto()
+            }
+
+            // 바텀 다이얼로그
+            menuBarIv.setOnClickListener {
+                showMenu()
+            }
+
         }
 
-        binding.menuBarIv.setOnClickListener {
-            showMenu()
-        }
 
         return binding.root
     }
@@ -69,8 +81,25 @@ class DailyBoardFragment : Fragment() {
         bottomSheetDialog.setContentView(bottomSheetView)
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+        val deleteBtn = bottomSheetView.findViewById<ImageView>(R.id.delete_iv)
+        deleteBtn.setOnClickListener {
+            removePhoto()
+
+            val deleteTitle = bottomSheetView.findViewById<TextView>(R.id.delete_tv)
+            deleteTitle.text = "삭제 취소"
+        }
+
         bottomSheetDialog.show()
 
+    }
+
+    private fun removePhoto() {
+        var layoutManager = binding.dailyBoardRv.layoutManager
+//        var visibleItemCount = layoutManager?.childCount
+        var pos : Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+
+        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
+        viewHolder?.removeItem()
     }
 
 

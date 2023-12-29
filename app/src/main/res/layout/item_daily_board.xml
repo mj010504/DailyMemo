@@ -183,4 +183,31 @@
 
     </FrameLayout>
 
+
+    <!--    삭제 눌렀을 때-->
+
+    <View
+        android:id="@+id/delete_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/daily_board_iv"
+        app:layout_constraintBottom_toBottomOf="@id/daily_board_iv"
+        android:background="#75000000"/>
+
+
+    <TextView
+        android:id="@+id/delete_expected_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삭제 예정"
+        android:textSize="100sp"
+        android:textColor="@color/white"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/daily_board_iv"
+        app:layout_constraintBottom_toBottomOf="@id/daily_board_iv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

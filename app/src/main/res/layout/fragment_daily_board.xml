@@ -69,6 +69,17 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
+        android:id="@+id/lock_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/lock_ic"
+        android:visibility="invisible"
+        android:layout_marginEnd="15.4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/photo_view_all"/>
+
+
+    <ImageView
         android:id="@+id/user_profile_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,10 +104,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/send_ic"
-        android:layout_marginTop="1.96dp"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="2.82dp"
         app:layout_constraintTop_toTopOf="@id/user_profile_iv"
         app:layout_constraintStart_toEndOf="@id/diary_et"/>
-
+    
 
 </androidx.constraintlayout.widget.ConstraintLayout>

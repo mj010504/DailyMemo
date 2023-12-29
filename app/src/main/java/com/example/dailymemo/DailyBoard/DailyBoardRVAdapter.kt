@@ -2,11 +2,21 @@ package com.example.dailymemo.DailyBoard
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dailymemo.databinding.ItemDailyBoardBinding
 
 class DailyBoardRVAdapter(private val photoList: ArrayList<Int>) : RecyclerView.Adapter<DailyBoardRVAdapter.ViewHolder>() {
+
+    interface ItemClickListener{
+        fun removePhoto()
+    }
+
+    private lateinit var itemClickListener: ItemClickListener
+    fun setITemClickListener(mitemClickListener: ItemClickListener) {
+        itemClickListener = mitemClickListener
+    }
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -26,6 +36,12 @@ class DailyBoardRVAdapter(private val photoList: ArrayList<Int>) : RecyclerView.
         fun bind(photo : Int) {
             binding.dailyBoardIv.setImageResource(photo!!)
         }
+
+        fun removeItem() {
+            binding.deleteView.visibility = View.VISIBLE
+            binding.deleteExpectedTv.visibility = View.VISIBLE
+        }
     }
+
 
 }
