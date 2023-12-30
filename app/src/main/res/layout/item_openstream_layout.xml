@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5.73dp"
-        tools:listitem="@layout/item_mystream_photo_layout"
+        tools:listitem="@layout/item_openstream_photo_layout"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"

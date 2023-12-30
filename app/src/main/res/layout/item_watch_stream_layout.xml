@@ -11,12 +11,12 @@
         android:layout_height="55dp"
         app:layout_constraintTop_toTopOf="parent">
 
-    <View
-        android:id="@+id/top_board"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@color/board_color"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <View
+            android:id="@+id/top_board"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/black"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,16 +25,10 @@
             android:layout_marginTop="13dp"
             >
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="15dp"
-            android:background="@color/white"/>
-
             <View
                 android:layout_width="20dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:background="@color/white"/>
 
             <View
@@ -85,11 +79,18 @@
                 android:layout_marginStart="20dp"
                 android:background="@color/white"/>
 
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
 
-    </LinearLayout>
+
+        </LinearLayout>
 
     </FrameLayout>
+
 
     <ImageView
         android:id="@+id/daily_board_iv"
@@ -103,7 +104,7 @@
     <View
         android:layout_width="6.5dp"
         android:layout_height="0dp"
-        android:background="@color/board_color"
+        android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@id/top_board_layout"
         app:layout_constraintBottom_toTopOf="@id/bottom_board_layout"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -111,10 +112,11 @@
     <View
         android:layout_width="6.5dp"
         android:layout_height="0dp"
-        android:background="@color/board_color"
+        android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@id/top_board_layout"
         app:layout_constraintBottom_toTopOf="@id/bottom_board_layout"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <FrameLayout
         android:id="@+id/bottom_board_layout"
@@ -122,108 +124,81 @@
         android:layout_height="55dp"
         app:layout_constraintTop_toBottomOf="@id/daily_board_iv">
 
-    <View
-        android:id="@+id/bottom_board"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@color/board_color"
-        app:layout_constraintTop_toBottomOf="@id/daily_board_iv"/>
+        <View
+            android:id="@+id/bottom_board"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/daily_board_iv"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="13dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="13dp">
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"/>
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
     </FrameLayout>
-
-
-    <!--    삭제 눌렀을 때-->
-
-    <View
-        android:id="@+id/delete_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="@id/daily_board_iv"
-        app:layout_constraintBottom_toBottomOf="@id/daily_board_iv"
-        android:background="#75000000"/>
-
-
-    <TextView
-        android:id="@+id/delete_expected_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="삭제 예정"
-        android:textSize="100sp"
-        android:textColor="@color/white"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="@id/daily_board_iv"
-        app:layout_constraintBottom_toBottomOf="@id/daily_board_iv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

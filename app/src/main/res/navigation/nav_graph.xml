@@ -54,7 +54,11 @@
         android:id="@+id/settingFragment"
         android:name="com.example.dailymemo.Setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_premiumSettingFragment"
+            app:destination="@id/premiumSettingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/openStreamFragment"
         android:name="com.example.dailymemo.OpenStream.OpenStreamFragment"
