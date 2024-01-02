@@ -31,6 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buy_stream_layout"
         android:layout_width="392dp"
@@ -53,6 +54,7 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/remove_ad_layout"

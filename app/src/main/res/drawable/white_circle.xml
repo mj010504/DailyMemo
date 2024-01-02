@@ -1,9 +1,5 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="43dp"
-    android:height="43dp"
-    android:viewportWidth="43"
-    android:viewportHeight="43">
-  <path
-      android:pathData="M19.5,19.5m-17.5,0a17.5,17.5 0,1 1,35 0a17.5,17.5 0,1 1,-35 0"
-      android:fillColor="#F0EFEA"/>
-</vector>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+  <solid android:color="@color/setting_layout" /> <!-- 배경색 -->
+  <corners android:radius="19dp" /> <!-- 코너 라디우스 설정 -->
+</shape>

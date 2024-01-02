@@ -14,4 +14,6 @@
     <color name="delete_color">#CC2229</color>
     <color name="nickname_layout">#CDCABA</color>
     <color name="setting_layout">#E4E3DB</color>
+    <color name="half_black">#80000000</color>
+    <color name="cancle">#AFAFAF</color>
 </resources>

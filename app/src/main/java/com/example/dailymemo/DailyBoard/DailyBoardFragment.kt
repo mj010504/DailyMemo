@@ -67,7 +67,7 @@ class DailyBoardFragment : Fragment() {
         binding.dailyBoardRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
        var snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(binding.dailyBoardRv);
+        snapHelper.attachToRecyclerView(binding.dailyBoardRv)
 
     }
 
