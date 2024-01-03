@@ -87,4 +87,13 @@
         app:layout_constraintStart_toEndOf="@id/comment_iv"
         app:layout_constraintTop_toTopOf="@id/comment_iv"/>
 
+    <Spinner
+        android:id="@+id/menu_spinner"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/mystream_rv"
+        android:background="@drawable/drop_down_menu_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

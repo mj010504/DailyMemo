@@ -12,9 +12,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.INVISIBLE
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -55,6 +57,8 @@ class DailyBoardFragment : Fragment() {
                 showMenu()
             }
 
+//            userProfileIv.setImageResource(binding.topUserProfileIv.)
+
         }
 
 
@@ -72,25 +76,30 @@ class DailyBoardFragment : Fragment() {
     }
 
     private fun uploadPhoto() {
-
+        if(photoList.size > 0) {
+            binding.basicIv.visibility = INVISIBLE
+            binding.basicTv.visibility = INVISIBLE
+        }
     }
 
     private fun showMenu() {
-        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_function_layout, null)
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(bottomSheetView)
-        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        if(photoList.size > 0) {
+            val bottomSheetView = layoutInflater.inflate(R.layout.bottom_menu_layout, null)
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            bottomSheetDialog.setContentView(bottomSheetView)
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-        val deleteBtn = bottomSheetView.findViewById<ImageView>(R.id.delete_iv)
-        deleteBtn.setOnClickListener {
-            removePhoto()
+            val deleteBtn = bottomSheetView.findViewById<ConstraintLayout>(R.id.delete_layout)
+            deleteBtn.setOnClickListener {
+                removePhoto()
 
-            val deleteTitle = bottomSheetView.findViewById<TextView>(R.id.delete_tv)
-            deleteTitle.text = "삭제 취소"
+                val deleteTitle = bottomSheetView.findViewById<TextView>(R.id.delete_tv)
+                deleteTitle.text = "삭제 취소"
+            }
+
+            bottomSheetDialog.show()
+
         }
-
-        bottomSheetDialog.show()
-
     }
 
     private fun removePhoto() {

@@ -1,60 +1,98 @@
 package com.example.dailymemo.OpenStream
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.PopupWindow
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.R
+import com.example.dailymemo.databinding.FragmentOpenStreamBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [OpenStreamFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class OpenStreamFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    lateinit var binding : FragmentOpenStreamBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_open_stream, container, false)
+        binding = FragmentOpenStreamBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment OpenStreamFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            OpenStreamFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun initRecyclerView() {
+        val openStreamRVAdapter = OpenStreamRVAdapter()
+        binding.openstreamRv.adapter = openStreamRVAdapter
+        binding.openstreamRv.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        openStreamRVAdapter.setMyItemClickListener(object: OpenStreamRVAdapter.MyItemClickListener {
+            override fun onMenuClick(menu: ImageView) {
+                showPopupMenu(menu)
             }
+
+            override fun onStreamClick() {
+               moveToStream()
+            }
+        })
+
     }
+
+    private fun showPopupMenu(anchorView: View) {
+        val inflater = LayoutInflater.from(requireContext())
+        val customMenuView = inflater.inflate(R.layout.mystream_popup_menu_layout, null)
+
+        // Customize PopupWindow
+        val popupWindow = PopupWindow(
+            customMenuView,
+            350,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        // Get the location of the anchorView on the screen
+        val location = IntArray(2)
+        anchorView.getLocationOnScreen(location)
+
+        // Calculate xOffset and yOffset to align top-right of popup with top-right of anchorView
+        val xOffset = location[0] + anchorView.width - 350
+        val yOffset = location[1]
+
+        // Set location
+        popupWindow?.showAtLocation(anchorView, Gravity.NO_GRAVITY, xOffset, yOffset)
+
+        val publicBtn = customMenuView.findViewById<ConstraintLayout>(R.id.public_btn)
+        val modifyBtn = customMenuView.findViewById<ConstraintLayout>(R.id.modify_btn)
+        val deleteBtn = customMenuView.findViewById<ConstraintLayout>(R.id.delete_btn)
+
+        publicBtn.setOnClickListener {
+
+            popupWindow?.dismiss()
+        }
+
+        modifyBtn.setOnClickListener {
+
+            popupWindow?.dismiss()
+        }
+
+
+        deleteBtn.setOnClickListener {
+
+            popupWindow?.dismiss()
+        }
+
+    }
+
+    private fun moveToStream() {
+        findNavController().navigate(R.id.watchStreamFragment)
+    }
+
+
 }

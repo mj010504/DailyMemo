@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <FrameLayout
         android:id="@+id/top_board_layout"
@@ -91,12 +92,13 @@
 
     </FrameLayout>
 
+
+
     <ImageView
         android:id="@+id/daily_board_iv"
         android:layout_width="match_parent"
         android:layout_height="393dp"
         android:scaleType="fitXY"
-        android:src="@color/white"
         app:layout_constraintTop_toBottomOf="@id/top_board_layout"
         tools:layout_editor_absoluteX="-152dp" />
 
@@ -225,5 +227,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
