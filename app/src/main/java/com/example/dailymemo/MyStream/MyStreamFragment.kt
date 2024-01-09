@@ -1,5 +1,8 @@
 package com.example.dailymemo.MyStream
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.service.voice.VoiceInteractionSession.VisibleActivityCallback
 import android.view.Gravity
@@ -18,16 +21,28 @@ import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.Space
 import android.widget.Spinner
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBindings
 import com.example.dailymemo.DailyBoard.DailyBoardRVAdapter
+import com.example.dailymemo.MyStream.Dialog.DeleteCheckDailog
+import com.example.dailymemo.MyStream.Dialog.SampleDialog
+import com.example.dailymemo.OpenStream.OpenStreamRVAdapter
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.StreamSetting.StreamSettingRVAdapter
 import com.example.dailymemo.databinding.FragmentMyStreamBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class MyStreamFragment : Fragment() {
+
 
     lateinit var binding: FragmentMyStreamBinding
 
@@ -39,6 +54,12 @@ class MyStreamFragment : Fragment() {
 
         initRecyclerView()
 
+        binding.apply {
+            userProfileIv.setOnClickListener {
+                showPopupMenu(userProfileIv)
+            }
+        }
+
 
         return binding.root
     }
@@ -49,22 +70,26 @@ class MyStreamFragment : Fragment() {
         binding.mystreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         myStreamRVAdapter.seMyItemClickListener(object: MyStreamRVAdapter.MyItemClickListener {
-            override fun onMenuClick(menu: ImageView) {
-                showPopupMenu(menu)
+            override fun onMenuClick() {
+                showMenu()
+            }
+
+            override fun onStreamClick() {
+                moveToStream()
             }
 
         })
-
     }
+
 
     private fun showPopupMenu(anchorView: View) {
         val inflater = LayoutInflater.from(requireContext())
-        val customMenuView = inflater.inflate(R.layout.mystream_popup_menu_layout, null)
+        val customMenuView = inflater.inflate(R.layout.stream_setting_popup_menu_layout, null)
 
         // Customize PopupWindow
        val popupWindow = PopupWindow(
             customMenuView,
-            350,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
@@ -74,33 +99,55 @@ class MyStreamFragment : Fragment() {
         anchorView.getLocationOnScreen(location)
 
         // Calculate xOffset and yOffset to align top-right of popup with top-right of anchorView
-        val xOffset = location[0] + anchorView.width - 350
+        val xOffset = location[0]
         val yOffset = location[1]
 
         // Set location
         popupWindow?.showAtLocation(anchorView, Gravity.NO_GRAVITY, xOffset, yOffset)
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+        popupWindow.elevation = resources.getDimension(R.dimen.popup_card_elevation)
 
-        val publicBtn = customMenuView.findViewById<ConstraintLayout>(R.id.public_btn)
-        val modifyBtn = customMenuView.findViewById<ConstraintLayout>(R.id.modify_btn)
-        val deleteBtn = customMenuView.findViewById<ConstraintLayout>(R.id.delete_btn)
-
-        publicBtn.setOnClickListener {
-
-            popupWindow?.dismiss()
-        }
-
-        modifyBtn.setOnClickListener {
-
-            popupWindow?.dismiss()
-        }
+        val recyclerView = customMenuView.findViewById<RecyclerView>(R.id.stream_setting_rv)
+        val streamSettingRVAdapter = StreamSettingRVAdapter()
+        recyclerView.adapter = streamSettingRVAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
 
-        deleteBtn.setOnClickListener {
+    }
 
-            popupWindow?.dismiss()
-        }
+    private fun showMenu() {
+
+            val bottomSheetView = layoutInflater.inflate(R.layout.mystream_bottom_menu_layout, null)
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            bottomSheetDialog.setContentView(bottomSheetView)
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+            val lockBtn = bottomSheetView.findViewById<ConstraintLayout>(R.id.stream_lock_layout)
+            val deleteBtn = bottomSheetView.findViewById<ConstraintLayout>(R.id.stream_delete_layout)
+
+            lockBtn.setOnClickListener {
+                val lockTitle = bottomSheetView.findViewById<TextView>(R.id.stream_lock_tv)
+                lockTitle.text = "숨기기 해제"
+                bottomSheetDialog.dismiss()
+
+                val dialog = SampleDialog(requireContext())
+                dialog.show()
+            }
+
+            deleteBtn.setOnClickListener {
+                bottomSheetDialog.dismiss()
+                val dialog = DeleteCheckDailog(requireContext())
+                dialog.show()
+            }
+
+            bottomSheetDialog.show()
 
 
+    }
+
+    private fun moveToStream() {
+        findNavController().navigate(R.id.watchStreamFragment)
     }
 }
 

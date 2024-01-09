@@ -32,6 +32,7 @@ class DailyBoardRVAdapter(private val photoList: ArrayList<Int>) : RecyclerView.
     }
 
     override fun getItemCount(): Int = photoList.size
+
     inner class ViewHolder(val binding: ItemDailyBoardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(photo : Int) {
             binding.dailyBoardIv.setImageResource(photo!!)

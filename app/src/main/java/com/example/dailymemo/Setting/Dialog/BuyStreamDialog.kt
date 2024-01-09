@@ -38,6 +38,7 @@ class BuyStreamDialog(context: Context) : Dialog(context) {
 
             buyBtn.setOnClickListener {
                 dismiss()
+                showBuySuccessDialog()
             }
         }
 
@@ -61,6 +62,11 @@ class BuyStreamDialog(context: Context) : Dialog(context) {
             val y = (rect.height() * height).toInt()
             dialog.window?.setLayout(x, y)
         }
+    }
+
+    private fun showBuySuccessDialog() {
+        val dialog = BuySuccessDialog(context)
+        dialog.show()
     }
 }
 

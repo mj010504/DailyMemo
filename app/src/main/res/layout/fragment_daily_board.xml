@@ -47,16 +47,207 @@
         app:layout_constraintStart_toStartOf="@id/top_user_profile_iv"
         app:layout_constraintEnd_toEndOf="@id/menu_bar_iv"/>
 
+    <FrameLayout
+        android:id="@+id/top_board_layout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="9dp"
+        app:layout_constraintTop_toBottomOf="@id/under_bar">
+
+        <View
+            android:id="@+id/top_board"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/board_color"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="13dp"
+            >
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/left_bar"
+        android:layout_width="6.5dp"
+        android:layout_height="0dp"
+        android:background="@color/board_color"
+        app:layout_constraintTop_toBottomOf="@id/top_board_layout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_board_layout"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <View
+        android:id="@+id/right_bar"
+        android:layout_width="6.5dp"
+        android:layout_height="0dp"
+        android:background="@color/board_color"
+        app:layout_constraintTop_toBottomOf="@id/top_board_layout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_board_layout"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/daily_board_rv"
-        android:layout_width="match_parent"
-        android:layout_height="503dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="393dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/under_bar"
+        app:layout_constraintStart_toEndOf="@id/left_bar"
+        app:layout_constraintEnd_toStartOf="@id/right_bar"
+        app:layout_constraintTop_toBottomOf="@id/top_board_layout"
         tools:layout_editor_absoluteX="0dp"
-        tools:listitem="@layout/item_daily_board"></androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/item_daily_board"/>
+
+    <FrameLayout
+        android:id="@+id/bottom_board_layout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:layout_constraintTop_toBottomOf="@id/daily_board_rv">
+
+        <View
+            android:id="@+id/bottom_board"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/board_color"
+            app:layout_constraintTop_toBottomOf="@id/daily_board_iv"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="13dp">
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/photo_view_all"
@@ -65,7 +256,7 @@
         android:src="@drawable/photo_view_all"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"
-        app:layout_constraintTop_toBottomOf="@id/daily_board_rv"
+        app:layout_constraintTop_toBottomOf="@id/bottom_board_layout"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
@@ -88,7 +279,17 @@
         android:layout_marginTop="37dp"
         app:layout_constraintTop_toBottomOf="@id/photo_view_all"
         app:layout_constraintStart_toStartOf="parent"/>
-    
+
+    <TextView
+        android:id="@+id/diary_text_tv"
+        android:layout_width="324dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="15dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@id/user_profile_iv"
+        app:layout_constraintTop_toTopOf="@id/user_profile_iv"/>
+
     <EditText
         android:id="@+id/diary_et"
         android:layout_width="291dp"
@@ -96,6 +297,8 @@
         android:background="@drawable/diary_edit_text"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
+        android:hint="일기 입력하기"
+        android:paddingStart="13dp"
         app:layout_constraintStart_toEndOf="@id/user_profile_iv"
         app:layout_constraintTop_toTopOf="@id/user_profile_iv"/>
 

@@ -6,8 +6,6 @@
 
     <style name="Theme.DailyMemo" parent="Base.Theme.DailyMemo" />
 
-    <style name="SpinnerItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
-
-    </style>
+    <style name="SpinnerItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner"/>
 
 </resources>

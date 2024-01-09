@@ -71,6 +71,6 @@
         tools:layout="@layout/fragment_premium_setting" />
     <fragment
         android:id="@+id/watchStreamFragment"
-        android:name="com.example.dailymemo.OpenStream.WatchStreamFragment"
+        android:name="com.example.dailymemo.WatchStream.WatchStreamFragment"
         android:label="WatchStreamFragment" />
 </navigation>

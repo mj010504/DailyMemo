@@ -1,8 +1,13 @@
 package com.example.dailymemo
 
+import InsetsWithKeyboardCallback
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -19,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         //네비게이션 컨트롤러
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bottmNav, navController)
         binding.bottmNav.itemIconTintList = null
         setBottomNavigationVisiblity()
+
 
 
     }
@@ -45,5 +50,6 @@ class MainActivity : AppCompatActivity() {
                 (destination.id !in hideBottomNavigationFragments)
         }
     }
+
 
 }

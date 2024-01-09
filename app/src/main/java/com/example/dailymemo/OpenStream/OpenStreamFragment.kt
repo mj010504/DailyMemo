@@ -1,14 +1,21 @@
 package com.example.dailymemo.OpenStream
 
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailymemo.MyStream.MyStreamRVAdapter
@@ -25,6 +32,60 @@ class OpenStreamFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentOpenStreamBinding.inflate(inflater,container,false)
+
+        binding.apply {
+            searchingIv.setOnClickListener {
+                searchEt.visibility = VISIBLE
+                searchEt.addTextChangedListener(object: TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        searchingIv.visibility = INVISIBLE
+                        searchTv.visibility = VISIBLE
+
+                        val inputText = s.toString()
+                        if(inputText.isEmpty()) {
+                            searchTv.text = "취소"
+
+                            searchTv.setOnClickListener {
+                                hideKeyboard(it)
+                                searchTv.visibility = INVISIBLE
+                                searchingIv.visibility = VISIBLE
+                            }
+                        }
+                        else {
+                            searchTv.text = "검색"
+                            searchTv.setOnClickListener {
+                                searchTv.visibility = INVISIBLE
+                                searchingIv.visibility = VISIBLE
+
+                                val keyword = searchEt.text.toString()
+                                searchEt.hint = "'$keyword'에 대한 검색결과"
+                                searchEt.setText("")
+                            }
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+
+                    }
+
+                })
+            }
+        }
+
         return binding.root
     }
 
@@ -34,9 +95,6 @@ class OpenStreamFragment : Fragment() {
         binding.openstreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         openStreamRVAdapter.setMyItemClickListener(object: OpenStreamRVAdapter.MyItemClickListener {
-            override fun onMenuClick(menu: ImageView) {
-                showPopupMenu(menu)
-            }
 
             override fun onStreamClick() {
                moveToStream()
@@ -45,53 +103,14 @@ class OpenStreamFragment : Fragment() {
 
     }
 
-    private fun showPopupMenu(anchorView: View) {
-        val inflater = LayoutInflater.from(requireContext())
-        val customMenuView = inflater.inflate(R.layout.mystream_popup_menu_layout, null)
-
-        // Customize PopupWindow
-        val popupWindow = PopupWindow(
-            customMenuView,
-            350,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        // Get the location of the anchorView on the screen
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Calculate xOffset and yOffset to align top-right of popup with top-right of anchorView
-        val xOffset = location[0] + anchorView.width - 350
-        val yOffset = location[1]
-
-        // Set location
-        popupWindow?.showAtLocation(anchorView, Gravity.NO_GRAVITY, xOffset, yOffset)
-
-        val publicBtn = customMenuView.findViewById<ConstraintLayout>(R.id.public_btn)
-        val modifyBtn = customMenuView.findViewById<ConstraintLayout>(R.id.modify_btn)
-        val deleteBtn = customMenuView.findViewById<ConstraintLayout>(R.id.delete_btn)
-
-        publicBtn.setOnClickListener {
-
-            popupWindow?.dismiss()
-        }
-
-        modifyBtn.setOnClickListener {
-
-            popupWindow?.dismiss()
-        }
-
-
-        deleteBtn.setOnClickListener {
-
-            popupWindow?.dismiss()
-        }
-
-    }
 
     private fun moveToStream() {
         findNavController().navigate(R.id.watchStreamFragment)
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 

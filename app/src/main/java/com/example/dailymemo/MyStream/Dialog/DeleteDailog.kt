@@ -1,4 +1,4 @@
-package com.example.dailymemo.Setting.Dialog
+package com.example.dailymemo.MyStream.Dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -8,19 +8,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
 import com.example.dailymemo.R
-import com.example.dailymemo.databinding.DialogBuyStreamBinding
-import com.example.dailymemo.databinding.DialogRemoveAdBinding
+import com.example.dailymemo.databinding.DialogMystreamDeleteBinding
+import com.example.dailymemo.databinding.DialogSampleBinding
 
-class RemoveAdDialog(context: Context) : Dialog(context) {
-    lateinit var binding: DialogRemoveAdBinding
-
+class DeleteDailog(context: Context) : Dialog(context) {
+    lateinit var binding: DialogMystreamDeleteBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DialogRemoveAdBinding.inflate(LayoutInflater.from(context))
+        binding = DialogMystreamDeleteBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
-        resize(this, 0.9f, 0.53f )
+        resize(this, 0.7f, 0.17f)
 
         window?.setBackgroundDrawableResource(R.drawable.white_dialog_layout)
 
@@ -30,20 +29,15 @@ class RemoveAdDialog(context: Context) : Dialog(context) {
         setCancelable(true)
 
         binding.apply {
-            cancleBtn.setOnClickListener {
+            checkBtn.setOnClickListener {
                 dismiss()
             }
 
-            buyBtn.setOnClickListener {
-                dismiss()
-                showBuySuccessDialog()
-            }
         }
-
     }
 
     // 사이즈를 조절하고 싶을 때 사용 (use it when you want to resize dialog)
-    private fun resize(dialog: Dialog, width: Float, height: Float){
+    private fun resize(dialog: Dialog, width: Float, height: Float) {
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         if (Build.VERSION.SDK_INT < 30) {
@@ -60,10 +54,5 @@ class RemoveAdDialog(context: Context) : Dialog(context) {
             val y = (rect.height() * height).toInt()
             dialog.window?.setLayout(x, y)
         }
-    }
-
-    private fun showBuySuccessDialog() {
-        val dialog = BuySuccessDialog(context)
-        dialog.show()
     }
 }

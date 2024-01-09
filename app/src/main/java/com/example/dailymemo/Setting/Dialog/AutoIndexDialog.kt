@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.DialogAutoIndexBinding
 import com.example.dailymemo.databinding.DialogBuyStreamBinding
@@ -36,6 +37,7 @@ class AutoIndexDialog(context: Context) : Dialog(context) {
 
             buyBtn.setOnClickListener {
                 dismiss()
+                showBuySuccessDialog()
             }
         }
 
@@ -59,5 +61,10 @@ class AutoIndexDialog(context: Context) : Dialog(context) {
             val y = (rect.height() * height).toInt()
             dialog.window?.setLayout(x, y)
         }
+    }
+
+    private fun showBuySuccessDialog() {
+        val dialog = BuySuccessDialog(context)
+        dialog.show()
     }
 }

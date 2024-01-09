@@ -8,19 +8,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
 import com.example.dailymemo.R
-import com.example.dailymemo.databinding.DialogBuyStreamBinding
-import com.example.dailymemo.databinding.DialogRemoveAdBinding
+import com.example.dailymemo.databinding.DialogAutoIndexBinding
+import com.example.dailymemo.databinding.DialogBuyResultBinding
 
-class RemoveAdDialog(context: Context) : Dialog(context) {
-    lateinit var binding: DialogRemoveAdBinding
-
+class BuySuccessDialog(context: Context) : Dialog(context) {
+    lateinit var binding: DialogBuyResultBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DialogRemoveAdBinding.inflate(LayoutInflater.from(context))
+        binding = DialogBuyResultBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
-        resize(this, 0.9f, 0.53f )
+        resize(this, 0.7f, 0.17f )
 
         window?.setBackgroundDrawableResource(R.drawable.white_dialog_layout)
 
@@ -30,13 +29,9 @@ class RemoveAdDialog(context: Context) : Dialog(context) {
         setCancelable(true)
 
         binding.apply {
-            cancleBtn.setOnClickListener {
-                dismiss()
-            }
 
-            buyBtn.setOnClickListener {
+            checkBtn.setOnClickListener {
                 dismiss()
-                showBuySuccessDialog()
             }
         }
 
@@ -60,10 +55,5 @@ class RemoveAdDialog(context: Context) : Dialog(context) {
             val y = (rect.height() * height).toInt()
             dialog.window?.setLayout(x, y)
         }
-    }
-
-    private fun showBuySuccessDialog() {
-        val dialog = BuySuccessDialog(context)
-        dialog.show()
     }
 }

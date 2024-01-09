@@ -11,7 +11,7 @@
 <!--            android:id="@+id/premiun_setting_title_iv"-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
-<!--            android:src="pr"-->
+<!--            android:src="@drawable/premeum_setting_title"-->
 <!--            android:layout_marginTop="26.59dp"-->
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"-->
@@ -22,6 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="프리미엄설정"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         android:layout_marginTop="26.59dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,6 +63,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:src="@drawable/buy_stream_ic"
+            app:layout_constraintTop_toBottomOf="@id/buy_stream_text_iv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.example.dailymemo.R
 import com.example.dailymemo.Setting.Dialog.AutoIndexDialog
 import com.example.dailymemo.Setting.Dialog.BuyStreamDialog
+import com.example.dailymemo.Setting.Dialog.BuySuccessDialog
 import com.example.dailymemo.Setting.Dialog.RemoveAdDialog
 import com.example.dailymemo.databinding.DialogAutoIndexBinding
 import com.example.dailymemo.databinding.DialogBuyStreamBinding
@@ -56,6 +57,11 @@ class PremiumSettingFragment : Fragment() {
 
     private fun showAutoIndexDialog() {
         val dialog = AutoIndexDialog(requireContext())
+        dialog.show()
+    }
+
+    private fun showBuySuccessDialog() {
+        val dialog = BuySuccessDialog(requireContext())
         dialog.show()
     }
 

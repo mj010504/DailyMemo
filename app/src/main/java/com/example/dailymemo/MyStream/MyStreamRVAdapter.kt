@@ -13,7 +13,8 @@ import com.example.dailymemo.databinding.ItemMystreamLayoutBinding
 class MyStreamRVAdapter : RecyclerView.Adapter<MyStreamRVAdapter.ViewHolder>() {
 
     interface MyItemClickListener {
-        fun onMenuClick(menu: ImageView)
+        fun onMenuClick()
+        fun onStreamClick()
     }
 
     private lateinit var mitemClickListener : MyItemClickListener
@@ -32,7 +33,8 @@ class MyStreamRVAdapter : RecyclerView.Adapter<MyStreamRVAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: MyStreamRVAdapter.ViewHolder, position: Int) {
         holder.bind(position)
-        holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick(holder.binding.menuBarIv) }
+        holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick() }
+//        holder.binding.myStreamLayout.setOnClickListener { mitemClickListener.onStreamClick() }
     }
 
     override fun getItemCount(): Int = 4
