@@ -3,12 +3,201 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Auth.SignUpFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Auth.SignUpFragment"
+    android:background="#F0EFEA">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/signup_title_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원가입"
+            android:textSize="45dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/signup_id_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아이디"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/signup_title_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="10dp"/>
+        <Button
+            android:id="@+id/signup_idchk_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_title_tv"
+            android:text="중복확인"
+            android:textSize="20dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_id_te"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/signup_id_tv"
+            app:layout_constraintEnd_toStartOf="@id/signup_idchk_btn"
+            app:layout_constraintTop_toBottomOf="@id/signup_title_tv"
+            android:hint="아이디 입력"/>
+        <TextView
+            android:id="@+id/signup_idwarn_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="영문 소문자와 숫자만 사용하여, 4~12자의 아이디를 입력해주세요."
+            android:textAlignment="center"
+            android:textColor="#F7C475"
+            app:layout_constraintTop_toBottomOf="@id/signup_idchk_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="10dp"/>
+"
+        <TextView
+            android:id="@+id/signup_pw_tv"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 입력"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/signup_idwarn_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="45dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_pw_te"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/signup_pw_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_idwarn_tv"
+            android:layout_marginTop="45dp"
+            android:hint="비밀번호 입력"/>
+        <TextView
+            android:id="@+id/signup_pwchk_tv"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/signup_pw_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAlignment="center"
+            android:text="비밀번호 확인"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_pwchk_te"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/signup_pw_tv"
+            android:hint="비밀번호 재입력"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/signup_pwchk_tv"/>
+        <TextView
+            android:id="@+id/signup_pwwarn_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="영문 대문자와 소문자, 숫자 중 2가지 이상을 조합하여 6~20자로 입력해주세요."
+            android:textColor="#F7C475"
+            android:textSize="10dp"
+            app:layout_constraintTop_toBottomOf="@id/signup_pwchk_tv"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/signup_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/signup_pwwarn_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAlignment="center"
+            android:text="이름"
+            android:textSize="20dp"
+            android:layout_marginTop="45dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_name_te"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="이름 입력"
+            app:layout_constraintStart_toEndOf="@id/signup_name_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_pwwarn_tv"
+            android:layout_marginTop="35dp"/>
+        <TextView
+            android:id="@+id/signup_email_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="이메일"
+            app:layout_constraintTop_toBottomOf="@id/signup_name_te"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:textSize="20dp"/>
+        <Button
+            android:id="@+id/signup_email_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="인증전송"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_name_te"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_email_te"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="본인 명의의 이메일"
+            app:layout_constraintStart_toEndOf="@id/signup_email_tv"
+            app:layout_constraintTop_toBottomOf="@id/signup_name_te"
+            app:layout_constraintEnd_toStartOf="@id/signup_email_btn"/>
+        <TextView
+            android:id="@+id/signup_emailwarn_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="인증전송 버튼을 누르면 작성하진 이메일로 인증번호가 발송됩니다."
+            android:textSize="10dp"
+            android:textColor="#F7C475"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/signup_email_te"/>
+        <TextView
+            android:id="@+id/signup_certi_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="인증번호"
+            android:textSize="20dp"
+            app:layout_constraintTop_toBottomOf="@id/signup_email_te"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="45dp"/>
+        <Button
+            android:id="@+id/signup_certi_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="확인"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_email_te"
+            android:layout_marginTop="35dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_certi_te"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/signup_certi_tv"
+            app:layout_constraintEnd_toStartOf="@id/signup_certi_btn"
+            app:layout_constraintTop_toBottomOf="@id/signup_email_te"
+            android:layout_marginTop="35dp"
+            android:hint="인증번호 입력"/>
+        <Button
+            android:id="@+id/signup_register_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="가입하기"/>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

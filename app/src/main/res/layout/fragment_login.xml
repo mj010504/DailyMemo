@@ -1,14 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Auth.LoginFragment">
+    tools:context=".Auth.LoginFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/main_color">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/loginfrag_title_iv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="65dp"
+        android:src="@drawable/title_ic"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="200dp"/>
 
-</FrameLayout>
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/loginfrag_id_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E4E3DB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_title_iv"
+        android:layout_marginTop="15dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:hint="아이디"/>
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/loginfrag_pw_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E4E3DB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_id_et"
+        android:layout_marginTop="15dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:hint="비밀번호"/>
+
+    <Button
+        android:id="@+id/loginfrag_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="로그인"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_pw_et"/>
+    <TextView
+        android:id="@+id/loginfrag_searching_id_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이디 찾기    |   "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_login_btn"
+        android:layout_marginStart="80dp"/>
+    <TextView
+        android:id="@+id/loginfrag_searching_pw_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호 찾기   |   "
+        app:layout_constraintStart_toEndOf="@id/loginfrag_searching_id_tv"
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_login_btn"/>
+    <TextView
+        android:id="@+id/loginfrag_register_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        app:layout_constraintStart_toEndOf="@id/loginfrag_searching_pw_tv"
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_login_btn"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
