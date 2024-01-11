@@ -12,7 +12,7 @@
     class DailyBoardRVAdapter(private val photoList: ArrayList<Int>) : RecyclerView.Adapter<DailyBoardRVAdapter.ViewHolder>() {
 
         interface ItemClickListener{
-
+            fun onPhotoClick()
         }
 
         private lateinit var itemClickListener: ItemClickListener
@@ -34,15 +34,10 @@
 
         override fun onBindViewHolder(holder: DailyBoardRVAdapter.ViewHolder, position: Int) {
             holder.bind(photoList[position])
-            holder.onPhotoClick()
-
+            holder.binding.dailyBoardIv.setOnClickListener { itemClickListener.onPhotoClick() }
         }
 
         override fun getItemCount(): Int = photoList.size
-
-        fun countUpdate() {
-
-        }
 
 
         inner class ViewHolder(val binding: ItemDailyBoardBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -55,34 +50,7 @@
                 binding.deleteExpectedTv.visibility = View.VISIBLE
             }
 
-            fun onPhotoClick() {
 
-                binding.dailyBoardIv.setOnClickListener {
-                    if(isPhoto == true) {
-                    isPhoto = false
-                    binding.deleteView.visibility = View.INVISIBLE
-                    binding.userProfileIv.visibility = View.INVISIBLE
-                    binding.streamNicknameTv.visibility = View.INVISIBLE
-                    binding.countLayout.visibility = View.INVISIBLE
-                }
-
-
-                    if(isPhoto == false) {
-                        isPhoto = true
-                        binding.deleteView.visibility = View.VISIBLE
-                        binding.userProfileIv.visibility = View.VISIBLE
-                        binding.streamNicknameTv.visibility = View.VISIBLE
-                        binding.countLayout.visibility = View.VISIBLE
-
-                        var currentPos = adapterPosition
-                        var total = itemCount
-
-                        binding.countTv.text = "$currentPos/$total"
-
-                    }
-                }
-
-            }
         }
 
 
