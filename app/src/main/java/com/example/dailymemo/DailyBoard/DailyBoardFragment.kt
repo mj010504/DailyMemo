@@ -196,7 +196,7 @@ class DailyBoardFragment : Fragment() {
     private fun showInfo() {
 
         if (isPhoto == true) {
-            isPhoto = false
+            isPhoto = !isPhoto
             binding.infoView.visibility = View.INVISIBLE
             binding.clickUserProfileIv.visibility = View.INVISIBLE
             binding.streamNameTv.visibility = View.INVISIBLE
@@ -205,7 +205,7 @@ class DailyBoardFragment : Fragment() {
 
 
         if (isPhoto == false) {
-            isPhoto = true
+            isPhoto = !isPhoto
             binding.infoView.visibility = View.VISIBLE
             binding.clickUserProfileIv.visibility = View.VISIBLE
             binding.streamNameTv.visibility = View.VISIBLE
