@@ -23,7 +23,7 @@
         android:id="@+id/stream_change_layout"
         android:layout_width="388dp"
         android:layout_height="57dp"
-        android:layout_marginTop="62dp"
+        android:layout_marginTop="45dp"
         android:background="@drawable/menu_box"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

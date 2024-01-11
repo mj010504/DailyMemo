@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.OpenStream.OpenStreamRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.Setting.StreamSetting.StreamSettingRVAdapter
@@ -39,6 +41,7 @@ class DailyBoardFragment : Fragment() {
 
     lateinit var binding:FragmentDailyBoardBinding
     private var photoList = ArrayList<Int>()
+    private var isPhoto = false
 
 
     override fun onCreateView(
@@ -89,14 +92,16 @@ class DailyBoardFragment : Fragment() {
         val dailyBoardRVAdapter = DailyBoardRVAdapter(photoList)
         binding.dailyBoardRv.adapter = dailyBoardRVAdapter
         binding.dailyBoardRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        dailyBoardRVAdapter.setITemClickListener(object: DailyBoardRVAdapter.ItemClickListener {
+            override fun onPhotoClick() {
+                showInfo()
+            }
 
+        })
         binding.dailyBoardRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                // 이 때 OnScrollListener의 메서드를 호출하여 현재 위치를 전달합니다.
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                dailyBoardRVAdapter.countUpdate()
+               updateCount()
             }
         })
 
@@ -187,5 +192,37 @@ class DailyBoardFragment : Fragment() {
 //
 //
 //    }
+
+    private fun showInfo() {
+
+        if (isPhoto == true) {
+            isPhoto = false
+            binding.infoView.visibility = View.INVISIBLE
+            binding.clickUserProfileIv.visibility = View.INVISIBLE
+            binding.streamNameTv.visibility = View.INVISIBLE
+            binding.countLayout.visibility = View.INVISIBLE
+        }
+
+
+        if (isPhoto == false) {
+            isPhoto = true
+            binding.infoView.visibility = View.VISIBLE
+            binding.clickUserProfileIv.visibility = View.VISIBLE
+            binding.streamNameTv.visibility = View.VISIBLE
+            binding.countLayout.visibility = View.VISIBLE
+
+           updateCount()
+
+        }
+    }
+
+    private fun updateCount() {
+        var layoutManager = binding.dailyBoardRv.layoutManager
+        val adapter = binding.dailyBoardRv.adapter
+        var currentPos : Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition() + 1
+        var total = adapter?.itemCount
+
+        binding.countTv.text = "$currentPos/$total"
+    }
 
 }
