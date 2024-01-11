@@ -17,26 +17,23 @@ class PhotoRVAdapter: RecyclerView.Adapter<PhotoRVAdapter.ViewHolder>() {
         fun onStreamClick()
     }
 
-    private lateinit var mitemClickListener : PhotoRVAdapter.MyItemClickListener
-    fun setMyItemClickListener(itemClickListener: PhotoRVAdapter.MyItemClickListener) {
+    private lateinit var mitemClickListener : MyItemClickListener
+    fun setMyItemClickListener(itemClickListener: MyItemClickListener) {
         mitemClickListener = itemClickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoRVAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ItemOpenstreamPhotoLayoutBinding = ItemOpenstreamPhotoLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: PhotoRVAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
         holder.binding.photoIv.setOnClickListener {mitemClickListener.onStreamClick()}
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
-
+    override fun getItemCount(): Int = 4
     inner class ViewHolder(val binding: ItemOpenstreamPhotoLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos: Int) {
 
