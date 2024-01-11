@@ -18,9 +18,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentOpenStreamBinding
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 
 
 class OpenStreamFragment : Fragment() {
@@ -32,6 +34,8 @@ class OpenStreamFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentOpenStreamBinding.inflate(inflater,container,false)
+
+        initRecyclerView()
 
         binding.apply {
             searchingIv.setOnClickListener {
@@ -94,12 +98,6 @@ class OpenStreamFragment : Fragment() {
         binding.openstreamRv.adapter = openStreamRVAdapter
         binding.openstreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        openStreamRVAdapter.setMyItemClickListener(object: OpenStreamRVAdapter.MyItemClickListener {
-
-            override fun onStreamClick() {
-               moveToStream()
-            }
-        })
 
     }
 

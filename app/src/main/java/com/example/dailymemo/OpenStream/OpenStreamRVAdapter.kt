@@ -40,6 +40,7 @@ class OpenStreamRVAdapter : RecyclerView.Adapter<OpenStreamRVAdapter.ViewHolder>
 
     override fun getItemCount(): Int = 4
 
+
     inner class ViewHolder(val binding: ItemOpenstreamLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos: Int) {
             binding.openstreamPhotoRv.apply {
