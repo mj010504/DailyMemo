@@ -33,9 +33,7 @@ class PhotoRVAdapter: RecyclerView.Adapter<PhotoRVAdapter.ViewHolder>() {
         holder.binding.photoIv.setOnClickListener {mitemClickListener.onStreamClick()}
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = 4
 
     inner class ViewHolder(val binding: ItemOpenstreamPhotoLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos: Int) {
