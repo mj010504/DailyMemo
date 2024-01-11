@@ -94,7 +94,8 @@ class DailyBoardFragment : Fragment() {
         binding.dailyBoardRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         dailyBoardRVAdapter.setITemClickListener(object: DailyBoardRVAdapter.ItemClickListener {
             override fun onPhotoClick() {
-                showInfo()
+                showInfo(isPhoto)
+                isPhoto = !isPhoto
             }
 
         })
@@ -193,10 +194,9 @@ class DailyBoardFragment : Fragment() {
 //
 //    }
 
-    private fun showInfo() {
+    private fun showInfo(isPhoto : Boolean) {
 
         if (isPhoto == true) {
-            isPhoto = !isPhoto
             binding.infoView.visibility = View.INVISIBLE
             binding.clickUserProfileIv.visibility = View.INVISIBLE
             binding.streamNameTv.visibility = View.INVISIBLE
@@ -205,7 +205,6 @@ class DailyBoardFragment : Fragment() {
 
 
         if (isPhoto == false) {
-            isPhoto = !isPhoto
             binding.infoView.visibility = View.VISIBLE
             binding.clickUserProfileIv.visibility = View.VISIBLE
             binding.streamNameTv.visibility = View.VISIBLE
