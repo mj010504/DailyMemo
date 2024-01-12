@@ -38,12 +38,15 @@ class WatchStreamFragment : Fragment() {
         initRecyclerView()
 
         binding.apply{
-            commentIv.setOnClickListener {
+            wsCommentLayout.setOnClickListener {
                 showMenu()
             }
 
             backIv.setOnClickListener {
-                requireActivity().onBackPressedDispatcher
+                val fragmentManager = getActivity()?.getSupportFragmentManager();
+                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.popBackStack();
+
             }
         }
 

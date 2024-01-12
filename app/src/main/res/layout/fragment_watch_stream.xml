@@ -79,15 +79,23 @@
         app:layout_constraintStart_toEndOf="@id/like_iv"
         app:layout_constraintTop_toTopOf="@id/like_iv"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ws_comment_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_marginStart="19dp"
+        app:layout_constraintStart_toEndOf="@id/like_count_tv"
+        app:layout_constraintTop_toBottomOf="@id/stream_rv">
+
     <ImageView
         android:id="@+id/comment_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/comment_ic"
-        android:layout_marginTop="17dp"
-        android:layout_marginStart="19dp"
-        app:layout_constraintStart_toEndOf="@id/like_count_tv"
-        app:layout_constraintTop_toBottomOf="@id/stream_rv"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+       />
 
     <TextView
         android:id="@+id/comment_count_tv"
@@ -98,6 +106,8 @@
         android:layout_marginStart="9.79dp"
         app:layout_constraintStart_toEndOf="@id/comment_iv"
         app:layout_constraintTop_toTopOf="@id/comment_iv"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/date_tv"

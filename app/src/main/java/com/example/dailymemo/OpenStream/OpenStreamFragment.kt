@@ -100,11 +100,7 @@ class OpenStreamFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
     }
-
-
-    private fun moveToStream() {
-        findNavController().navigate(R.id.watchStreamFragment)
-    }
+    
 
     private fun hideKeyboard(view: View) {
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

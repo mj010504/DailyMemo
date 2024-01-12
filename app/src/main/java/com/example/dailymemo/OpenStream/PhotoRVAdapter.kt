@@ -30,7 +30,7 @@ class PhotoRVAdapter: RecyclerView.Adapter<PhotoRVAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
-        holder.binding.photoIv.setOnClickListener {mitemClickListener.onStreamClick()}
+        holder.binding.photoCv.setOnClickListener {mitemClickListener.onStreamClick()}
     }
 
     override fun getItemCount(): Int = 4

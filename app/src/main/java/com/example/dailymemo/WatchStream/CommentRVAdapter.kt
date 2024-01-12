@@ -32,9 +32,7 @@ class CommentRVAdapter : RecyclerView.Adapter<CommentRVAdapter.ViewHolder>() {
         holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick(holder.binding.menuBarIv) }
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = 3
 
     inner class ViewHolder(val binding: ItemCommentBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos: Int) {
