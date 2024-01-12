@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="488dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/white_dialog_layout">
+
+    <ImageView
+        android:id="@+id/title_tv"
+        android:layout_width="98dp"
+        android:layout_height="42dp"
+        android:src="@drawable/buy_stream_text"
+        android:layout_marginTop="26dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/sub_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="스트림을 추가해보세요!"
+        android:textColor="@color/half_black"
+        android:textSize="12dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/title_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/description_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(*)님은 현재 (**)개의 스트림을 가지고 있습니다\n스트림은 최대 5개까지 추가가 가능합니다.\n\n스트림을 추가하여 일상을 더욱 자세하게 기록해보세요.\n\n스트림마다 사진 유형을 달리 하여 일기를 작성할 수\n있습니다.\n\n가격 : 3300￦"
+        android:textColor="@color/black"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="36dp"
+        app:layout_constraintTop_toBottomOf="@id/sub_title_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancle_btn"
+        android:layout_width="144dp"
+        android:layout_height="52dp"
+        android:text="취소"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/cancle"
+        android:background="@drawable/cancle_button_layout"
+        android:layout_marginTop="72dp"
+        android:layout_marginStart="36dp"
+        app:layout_constraintTop_toBottomOf="@id/description_tv"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buy_btn"
+        android:layout_width="144dp"
+        android:layout_height="52dp"
+        android:text="구매"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/button_layout"
+        android:layout_marginStart="13dp"
+        app:layout_constraintTop_toTopOf="@id/cancle_btn"
+        app:layout_constraintStart_toEndOf="@id/cancle_btn"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_stream_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="40dp"
+    android:layout_marginEnd="19dp">
+
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="xxxx년 xx월 xx일"
+        />
+
+    <ImageView
+        android:id="@+id/lock_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mysream_lock_ic"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/date_tv"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@id/menu_bar_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu_bar_ic"
+        android:layout_marginEnd="13dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mystream_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3.92dp"
+        tools:listitem="@layout/item_mystream_photo_layout"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_tv"
+        ></androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/like_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/like_ic"
+        android:layout_marginTop="5.19dp"
+        app:layout_constraintTop_toBottomOf="@id/mystream_rv"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/like_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="14sp"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="8.49dp"
+        app:layout_constraintStart_toEndOf="@id/like_iv"
+        app:layout_constraintTop_toTopOf="@id/like_iv"/>
+
+    <ImageView
+        android:id="@+id/comment_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/comment_ic"
+        android:layout_marginTop="6.19dp"
+        android:layout_marginStart="19dp"
+        app:layout_constraintStart_toEndOf="@id/like_count_tv"
+        app:layout_constraintTop_toBottomOf="@id/mystream_rv"/>
+
+    <TextView
+        android:id="@+id/comment_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="14sp"
+        android:layout_marginStart="9.79dp"
+        app:layout_constraintStart_toEndOf="@id/comment_iv"
+        app:layout_constraintTop_toTopOf="@id/comment_iv"/>
+
+    <Spinner
+        android:id="@+id/menu_spinner"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/mystream_rv"
+        android:background="@drawable/drop_down_menu_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

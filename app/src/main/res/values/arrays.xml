@@ -10,4 +10,10 @@
         <item>@id/searchingPasswordResetFragment</item>
     </array>
 
+    <string-array name="my_stream_menu">
+        <item>공개하기</item>
+        <item>수정하기</item>
+        <item>삭제하기</item>
+    </string-array>
+
 </resources>
