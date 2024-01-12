@@ -73,11 +73,6 @@ class MyStreamFragment : Fragment() {
             override fun onMenuClick() {
                 showMenu()
             }
-
-            override fun onStreamClick() {
-                moveToStream()
-            }
-
         })
     }
 
