@@ -1,11 +1,13 @@
 package com.example.dailymemo
 
 import InsetsWithKeyboardCallback
+import android.graphics.Rect
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
@@ -25,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        //네비게이션 컨트롤러
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 

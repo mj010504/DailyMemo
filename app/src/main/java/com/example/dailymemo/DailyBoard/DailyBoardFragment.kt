@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,6 +13,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
@@ -51,11 +55,39 @@ class DailyBoardFragment : Fragment() {
        binding = FragmentDailyBoardBinding.inflate(inflater,container,false)
         initRecyclerView()
 
+        val editText = binding.diaryEt
+        val rootView = binding.rootView
+
+        // 키보드가 나타날 때의 리스너 등록
+        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+            val r = Rect()
+            rootView.getWindowVisibleDisplayFrame(r)
+            val screenHeight = rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                // 키보드가 열려있는 상태에서의 동작 (올리기)
+                val location = IntArray(2)
+                editText.getLocationOnScreen(location)
+                val editTextBottom = location[1] + editText.height + 35
+                val margin = editTextBottom - r.bottom
+                rootView.scrollTo(0, margin)
+            } else {
+                // 키보드가 닫혀있는 상태에서의 동작 (내리기)
+                rootView.scrollTo(0, 0)
+            }
+        }
+
+        // 키보드 자동으로 올라오는 것 방지
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
+
         photoList.apply {
             add(R.drawable.daily1)
             add(R.drawable.daily2)
             add(R.drawable.daily3)
         }
+
 
 
         binding.apply {
@@ -74,6 +106,8 @@ class DailyBoardFragment : Fragment() {
                 sendBtnIv.visibility = INVISIBLE
                 diaryTextTv.text = diaryEt.text
                 diaryTextTv.visibility = VISIBLE
+
+                hideKeyboard(it)
             }
 
             diaryBasicTextTv.setOnClickListener {
@@ -222,6 +256,11 @@ class DailyBoardFragment : Fragment() {
         var total = adapter?.itemCount
 
         binding.countTv.text = "$currentPos/$total"
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }
