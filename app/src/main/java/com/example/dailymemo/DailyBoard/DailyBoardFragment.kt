@@ -57,7 +57,6 @@ import java.util.Locale
 class DailyBoardFragment : Fragment() {
 
     lateinit var binding: FragmentDailyBoardBinding
-    private var photoList = ArrayList<Int>()
     private var isPhoto = false
     private var imageList = ArrayList<Uri>()
 
@@ -67,7 +66,7 @@ class DailyBoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDailyBoardBinding.inflate(inflater, container, false)
-        initRecyclerView()
+
 
         val editText = binding.diaryEt
         val rootView = binding.rootView
@@ -95,20 +94,7 @@ class DailyBoardFragment : Fragment() {
         // 키보드 자동으로 올라오는 것 방지
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 
-
-        photoList.apply {
-            add(R.drawable.daily1)
-            add(R.drawable.daily2)
-            add(R.drawable.daily3)
-        }
-
-
-
         binding.apply {
-            // 사진 업로드(미완성)
-            userProfileIv.setOnClickListener {
-                uploadPhoto()
-            }
 
             // 바텀 다이얼로그
             menuBarIv.setOnClickListener {
@@ -145,29 +131,14 @@ class DailyBoardFragment : Fragment() {
             loadImageFromInternalStorage(savedImagePath)
         }
 
-        val yesterday = Calendar.getInstance()
-        yesterday.add(Calendar.DATE, -1) // 오늘 날짜에서 1일을 빼서 어제의 날짜를 얻음
-
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val formattedDateYesterday = formatter.format(yesterday.time)
-        Log.d("yesterday", formattedDateYesterday)
-
         getImage()
-        if(imageList.isNotEmpty()) {
-            val uri = imageList[3]
-
-            Glide.with(this)
-                .load(uri)
-                .into(binding.basicIv)
-        }
-        else {
-            Log.d("cursor", "Empty Empty Empty")
-        }
+        basicSetting()
+        initRecyclerView()
 
     }
 
     private fun initRecyclerView() {
-        val dailyBoardRVAdapter = DailyBoardRVAdapter(photoList)
+        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(),imageList)
         binding.dailyBoardRv.adapter = dailyBoardRVAdapter
         binding.dailyBoardRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -190,15 +161,15 @@ class DailyBoardFragment : Fragment() {
 
     }
 
-    private fun uploadPhoto() {
-        if (photoList.size > 0) {
+    private fun basicSetting() {
+        if (imageList.size > 0) {
             binding.basicIv.visibility = INVISIBLE
             binding.basicTv.visibility = INVISIBLE
         }
     }
 
     private fun showMenu() {
-        if (photoList.size > 0) {
+        if (imageList.size > 0) {
             val bottomSheetView = layoutInflater.inflate(R.layout.bottom_menu_layout, null)
             val bottomSheetDialog = BottomSheetDialog(requireContext())
             bottomSheetDialog.setContentView(bottomSheetView)
@@ -311,7 +282,6 @@ class DailyBoardFragment : Fragment() {
 
         val projection = arrayOf(
             MediaStore.Images.ImageColumns._ID,
-            MediaStore.Images.ImageColumns.TITLE,
             MediaStore.Images.ImageColumns.DATE_TAKEN
 
         ) //mediaStore provider의 사진의 id, title, date_taken을 가져오겠다.
@@ -323,8 +293,15 @@ class DailyBoardFragment : Fragment() {
         //dateToTimestamp(day = 1, month = 1, year = 1970).toString()) //?는 1970년 1월 1일
 
         //모두 가져오고 싶으면 selection과 selectionArgs에 null을 넣어주면 된다.
-        val selection = null
-        val selectionArgs = null
+        val today = Calendar.getInstance()
+        val midnight = today.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+
+        val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ?"
+        val selectionArgs = arrayOf(midnight.timeInMillis.toString())
         val sortOrder = "${MediaStore.Images.ImageColumns.DATE_TAKEN} DESC" //내림차순
         //"${MediaStore.Images.ImageColumns.DATE_TAKEN} ASC" //오름차순
 
@@ -338,7 +315,7 @@ class DailyBoardFragment : Fragment() {
             //Selection args: Selection과 함께 사용됩니다. SELECT 절에 있는 ? 자리표시자를 대체합니다.
             selectionArgs,
             //SortOrder: 쿼리 결과 데이터를 sorting할 때 사용합니다.(반환된 Cursor 내에 행이 나타나는 순서를 지정합니다.)
-            null
+            sortOrder
         )
 
         //1건만 가져오려면?
@@ -386,14 +363,11 @@ class DailyBoardFragment : Fragment() {
                             //1. 각 컬럼의 열 인덱스를 취득한다.
                             val idColNum =
                                 cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
-                            val titleColNum =
-                                cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.TITLE)
                             val dateTakenColNum =
                                 cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN)
 
                             //2. 인덱스를 바탕으로 각 행의 열 값(마지막 행에 도달할 때 까지 1행의 id,title,dateTaken, 2행의 id,title,dateTaken...)을 Cursor로부터 취득하기
                             val id = cursor.getLong(idColNum)
-                            val title = cursor.getString(titleColNum)
                             val dateTaken = cursor.getLong(dateTakenColNum)
                             /*Cursor를 통해 얻은 ID로 Uri 정보를 얻을 수 있습니다.
                             쿼리를 요청한 Uri와 파일의 ID가 다음과 같이 주어졌다면,
@@ -413,7 +387,7 @@ class DailyBoardFragment : Fragment() {
 
                             Log.d(
                                 "cursor",
-                                "id: ${id}, title:$title, dateTaken : $dateTaken, imageUri : $imageUri"
+                                "id: ${id}, dateTaken : $dateTaken, imageUri : $imageUri"
                             )
 
                         }

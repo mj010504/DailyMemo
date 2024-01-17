@@ -120,6 +120,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <View
+        android:id="@+id/point_bar"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/point_color"
@@ -129,6 +130,17 @@
         app:layout_constraintTop_toBottomOf="@id/like_iv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
+    
+<!--    비공개-->
+<ImageView
+    android:id="@+id/lock_iv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+   android:layout_marginTop="28.5dp"
+    android:visibility="invisible"
+    app:layout_constraintTop_toBottomOf="@id/point_bar"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:src="@drawable/lock_stream_image"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
