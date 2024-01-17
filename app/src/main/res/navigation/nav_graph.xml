@@ -54,7 +54,11 @@
         android:id="@+id/settingFragment"
         android:name="com.example.dailymemo.Setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_premiumSettingFragment"
+            app:destination="@id/premiumSettingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/openStreamFragment"
         android:name="com.example.dailymemo.OpenStream.OpenStreamFragment"
@@ -65,4 +69,8 @@
         android:name="com.example.dailymemo.Setting.PremiumSettingFragment"
         android:label="fragment_premium_setting"
         tools:layout="@layout/fragment_premium_setting" />
+    <fragment
+        android:id="@+id/watchStreamFragment"
+        android:name="com.example.dailymemo.WatchStream.WatchStreamFragment"
+        android:label="WatchStreamFragment" />
 </navigation>

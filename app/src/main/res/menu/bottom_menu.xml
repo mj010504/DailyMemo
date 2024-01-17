@@ -12,11 +12,6 @@
         android:icon="@drawable/menu_selector_mystream"/>
 
     <item
-        android:id="@+id/cameraFragment"
-        android:title="카메라"
-        android:icon="@drawable/camera_ic"/>
-
-    <item
         android:id="@+id/dailyBoardFragment"
         android:title="일기보드"
         android:icon="@drawable/menu_selector_dailyboard"/>

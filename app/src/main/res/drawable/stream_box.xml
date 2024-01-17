@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/steram_box" /> <!-- 배경색 -->
+    <corners android:radius="9dp" /> <!-- 코너 라디우스 설정 -->
+</shape>
