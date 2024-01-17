@@ -18,38 +18,47 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/loginfrag_id_et"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#E4E3DB"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginfrag_title_iv"
         android:layout_marginTop="15dp"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginEnd="19dp"
         android:hint="아이디"/>
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/loginfrag_pw_et"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#E4E3DB"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginfrag_id_et"
         android:layout_marginTop="15dp"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginEnd="19dp"
         android:hint="비밀번호"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginfrag_login_btn"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="로그인"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
         android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginfrag_pw_et"/>
+        app:layout_constraintTop_toBottomOf="@id/loginfrag_pw_et"
+        android:layout_marginStart="19dp"
+        android:layout_marginEnd="19dp"
+        android:background="#FF9900"/>
     <TextView
         android:id="@+id/loginfrag_searching_id_tv"
         android:layout_width="wrap_content"

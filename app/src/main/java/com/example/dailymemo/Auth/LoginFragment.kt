@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
+import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.databinding.FragmentLoginBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,10 +20,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [LoginFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(),LoginView {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    lateinit var binding: FragmentLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +39,30 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentLoginBinding.inflate(inflater)
+
+        binding.loginfragLoginBtn.setOnClickListener{
+            login()
+        }
+        binding.loginfragRegisterTv.setOnClickListener{
+            findNavController().navigate(R.id.signUpFragment)
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        return binding.root
+    }
+
+    fun login(){
+        val loginService = LoginService()
+        loginService.setLoginView(this)
+
+        val id_text = binding.loginfragIdEt.text.toString()
+        val pw_text = binding.loginfragPwEt.text.toString()
+
+        loginService.login(id_text,pw_text)
+    }
+
+    override fun loginSuccess(){
+        findNavController().navigate(R.id.openStreamFragment)
     }
 
     companion object {
