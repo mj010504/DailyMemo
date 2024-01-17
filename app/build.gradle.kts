@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.dailymemo"
-        minSdk = 34
+        minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

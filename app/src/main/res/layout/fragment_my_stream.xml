@@ -29,10 +29,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/mystream_title_ic"
-        android:layout_marginTop="28.59dp"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/user_profile_iv"
+        app:layout_constraintBottom_toBottomOf="@id/user_profile_iv"/>
 
     <ImageView
         android:id="@+id/searching_iv"

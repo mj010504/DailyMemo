@@ -1,4 +1,4 @@
-package com.example.dailymemo.Service
+package com.example.dailymemo.Auth.Service
 
 import retrofit2.Call
 import retrofit2.http.GET

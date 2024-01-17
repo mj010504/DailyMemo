@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dailymemo.MyStream.Dialog.DeleteDailog
+import com.example.dailymemo.MyStream.Dialog.KeywordCheckDialog
 import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentOpenStreamBinding
@@ -72,12 +74,17 @@ class OpenStreamFragment : Fragment() {
                         else {
                             searchTv.text = "검색"
                             searchTv.setOnClickListener {
-                                searchTv.visibility = INVISIBLE
-                                searchingIv.visibility = VISIBLE
-
                                 val keyword = searchEt.text.toString()
-                                searchEt.hint = "'$keyword'에 대한 검색결과"
-                                searchEt.setText("")
+                                if(keyword.length < 2) {
+                                    showKeywordCheckDialog()
+                                }
+                                else {
+                                    searchTv.visibility = INVISIBLE
+                                    searchingIv.visibility = VISIBLE
+
+                                    searchEt.hint = "'$keyword'에 대한 검색결과"
+                                    searchEt.setText("")
+                                }
                             }
                         }
                     }
@@ -107,5 +114,9 @@ class OpenStreamFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun showKeywordCheckDialog() {
+        val dialog = KeywordCheckDialog(requireContext())
+        dialog.show()
+    }
 
 }

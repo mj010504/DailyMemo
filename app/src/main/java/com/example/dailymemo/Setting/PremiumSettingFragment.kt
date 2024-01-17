@@ -11,6 +11,7 @@ import com.example.dailymemo.Setting.Dialog.AutoIndexDialog
 import com.example.dailymemo.Setting.Dialog.BuyStreamDialog
 import com.example.dailymemo.Setting.Dialog.BuySuccessDialog
 import com.example.dailymemo.Setting.Dialog.RemoveAdDialog
+import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.DialogAutoIndexBinding
 import com.example.dailymemo.databinding.DialogBuyStreamBinding
 import com.example.dailymemo.databinding.DialogRemoveAdBinding
@@ -40,6 +41,13 @@ class PremiumSettingFragment : Fragment() {
             autoIndexLayout.setOnClickListener {
                 showAutoIndexDialog()
             }
+
+            backIv.setOnClickListener {
+                val fragmentManager = getActivity()?.getSupportFragmentManager();
+                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.popBackStack();
+
+            }
         }
 
         return binding.root
@@ -57,11 +65,6 @@ class PremiumSettingFragment : Fragment() {
 
     private fun showAutoIndexDialog() {
         val dialog = AutoIndexDialog(requireContext())
-        dialog.show()
-    }
-
-    private fun showBuySuccessDialog() {
-        val dialog = BuySuccessDialog(requireContext())
         dialog.show()
     }
 

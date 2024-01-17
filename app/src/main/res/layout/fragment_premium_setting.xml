@@ -17,6 +17,17 @@
 <!--            app:layout_constraintEnd_toEndOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent"-->
 <!--            />-->
+
+    <ImageView
+        android:id="@+id/back_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_ic"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28.59dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/premiun_setting_title_iv"
         android:layout_width="wrap_content"

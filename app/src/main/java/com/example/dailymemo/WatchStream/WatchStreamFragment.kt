@@ -1,8 +1,6 @@
 package com.example.dailymemo.WatchStream
 
-import InsetsWithKeyboardCallback
 import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,19 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentWatchStreamBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class WatchStreamFragment : Fragment() {
