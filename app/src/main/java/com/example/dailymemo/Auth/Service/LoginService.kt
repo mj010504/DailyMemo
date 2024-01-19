@@ -1,6 +1,6 @@
 package com.example.dailymemo.Auth.Service
 
-class LoginService {
+class  LoginService {
 
     fun login(){
     }
