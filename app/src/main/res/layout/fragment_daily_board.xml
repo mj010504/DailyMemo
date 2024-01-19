@@ -346,7 +346,18 @@
         app:layout_constraintStart_toEndOf="@id/user_profile_iv"
         app:layout_constraintTop_toTopOf="@id/user_profile_iv"/>
 
-<!--    클릭 시 효과-->
+    <View
+        android:id="@+id/info_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/daily_board_rv"
+        app:layout_constraintStart_toStartOf="@id/daily_board_rv"
+        app:layout_constraintEnd_toEndOf="@id/daily_board_rv"
+        app:layout_constraintBottom_toBottomOf="@id/daily_board_rv"
+        android:background="#75000000"/>
+
+    <!--    클릭 시 효과-->
     <ImageView
         android:id="@+id/click_user_profile_iv"
         android:layout_width="55dp"
@@ -398,16 +409,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/info_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="@id/daily_board_rv"
-        app:layout_constraintStart_toStartOf="@id/daily_board_rv"
-        app:layout_constraintEnd_toEndOf="@id/daily_board_rv"
-        app:layout_constraintBottom_toBottomOf="@id/daily_board_rv"
-        android:background="#75000000"/>
 
 
 
