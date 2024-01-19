@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.dailymemo.R
+import com.example.dailymemo.WatchStream.Comment.CommentFragment
 import com.example.dailymemo.databinding.FragmentWatchStreamBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -56,40 +58,12 @@ class WatchStreamFragment : Fragment() {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.streamRv)
 
+
     }
     private fun showMenu() {
-            val bottomSheetView = layoutInflater.inflate(R.layout.comment_layout, null)
-            val bottomSheetDialog = BottomSheetDialog(requireContext())
-            bottomSheetDialog.setContentView(bottomSheetView)
-            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        val bottomSheetFragment = CommentFragment()
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
-
-        bottomSheetDialog.show()
-
-        val editText = bottomSheetView.findViewById<EditText>(R.id.comment_et)
-
-        // 키보드가 나타날 때의 리스너 등록
-        editText.viewTreeObserver.addOnGlobalLayoutListener {
-            val r = Rect()
-            editText.getWindowVisibleDisplayFrame(r)
-            val screenHeight = editText.height
-            val keypadHeight = screenHeight - r.bottom
-
-            if (keypadHeight > screenHeight * 0.15) {
-                // 키보드가 열려있는 상태에서의 동작 (올리기)
-                val location = IntArray(2)
-                editText.getLocationOnScreen(location)
-                val editTextBottom = location[1] + editText.height
-                val margin = editTextBottom - r.bottom
-                editText.scrollBy(0, margin)
-            } else {
-                // 키보드가 닫혀있는 상태에서의 동작 (내리기)
-                editText.scrollBy(0, 0)
-            }
-        }
-
-        // 키보드 자동으로 올라오는 것 방지
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
     }
 
 }
