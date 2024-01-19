@@ -3,6 +3,8 @@ package com.example.dailymemo.Setting
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,6 +22,9 @@ import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentSettingBinding
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.nio.file.Files.delete
 
 
@@ -82,7 +87,6 @@ class SettingFragment : Fragment() {
         val fileName = "user_profile_image.jpg"
         val file = File(requireContext().filesDir, fileName)
 
-        file.writeText("")
         val outputStream = FileOutputStream(file)
 
         inputStream?.use { input ->
@@ -114,6 +118,7 @@ class SettingFragment : Fragment() {
         val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
         return preferences.getString("user_profile_image_path", "") ?: ""
     }
+
 
 
 }
