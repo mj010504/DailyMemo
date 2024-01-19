@@ -1,5 +1,6 @@
 package com.example.dailymemo.MyStream
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -30,6 +31,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBindings
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dailymemo.DailyBoard.DailyBoardRVAdapter
 import com.example.dailymemo.MyStream.Dialog.DeleteCheckDailog
 import com.example.dailymemo.MyStream.Dialog.SampleDialog
@@ -39,6 +42,7 @@ import com.example.dailymemo.Setting.StreamSetting.StreamSettingRVAdapter
 import com.example.dailymemo.databinding.FragmentMyStreamBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.io.File
 
 
 class MyStreamFragment : Fragment() {
@@ -62,6 +66,16 @@ class MyStreamFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수 호출
+        val savedImagePath = loadSavedImagePath()
+        if (savedImagePath.isNotEmpty()) {
+            loadImageFromInternalStorage(savedImagePath)
+        }
     }
 
     private fun initRecyclerView() {
@@ -141,8 +155,21 @@ class MyStreamFragment : Fragment() {
 
     }
 
-    private fun moveToStream() {
-        findNavController().navigate(R.id.watchStreamFragment)
+
+    private fun loadImageFromInternalStorage(filePath: String) {
+        Glide.with(this)
+            .load(File(filePath))
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .into(binding.userProfileIv)
+
+
+    }
+
+    // 저장된 이미지의 파일 경로를 불러오는 함수
+    private fun loadSavedImagePath(): String {
+        val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return preferences.getString("user_profile_image_path", "") ?: ""
     }
 }
 

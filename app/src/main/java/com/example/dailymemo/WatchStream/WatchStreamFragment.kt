@@ -1,6 +1,7 @@
 package com.example.dailymemo.WatchStream
 
-import android.os.Build
+
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,15 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.R
+import com.example.dailymemo.WatchStream.Comment.CommentFragment
 import com.example.dailymemo.databinding.FragmentWatchStreamBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -61,17 +59,16 @@ class WatchStreamFragment : Fragment() {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.streamRv)
 
+
     }
     private fun showMenu() {
-            val bottomSheetView = layoutInflater.inflate(R.layout.comment_layout, null)
-            val bottomSheetDialog = BottomSheetDialog(requireContext())
-            bottomSheetDialog.setContentView(bottomSheetView)
-            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        val bottomSheetFragment = CommentFragment()
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
-
-        bottomSheetDialog.show()
-        }
-
+    }
 
 }
+
+
+
 

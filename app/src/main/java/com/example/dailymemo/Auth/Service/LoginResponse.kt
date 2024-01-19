@@ -1,4 +1,4 @@
-package com.example.dailymemo.Service
+package com.example.dailymemo.Auth.Service
 
 import com.google.gson.annotations.SerializedName
 
