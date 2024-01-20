@@ -66,11 +66,31 @@
         tools:layout="@layout/fragment_open_stream" />
     <fragment
         android:id="@+id/premiumSettingFragment"
-        android:name="com.example.dailymemo.Setting.PremiumSettingFragment"
+        android:name="com.example.dailymemo.Setting.Dialog.PremiumSettingFragment"
         android:label="fragment_premium_setting"
         tools:layout="@layout/fragment_premium_setting" />
     <fragment
         android:id="@+id/watchStreamFragment"
         android:name="com.example.dailymemo.WatchStream.WatchStreamFragment"
         android:label="WatchStreamFragment" />
+    <fragment
+        android:id="@+id/accountWithdrawalFragment"
+        android:name="com.example.dailymemo.Setting.AccountWithdrawalFragment"
+        android:label="AccountWithdrawalFragment" />
+    <dialog
+        android:id="@+id/commentFragment"
+        android:name="com.example.dailymemo.WatchStream.Comment.CommentFragment"
+        android:label="CommentFragment" />
+    <fragment
+        android:id="@+id/searchingIdFailedFragment"
+        android:name="com.example.dailymemo.Auth.SearchingIdFailedFragment"
+        android:label="SearchingIdFailedFragment" />
+    <activity
+        android:id="@+id/serachingActivity"
+        android:name="com.example.dailymemo.Auth.SerachingActivity"
+        android:label="SerachingActivity" />
+    <fragment
+        android:id="@+id/searchingIdSuccessFragment"
+        android:name="com.example.dailymemo.Auth.SearchingIdSuccessFragment"
+        android:label="SearchingIdSuccessFragment" />
 </navigation>

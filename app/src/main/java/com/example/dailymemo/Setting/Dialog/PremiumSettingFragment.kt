@@ -1,22 +1,12 @@
-package com.example.dailymemo.Setting
+package com.example.dailymemo.Setting.Dialog
 
-import android.R.style
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.dailymemo.R
-import com.example.dailymemo.Setting.Dialog.AutoIndexDialog
-import com.example.dailymemo.Setting.Dialog.BuyStreamDialog
-import com.example.dailymemo.Setting.Dialog.BuySuccessDialog
-import com.example.dailymemo.Setting.Dialog.RemoveAdDialog
 import com.example.dailymemo.WatchStream.WatchStreamFragment
-import com.example.dailymemo.databinding.DialogAutoIndexBinding
-import com.example.dailymemo.databinding.DialogBuyStreamBinding
-import com.example.dailymemo.databinding.DialogRemoveAdBinding
 import com.example.dailymemo.databinding.FragmentPremiumSettingBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class PremiumSettingFragment : Fragment() {

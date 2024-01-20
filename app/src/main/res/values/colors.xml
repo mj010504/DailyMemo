@@ -17,4 +17,6 @@
     <color name="half_black">#80000000</color>
     <color name="cancle">#AFAFAF</color>
     <color name="steram_box">#E5E3D9</color>
+    <color name="delete">#FF0000</color>
+    <color name="impossible">#FF1B1B</color>
 </resources>

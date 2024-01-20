@@ -23,7 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class WatchStreamFragment : Fragment() {
 
     lateinit var binding : FragmentWatchStreamBinding
-    private lateinit var callback: OnBackPressedCallback
+
 
 
     override fun onCreateView(

@@ -60,6 +60,10 @@ class SettingFragment : Fragment() {
             userProfileIv.setOnClickListener {
                 openGallery()
             }
+
+            accountWithdrawalTv.setOnClickListener {
+                findNavController().navigate(R.id.accountWithdrawalFragment)
+            }
         }
 
         return binding.root

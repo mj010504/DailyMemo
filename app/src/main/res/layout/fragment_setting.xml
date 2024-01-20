@@ -197,7 +197,7 @@
             app:layout_constraintTop_toBottomOf="@id/user_info_tv"/>
 
         <TextView
-            android:id="@+id/quit_tv"
+            android:id="@+id/account_withdrawal_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
