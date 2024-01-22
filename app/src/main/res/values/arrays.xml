@@ -8,6 +8,7 @@
         <item>@id/searchingPasswordFragment</item>
         <item>@id/searchingPasswordInputFragment</item>
         <item>@id/searchingPasswordResetFragment</item>
+        <item>@id/watchStreamFragment</item>
     </array>
 
     <string-array name="my_stream_menu">

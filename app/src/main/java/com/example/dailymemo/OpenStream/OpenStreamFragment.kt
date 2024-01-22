@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
@@ -40,6 +42,8 @@ class OpenStreamFragment : Fragment() {
         initRecyclerView()
 
         binding.apply {
+            rootView.isEnabled = false
+
             searchingIv.setOnClickListener {
                 searchEt.visibility = VISIBLE
                 searchEt.addTextChangedListener(object: TextWatcher {
@@ -94,10 +98,19 @@ class OpenStreamFragment : Fragment() {
                     }
 
                 })
+
+
             }
+
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        infiniteScroll()
     }
 
     private fun initRecyclerView() {
@@ -105,6 +118,7 @@ class OpenStreamFragment : Fragment() {
         binding.openstreamRv.adapter = openStreamRVAdapter
         binding.openstreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
 
     }
     
@@ -119,4 +133,14 @@ class OpenStreamFragment : Fragment() {
         dialog.show()
     }
 
+
+    private fun infiniteScroll() {
+        binding.rootView.viewTreeObserver.addOnScrollChangedListener {
+
+            // NestedScrollView의 ScrollY 값과 ScrollableView의 높이를 통해 스크롤 상태를 확인
+            if (binding.rootView.scrollY  >= binding.rootView.height) {
+
+            }
+        }
+    }
 }

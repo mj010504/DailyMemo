@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.service.voice.VoiceInteractionSession.VisibleActivityCallback
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -76,6 +77,8 @@ class MyStreamFragment : Fragment() {
         if (savedImagePath.isNotEmpty()) {
             loadImageFromInternalStorage(savedImagePath)
         }
+
+        infiniteScroll()
     }
 
     private fun initRecyclerView() {
@@ -170,6 +173,17 @@ class MyStreamFragment : Fragment() {
     private fun loadSavedImagePath(): String {
         val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
         return preferences.getString("user_profile_image_path", "") ?: ""
+    }
+
+    private fun infiniteScroll() {
+        binding.rootView.viewTreeObserver.addOnScrollChangedListener {
+
+            // NestedScrollView의 ScrollY 값과 ScrollableView의 높이를 통해 스크롤 상태를 확인
+            if (binding.rootView.scrollY  >= binding.rootView.height) {
+                Log.d("layoutTotal", "total succs")
+
+            }
+        }
     }
 }
 

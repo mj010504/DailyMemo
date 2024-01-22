@@ -67,4 +67,5 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("de.hdodenhof:circleimageview:2.2.0")
 
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
