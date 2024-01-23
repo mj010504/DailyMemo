@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
+import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.databinding.FragmentSignUpBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +24,11 @@ class SignUpFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var email_verify_token: String = ""
+
+    lateinit var binding : FragmentSignUpBinding
+
+    var chkName : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +42,54 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentSignUpBinding.inflate(inflater)
+
+        binding.signupIdchkBtn.setOnClickListener{
+            checkNickname()
+        }
+
+        binding.signupEmailBtn.setOnClickListener{
+            checkEmail()
+        }
+
+        binding.signupRegisterBtn.setOnClickListener{
+            register()
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up, container, false)
+        return binding.root
     }
+
+    fun checkNickname(){
+        val loginService : LoginService = LoginService()
+        loginService.setSignupView(this)
+
+        val nickname_input = binding.signupNameTe.text.toString()
+        loginService.isNicknameExist(nickname_input)
+    }
+
+    fun checkEmail(){
+        val loginService : LoginService = LoginService()
+        loginService.setSignupView(this)
+
+        val email_input = binding.signupEmailTe.text.toString()
+        loginService.isEmailExist(email_input)
+    }
+
+    fun checkEmailSuccess(){
+    }
+
+    fun register(){
+        val loginService : LoginService = LoginService()
+        loginService.setSignupView(this)
+
+        loginService.resigster(email_verify_token)
+    }
+
+    fun registerSuccess(){
+        findNavController().navigate(R.id.loginFragment)
+    }
+
+
 
     companion object {
         /**
