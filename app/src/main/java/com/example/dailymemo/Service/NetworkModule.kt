@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-const val BASE_URL = "https://dayrecord.shop"
+const val BASE_URL = "https://dayrecord.shop/"
 
 fun getRetrofit(): Retrofit {
 
