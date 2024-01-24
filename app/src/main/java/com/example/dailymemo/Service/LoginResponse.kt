@@ -45,7 +45,7 @@ data class EmailVerifyRequest(
 
 data class EmailVerify_result(
     @SerializedName("token") val token: String,
-    @SerializedName("expireAt") val expireAt: LocalDateTime
+    @SerializedName("expireAt") val expireAt: String
 )
 data class EmailVerifyResponse(
     @SerializedName("isSuccess") val isSuccess: Boolean,
@@ -60,15 +60,23 @@ data class RegisterRequest(
     @SerializedName("password") val password : String,
     @SerializedName("phoneNumber") val phoneNumber: String,
     @SerializedName("email") val email: String,
-    @SerializedName("profilePhoto") val profilePhoto: String,
+    //@SerializedName("profilePhoto") val profilePhoto: String,
     @SerializedName("emailVerificationToken") val emailVerificationToken: String
+)
+data class Register_result(
+    @SerializedName("id") val id : Int,
+    @SerializedName("createdAt") val date : String,
+    @SerializedName("phoneNumber") val phoneErr : String,
+    @SerializedName("name") val nameErr : String,
+    @SerializedName("password") val pwErr : String,
+    @SerializedName("email") val emailErr : String,
+    @SerializedName("nickName") val nickErr : String
 )
 data class RegisterResponse(
     @SerializedName("isSuccess") val isSuccess: Boolean,
     @SerializedName("code") val code: String,
     @SerializedName("message") val message: String,
-    @SerializedName("result.id") val id: Int,
-    @SerializedName("result.createdAt") val date: LocalDateTime
+    @SerializedName("result") val result: Register_result
 )
 
 data class searchingIDRequest(

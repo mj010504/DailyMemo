@@ -59,10 +59,6 @@ class LoginService {
     fun isNicknameExist(id : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-
-        loginService.isNicknameExist(id).enqueue(object : Callback<nicknameRepeatedResponse>{
-            override fun onResponse(call: Call<nicknameRepeatedResponse>, response: Response<nicknameRepeatedResponse> ) {
-
         val body : nicknameRepeatedRequest = nicknameRepeatedRequest(id);
         loginService.isNicknameExist(body).enqueue(object : Callback<nicknameRepeatedResponse>{
             override fun onResponse( call: Call<nicknameRepeatedResponse>,response: Response<nicknameRepeatedResponse> ) {
@@ -86,27 +82,15 @@ class LoginService {
     fun isEmailExist(email : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-
-        loginService.isEmailExist(email).enqueue(object : Callback<emailRepeatedResponse>{
-            override fun onResponse(call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
-
         val body : emailRepeatedRequest = emailRepeatedRequest(email);
         loginService.isEmailExist(body).enqueue(object : Callback<emailRepeatedResponse>{
             override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
 
-                if(response.code()==200){
-                    if(response.body()?.isExists == false){
+                if(response.code()==200) {
+                    if (response.body()?.isExists == false) {
                         signupView.checkEmailSuccess()
-
-
-                if(response.isSuccessful){
-                    if(response.code()==200){
-                        if(response.body()?.isExists == true){
-                            signupView.checkEmailSuccess()
-                        }
-                        else{
-
-                        }
+                    }
+                    else{
 
                     }
                 }
@@ -127,7 +111,7 @@ class LoginService {
                 call: Call<EmailVerifyResponse>,
                 response: Response<EmailVerifyResponse>
             ) {
-                Log.i("EmailVerificationService",response.code().toString())
+                Log.i("EmailVerificationService","성공")
                 if(response.code() == 200){
                     Log.i("EmailVerificationService","메일을 성공적으로 전송했습니다.")
                     signupView.emailVerificationSuccess(response.body()!!.result.token)
@@ -138,7 +122,7 @@ class LoginService {
             }
 
             override fun onFailure(call: Call<EmailVerifyResponse>, t: Throwable) {
-                Log.i("EmailVerificationService","연결 상태 확인")
+                Log.i("EmailVerificationService","err:(${t.message})")
             }
         })
     }
@@ -149,11 +133,12 @@ class LoginService {
         val id: String = signupView.binding.signupIdTe.text.toString()
         val nickName: String = signupView.binding.signupNameTe.text.toString()
         val pw: String = signupView.binding.signupPwTe.text.toString()
-        val tele: String = "00000000"
+        val tele: String = "01057585744"
         val email: String = signupView.binding.signupEmailTe.text.toString()
         val image_encoded: String = ""
 
-        val body : RegisterRequest = RegisterRequest(id,nickName,pw,tele,email,image_encoded, email_verify_token);
+        val body : RegisterRequest = RegisterRequest(nickName,id,pw,tele,email, email_verify_token)
+        Log.i("RegisterService",body.toString())
         loginService.register(body).enqueue(object : Callback<RegisterResponse>{
             override fun onResponse(
                 call: Call<RegisterResponse>,
@@ -165,12 +150,13 @@ class LoginService {
                     Log.i("RegisterService","회원가입 성공")
                 }
                 if(response.code() == 400){
+                    Log.i("ResgisterService",response.message())
                     if(response.body() != null)
-                        Log.i("RegisterService", response.body()!!.message)
+                        Log.i("RegisterService", response.body()!!.result.toString())
                 }
             }
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-
+                Log.i("RegisterService","err:${t.message}")
             }
         })
     }
