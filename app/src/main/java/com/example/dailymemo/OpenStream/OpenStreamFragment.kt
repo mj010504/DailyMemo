@@ -24,12 +24,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dailymemo.MyStream.Dialog.DeleteDailog
 import com.example.dailymemo.MyStream.Dialog.KeywordCheckDialog
 import com.example.dailymemo.MyStream.MyStreamRVAdapter
+import com.example.dailymemo.OpenStream.Retrofit.OpenStreamService
+import com.example.dailymemo.OpenStream.Retrofit.OpenStreamView
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentOpenStreamBinding
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 
 
-class OpenStreamFragment : Fragment() {
+class OpenStreamFragment : Fragment(), OpenStreamView {
 
     lateinit var binding : FragmentOpenStreamBinding
 
@@ -109,6 +111,10 @@ class OpenStreamFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val openStreamService =  OpenStreamService()
+        openStreamService.setOpenStreamView(this)
+
 
         infiniteScroll()
     }

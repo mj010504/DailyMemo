@@ -130,8 +130,8 @@ class AccountWithdrawalFragment : Fragment() {
 
     private fun showText() {
         val span  = SpannableString(binding.accountWithdrawalTv.text)
-        span.setSpan(R.color.delete, 33, 35, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        span.setSpan(R.color.impossible,47, 50,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        span.setSpan(ForegroundColorSpan(resources.getColor(R.color.delete)), 33, 35, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        span.setSpan(ForegroundColorSpan(resources.getColor(R.color.impossible)),47, 50,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         span.setSpan(StyleSpan(Typeface.BOLD), 92, 97, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         binding.accountWithdrawalTv.text  = span
