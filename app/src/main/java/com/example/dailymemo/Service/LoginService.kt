@@ -63,18 +63,15 @@ class LoginService {
         val body : nicknameRepeatedRequest = nicknameRepeatedRequest(id);
         loginService.isNicknameExist(body).enqueue(object : Callback<nicknameRepeatedResponse>{
             override fun onResponse( call: Call<nicknameRepeatedResponse>,response: Response<nicknameRepeatedResponse> ) {
-                if(response.isSuccessful){
-                    if(response.code() == 200){
-                        if(response.body()?.isExists == true){
+                Log.i("CheckIDService",response.code().toString())
+                if(response.code() == 200){
+                    if(response.body()?.result!!.isExists == true){
 
-                        }
-                        else{
-                            signupView.chkName = true
-                        }
                     }
-                }
-                else{
-
+                    else{
+                        signupView.chkName = true
+                        Log.i("CheckIDService","사용가능한 아이디 입니다.")
+                    }
                 }
             }
             override fun onFailure(call: Call<nicknameRepeatedResponse>, t: Throwable) {
@@ -133,7 +130,7 @@ class LoginService {
         val id: String = signupView.binding.signupIdTe.text.toString()
         val nickName: String = signupView.binding.signupNameTe.text.toString()
         val pw: String = signupView.binding.signupPwTe.text.toString()
-        val tele: String = ""
+        val tele: String = "00000000"
         val email: String = signupView.binding.signupEmailTe.text.toString()
         val image_encoded: String = ""
 
