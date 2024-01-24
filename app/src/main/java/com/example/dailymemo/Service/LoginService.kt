@@ -66,17 +66,6 @@ class LoginService {
                 if(response.code() == 200){
                     if(response.body()?.result!!.isExists == true){
 
-
-                if(response.isSuccessful){
-                    if(response.code() == 200){
-                        if(response.body()?.isExists == true){
-
-                        }
-                        else{
-                            signupView.chkName = true
-
-                        }
-
                     }
                     else{
                         signupView.chkName = true
@@ -93,30 +82,6 @@ class LoginService {
     fun isEmailExist(email : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-<<<<<<< HEAD
-
-                val body: emailRepeatedRequest = emailRepeatedRequest(email);
-                loginService.isEmailExist(body).enqueue(object : Callback<emailRepeatedResponse> {
-                override fun onResponse(
-                    call: Call<emailRepeatedResponse>,
-                    response: Response<emailRepeatedResponse>
-                ) {
-
-                    if (response.isSuccessful) {
-                        if (response.code() == 200) {
-                            if (response.body()?.isExists == true) {
-                                signupView.checkEmailSuccess()
-                            } else {
-
-                            }
-                        }
-                    } else {
-
-                    }
-                }
-
-                override fun onFailure(call: Call<emailRepeatedResponse>, t: Throwable) {
-=======
         val body : emailRepeatedRequest = emailRepeatedRequest(email);
         loginService.isEmailExist(body).enqueue(object : Callback<emailRepeatedResponse>{
             override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
@@ -126,57 +91,17 @@ class LoginService {
                         signupView.checkEmailSuccess()
                     }
                     else{
->>>>>>> 6a1b383915a8baa08d4d85331ac2a981c48161dc
 
                     }
                 }
-            })
+            }
 
+            override fun onFailure(call: Call<emailRepeatedResponse>, t: Throwable) {
+
+            }
+        })
     }
 
-<<<<<<< HEAD
-            fun resigster(email_verify_token: String) {
-                val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
-
-                val id: String = signupView.binding.signupIdTe.text.toString()
-                val nickName: String = signupView.binding.signupNameTe.text.toString()
-                val pw: String = signupView.binding.signupPwTe.text.toString()
-                val tele: String = ""
-                val email: String = signupView.binding.signupEmailTe.text.toString()
-                val image_encoded: String = ""
-
-                val body: RegisterRequest = RegisterRequest(
-                    id,
-                    nickName,
-                    pw,
-                    tele,
-                    email,
-                    image_encoded,
-                    email_verify_token
-                );
-                loginService.register(body).enqueue(object : Callback<RegisterResponse> {
-                    override fun onResponse(
-                        call: Call<RegisterResponse>,
-                        response: Response<RegisterResponse>
-                    ) {
-                        Log.i("RegisterService", response.code().toString())
-                        if (response.code() == 200) {
-                            signupView.registerSuccess()
-                            Log.i("RegisterService", "회원가입 성공")
-                        }
-                        if (response.code() == 400) {
-                            if (response.body() != null)
-                                Log.i("RegisterService", response.body()!!.message)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-
-                    }
-                })
-            }
-        }
-=======
     fun emailVerificationRequest(email: String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
@@ -266,4 +191,3 @@ class LoginService {
         })
     }
 }
->>>>>>> 6a1b383915a8baa08d4d85331ac2a981c48161dc
