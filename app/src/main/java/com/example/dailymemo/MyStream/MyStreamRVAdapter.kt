@@ -4,9 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dailymemo.DailyBoard.DailyBoardRVAdapter
+import com.example.dailymemo.R
 import com.example.dailymemo.databinding.ItemDailyBoardBinding
 import com.example.dailymemo.databinding.ItemMystreamLayoutBinding
 
@@ -14,7 +17,6 @@ class MyStreamRVAdapter : RecyclerView.Adapter<MyStreamRVAdapter.ViewHolder>() {
 
     interface MyItemClickListener {
         fun onMenuClick()
-        fun onStreamClick()
     }
 
     private lateinit var mitemClickListener : MyItemClickListener
@@ -34,7 +36,6 @@ class MyStreamRVAdapter : RecyclerView.Adapter<MyStreamRVAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: MyStreamRVAdapter.ViewHolder, position: Int) {
         holder.bind(position)
         holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick() }
-//        holder.binding.myStreamLayout.setOnClickListener { mitemClickListener.onStreamClick() }
     }
 
     override fun getItemCount(): Int = 4
@@ -44,9 +45,17 @@ class MyStreamRVAdapter : RecyclerView.Adapter<MyStreamRVAdapter.ViewHolder>() {
             binding.dateTv.text = "2024년 1월 2일"
             binding.likeCountTv.text = "5"
             binding.mystreamRv.apply {
-                adapter = MyPhotoRVAdapter(pos)
+                var myPhotoRVAdapter = MyPhotoRVAdapter(pos)
+                adapter = myPhotoRVAdapter
                 layoutManager = LinearLayoutManager(binding.mystreamRv.context, LinearLayoutManager.HORIZONTAL, false)
                 setHasFixedSize(true)
+
+                myPhotoRVAdapter.seMyItemClickListener(object: MyPhotoRVAdapter.MyItemClickListener{
+                    override fun onStreamClick() {
+                        findNavController().navigate(R.id.watchStreamFragment)
+                    }
+
+                })
             }
         }
 

@@ -11,6 +11,15 @@ class MyPhotoRVAdapter(private val parentPos: Int) : RecyclerView.Adapter<MyPhot
 
     val images = listOf(R.drawable.daily1,R.drawable.daily2, R.drawable.daily3, R.drawable.daily1)
 
+    interface MyItemClickListener {
+        fun onStreamClick()
+    }
+
+    private lateinit var mitemClickListener : MyItemClickListener
+    fun seMyItemClickListener(itemClickListener: MyItemClickListener) {
+        mitemClickListener = itemClickListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyPhotoRVAdapter.ViewHolder {
         val binding: ItemMystreamPhotoLayoutBinding = ItemMystreamPhotoLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -19,6 +28,7 @@ class MyPhotoRVAdapter(private val parentPos: Int) : RecyclerView.Adapter<MyPhot
 
     override fun onBindViewHolder(holder: MyPhotoRVAdapter.ViewHolder, position: Int) {
         holder.bind(position)
+        holder.binding.photoCv.setOnClickListener { mitemClickListener.onStreamClick() }
     }
 
     override fun getItemCount(): Int = 4

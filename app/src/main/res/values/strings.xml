@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">DailyMemo</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">일상의기록</string>
+    <string name="account_withdrawal">정말로 계정 탈퇴를 하시겠습니까?\n탈퇴 시, 모든 스트림과 내용이 삭제되며,\n복구가 불가능 합니다.\n필요 시, 백업하시기 바랍니다.\n\n\n계정탈퇴를 진행하시려면 아래에\n\u0022탈퇴\u0022를 작성해주세요.</string>
 </resources>

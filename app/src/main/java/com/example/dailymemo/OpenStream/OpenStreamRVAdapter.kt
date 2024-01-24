@@ -3,10 +3,12 @@ package com.example.dailymemo.OpenStream
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dailymemo.MyStream.MyPhotoRVAdapter
 import com.example.dailymemo.MyStream.MyStreamRVAdapter
+import com.example.dailymemo.R
 import com.example.dailymemo.databinding.ItemMystreamLayoutBinding
 import com.example.dailymemo.databinding.ItemMystreamPhotoLayoutBinding
 import com.example.dailymemo.databinding.ItemOpenstreamLayoutBinding
@@ -48,6 +50,14 @@ class OpenStreamRVAdapter : RecyclerView.Adapter<OpenStreamRVAdapter.ViewHolder>
                 adapter = photoRVAdapter
                 layoutManager = LinearLayoutManager(binding.openstreamPhotoRv.context, LinearLayoutManager.HORIZONTAL, false)
                 setHasFixedSize(true)
+
+
+                photoRVAdapter.setMyItemClickListener(object: PhotoRVAdapter.MyItemClickListener{
+                    override fun onStreamClick() {
+                        findNavController().navigate(R.id.watchStreamFragment)
+                    }
+
+                })
             }
         }
 

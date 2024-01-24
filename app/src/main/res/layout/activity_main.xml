@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottm_nav"
         style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
