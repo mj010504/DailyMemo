@@ -76,6 +76,19 @@ class SignUpFragment : Fragment() {
     }
 
     fun checkEmailSuccess(){
+        emailVerificationRequest()
+    }
+
+    fun emailVerificationRequest(){
+        val loginService: LoginService = LoginService()
+        loginService.setSignupView(this)
+
+        val email_input = binding.signupEmailTe.text.toString()
+        loginService.emailVerificationRequest(email_input)
+    }
+
+    fun emailVerificationSuccess(token : String){
+        this.email_verify_token = token
     }
 
     fun register(){
