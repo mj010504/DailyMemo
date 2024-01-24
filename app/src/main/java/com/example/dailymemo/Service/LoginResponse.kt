@@ -17,11 +17,15 @@ data class LoginResponse(
 data class nicknameRepeatedRequest(
     @SerializedName("nickName") val nickname : String
 )
+
+data class nicknameRepeated_result(
+    @SerializedName("isExist") val isExists: Boolean
+)
 data class nicknameRepeatedResponse(
     @SerializedName("isSuccess") val isSuccess :Boolean,
     @SerializedName("code") val code : String,
     @SerializedName("message") val message : String,
-    @SerializedName("isExists") val isExists : Boolean
+    @SerializedName("result") val result : nicknameRepeated_result
 )
 
 data class emailRepeatedRequest(

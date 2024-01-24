@@ -63,7 +63,7 @@ class SignUpFragment : Fragment() {
         val loginService : LoginService = LoginService()
         loginService.setSignupView(this)
 
-        val nickname_input = binding.signupNameTe.text.toString()
+        val nickname_input = binding.signupIdTe.text.toString()
         loginService.isNicknameExist(nickname_input)
     }
 
