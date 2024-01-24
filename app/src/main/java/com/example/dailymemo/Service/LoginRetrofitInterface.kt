@@ -21,7 +21,7 @@ interface LoginRetrofitInterface {
     @POST("verification/email-exists")
     fun isEmailExist(@Body email : emailRepeatedRequest) : Call<emailRepeatedResponse>
 
-    @POST("email-verification-request")
+    @POST("verification/email-verification-request")
     fun emailVerificationRequest(@Body emailVerifyRequest: EmailVerifyRequest) : Call<EmailVerifyResponse>
 
     @POST("users/findmyid")
