@@ -3,6 +3,7 @@ package com.example.dailymemo.Service
 import android.util.Log
 import com.example.dailymemo.Auth.LoginFragment
 import com.example.dailymemo.Auth.LoginView
+import com.example.dailymemo.Auth.SearchingIdFragment
 import com.example.dailymemo.Auth.SignUpFragment
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,6 +16,8 @@ class LoginService {
 
     lateinit var signupView : SignUpFragment
 
+    lateinit var searchingIDView : SearchingIdFragment
+
     @JvmName("setLoginView2")
     fun setLoginView(loginView: LoginView){
         this.loginView = loginView
@@ -23,6 +26,11 @@ class LoginService {
     @JvmName("setSignupView2")
     fun setSignupView(signupView : SignUpFragment){
         this.signupView = signupView
+    }
+
+    @JvmName("setSearchingIdView2")
+    fun setSearchingIdView(searchingIdView: SearchingIdFragment){
+        this.searchingIDView = searchingIdView
     }
 
     fun login(id : String, pw : String){
@@ -81,23 +89,40 @@ class LoginService {
         val body : emailRepeatedRequest = emailRepeatedRequest(email);
         loginService.isEmailExist(body).enqueue(object : Callback<emailRepeatedResponse>{
             override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
-                if(response.isSuccessful){
-                    if(response.code()==200){
-                        if(response.body()?.isExists == true){
-                            signupView.checkEmailSuccess()
-                        }
-                        else{
-
-                        }
+                if(response.code()==200){
+                    if(response.body()?.isExists == false){
+                        signupView.checkEmailSuccess()
                     }
-                }
-                else{
-
                 }
             }
 
             override fun onFailure(call: Call<emailRepeatedResponse>, t: Throwable) {
 
+            }
+        })
+    }
+
+    fun emailVerificationRequest(email: String){
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        val body: EmailVerifyRequest = EmailVerifyRequest(email)
+        loginService.emailVerificationRequest(body).enqueue(object : Callback<EmailVerifyResponse>{
+            override fun onResponse(
+                call: Call<EmailVerifyResponse>,
+                response: Response<EmailVerifyResponse>
+            ) {
+                Log.i("EmailVerificationService",response.code().toString())
+                if(response.code() == 200){
+                    Log.i("EmailVerificationService","메일을 성공적으로 전송했습니다.")
+                    signupView.emailVerificationSuccess(response.body()!!.result.token)
+                }
+                else if(response.code() == 400){
+                    Log.i("EmailVerficationService","메일 전송에 실패했습니다.")
+                }
+            }
+
+            override fun onFailure(call: Call<EmailVerifyResponse>, t: Throwable) {
+                Log.i("EmailVerificationService","연결 상태 확인")
             }
         })
     }
@@ -129,6 +154,36 @@ class LoginService {
                 }
             }
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+    fun searchingId(email_verify_token: String){
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        val name:String = searchingIDView.binding.searchingIdNameTe.text.toString()
+        val email:String = ""
+
+        val body : searchingIDRequest = searchingIDRequest(name, email, email_verify_token)
+        loginService.searchingIDRequest(body).enqueue(object : Callback<searchingIDResponse>{
+            override fun onResponse(
+                call: Call<searchingIDResponse>,
+                response: Response<searchingIDResponse>
+            ) {
+                Log.i("SearchingIDService",response.code().toString())
+                if(response.code()==404){
+                    Log.i("SearchingIDService","사용자를 찾을 수 없음")
+                }
+                else if(response.code()==200){
+                    Log.i("SearchingIDService", "사용자를 찾았습니다.")
+                }
+                else if(response.code()==400){
+                    Log.i("SearchingIDService", "유효한 요청이 아님")
+                }
+            }
+
+            override fun onFailure(call: Call<searchingIDResponse>, t: Throwable) {
 
             }
         })

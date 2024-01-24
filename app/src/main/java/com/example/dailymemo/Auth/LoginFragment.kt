@@ -47,6 +47,9 @@ class LoginFragment : Fragment(),LoginView {
         binding.loginfragRegisterTv.setOnClickListener{
             findNavController().navigate(R.id.signUpFragment)
         }
+        binding.loginfragSearchingIdTv.setOnClickListener{
+            findNavController().navigate(R.id.searchingIdFragment)
+        }
         // Inflate the layout for this fragment
         return binding.root
     }

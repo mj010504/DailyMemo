@@ -35,6 +35,21 @@ data class emailRepeatedResponse(
     @SerializedName("isExists") val isExists : Boolean
 )
 
+data class EmailVerifyRequest(
+    @SerializedName("email") val email: String
+)
+
+data class EmailVerify_result(
+    @SerializedName("token") val token: String,
+    @SerializedName("expireAt") val expireAt: LocalDateTime
+)
+data class EmailVerifyResponse(
+    @SerializedName("isSuccess") val isSuccess: Boolean,
+    @SerializedName("code") val code: String,
+    @SerializedName("message") val message: String,
+    @SerializedName("result") val result: EmailVerify_result
+)
+
 data class RegisterRequest(
     @SerializedName("name") val name : String,
     @SerializedName("nickName") val nickName : String,
@@ -50,4 +65,16 @@ data class RegisterResponse(
     @SerializedName("message") val message: String,
     @SerializedName("result.id") val id: Int,
     @SerializedName("result.createdAt") val date: LocalDateTime
+)
+
+data class searchingIDRequest(
+    @SerializedName("name") val name : String,
+    @SerializedName("email") val email : String,
+    @SerializedName("emailVerificationToken") val emailVerificationToken: String
+)
+
+data class searchingIDResponse(
+    @SerializedName("isSuccess") val isSuccess: Boolean,
+    @SerializedName("code") val code: String,
+    @SerializedName("message") val message: String
 )
