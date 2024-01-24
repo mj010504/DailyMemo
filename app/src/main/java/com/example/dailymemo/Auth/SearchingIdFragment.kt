@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
+import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.databinding.FragmentSearchingIdBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +25,10 @@ class SearchingIdFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    lateinit var binding: FragmentSearchingIdBinding
+
+    val email_verify_token : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,8 +41,22 @@ class SearchingIdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentSearchingIdBinding.inflate(inflater)
+        binding.searchingIdCertiBtn.setOnClickListener{
+            searchID()
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_searching_id, container, false)
+        return binding.root
+    }
+
+    fun searchID(){
+        val loginService: LoginService = LoginService()
+        loginService.setSearchingIdView(this)
+
+        loginService.searchingId(email_verify_token)
+    }
+
+    fun success(){
     }
 
     companion object {

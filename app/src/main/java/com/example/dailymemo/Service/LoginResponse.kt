@@ -17,11 +17,15 @@ data class LoginResponse(
 data class nicknameRepeatedRequest(
     @SerializedName("nickName") val nickname : String
 )
+
+data class nicknameRepeated_result(
+    @SerializedName("isExist") val isExists: Boolean
+)
 data class nicknameRepeatedResponse(
     @SerializedName("isSuccess") val isSuccess :Boolean,
     @SerializedName("code") val code : String,
     @SerializedName("message") val message : String,
-    @SerializedName("isExists") val isExists : Boolean
+    @SerializedName("result") val result : nicknameRepeated_result
 )
 
 data class emailRepeatedRequest(
@@ -35,19 +39,54 @@ data class emailRepeatedResponse(
     @SerializedName("isExists") val isExists : Boolean
 )
 
+data class EmailVerifyRequest(
+    @SerializedName("email") val email: String
+)
+
+data class EmailVerify_result(
+    @SerializedName("token") val token: String,
+    @SerializedName("expireAt") val expireAt: String
+)
+data class EmailVerifyResponse(
+    @SerializedName("isSuccess") val isSuccess: Boolean,
+    @SerializedName("code") val code: String,
+    @SerializedName("message") val message: String,
+    @SerializedName("result") val result: EmailVerify_result
+)
+
 data class RegisterRequest(
     @SerializedName("name") val name : String,
     @SerializedName("nickName") val nickName : String,
     @SerializedName("password") val password : String,
     @SerializedName("phoneNumber") val phoneNumber: String,
     @SerializedName("email") val email: String,
-    @SerializedName("profilePhoto") val profilePhoto: String,
+    //@SerializedName("profilePhoto") val profilePhoto: String,
     @SerializedName("emailVerificationToken") val emailVerificationToken: String
+)
+data class Register_result(
+    @SerializedName("id") val id : Int,
+    @SerializedName("createdAt") val date : String,
+    @SerializedName("phoneNumber") val phoneErr : String,
+    @SerializedName("name") val nameErr : String,
+    @SerializedName("password") val pwErr : String,
+    @SerializedName("email") val emailErr : String,
+    @SerializedName("nickName") val nickErr : String
 )
 data class RegisterResponse(
     @SerializedName("isSuccess") val isSuccess: Boolean,
     @SerializedName("code") val code: String,
     @SerializedName("message") val message: String,
-    @SerializedName("result.id") val id: Int,
-    @SerializedName("result.createdAt") val date: LocalDateTime
+    @SerializedName("result") val result: Register_result
+)
+
+data class searchingIDRequest(
+    @SerializedName("name") val name : String,
+    @SerializedName("email") val email : String,
+    @SerializedName("emailVerificationToken") val emailVerificationToken: String
+)
+
+data class searchingIDResponse(
+    @SerializedName("isSuccess") val isSuccess: Boolean,
+    @SerializedName("code") val code: String,
+    @SerializedName("message") val message: String
 )

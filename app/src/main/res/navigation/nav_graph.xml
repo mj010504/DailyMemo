@@ -93,4 +93,13 @@
         android:id="@+id/searchingIdSuccessFragment"
         android:name="com.example.dailymemo.Auth.SearchingIdSuccessFragment"
         android:label="SearchingIdSuccessFragment" />
+    <fragment
+        android:id="@+id/streamSettingFragment"
+        android:name="com.example.dailymemo.Setting.StreamSetting.StreamSettingFragment"
+        android:label="fragment_stream_setting"
+        tools:layout="@layout/fragment_stream_setting" />
+    <fragment
+        android:id="@+id/streamSettingDetailFragment"
+        android:name="com.example.dailymemo.Setting.StreamSetting.StreamSettingDetailFragment"
+        android:label="StreamSettingDetailFragment" />
 </navigation>

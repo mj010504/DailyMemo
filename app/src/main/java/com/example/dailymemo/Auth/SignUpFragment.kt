@@ -43,7 +43,7 @@ class SignUpFragment : Fragment() {
         val loginService: LoginService = LoginService()
         loginService.setSignupView(this)
 
-        val nickname_input = binding.signupNameTe.text.toString()
+        val nickname_input = binding.signupIdTe.text.toString()
         loginService.isNicknameExist(nickname_input)
     }
 
@@ -55,7 +55,21 @@ class SignUpFragment : Fragment() {
         loginService.isEmailExist(email_input)
     }
 
-    fun checkEmailSuccess() {
+
+    fun checkEmailSuccess(){
+        emailVerificationRequest()
+    }
+
+    fun emailVerificationRequest(){
+        val loginService: LoginService = LoginService()
+        loginService.setSignupView(this)
+
+        val email_input = binding.signupEmailTe.text.toString()
+        loginService.emailVerificationRequest(email_input)
+    }
+
+    fun emailVerificationSuccess(token : String){
+        this.email_verify_token = token
     }
 
     fun register() {
