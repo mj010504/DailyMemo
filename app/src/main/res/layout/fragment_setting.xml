@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/setting_ic"
             android:layout_marginStart="9dp"
-            app:layout_constraintStart_toStartOf="@id/setting_view_iv"
+            app:layout_constraintStart_toEndOf="@id/nickname_view"
             app:layout_constraintTop_toTopOf="@id/nickname_view"
             app:layout_constraintBottom_toBottomOf="@id/nickname_view"
 

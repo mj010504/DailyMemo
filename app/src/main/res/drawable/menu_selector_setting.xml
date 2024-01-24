@@ -4,6 +4,6 @@
         android:drawable="@drawable/setting_color_ic"
         android:state_checked="true"/>
     <item
-        android:drawable="@drawable/setting_ic"
+        android:drawable="@drawable/bottom_setting_ic"
         android:state_checked="false"/>
 </selector>

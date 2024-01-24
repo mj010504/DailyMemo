@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dailymemo.R
+import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentStreamSettingDetailBinding
 import java.io.File
 import java.io.FileOutputStream
@@ -44,6 +45,13 @@ class StreamSettingDetailFragment : Fragment() {
         binding.apply {
             settingIcIv.setOnClickListener {
                 openGallery()
+            }
+
+            backIv.setOnClickListener {
+                val fragmentManager = getActivity()?.getSupportFragmentManager();
+                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.popBackStack();
+
             }
         }
 
