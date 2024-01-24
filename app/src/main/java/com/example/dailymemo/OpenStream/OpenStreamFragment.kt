@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,11 +15,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dailymemo.MyStream.Dialog.DeleteDailog
+import com.example.dailymemo.MyStream.Dialog.KeywordCheckDialog
 import com.example.dailymemo.MyStream.MyStreamRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentOpenStreamBinding
@@ -38,6 +42,8 @@ class OpenStreamFragment : Fragment() {
         initRecyclerView()
 
         binding.apply {
+            rootView.isEnabled = false
+
             searchingIv.setOnClickListener {
                 searchEt.visibility = VISIBLE
                 searchEt.addTextChangedListener(object: TextWatcher {
@@ -72,12 +78,17 @@ class OpenStreamFragment : Fragment() {
                         else {
                             searchTv.text = "검색"
                             searchTv.setOnClickListener {
-                                searchTv.visibility = INVISIBLE
-                                searchingIv.visibility = VISIBLE
-
                                 val keyword = searchEt.text.toString()
-                                searchEt.hint = "'$keyword'에 대한 검색결과"
-                                searchEt.setText("")
+                                if(keyword.length < 2) {
+                                    showKeywordCheckDialog()
+                                }
+                                else {
+                                    searchTv.visibility = INVISIBLE
+                                    searchingIv.visibility = VISIBLE
+
+                                    searchEt.hint = "'$keyword'에 대한 검색결과"
+                                    searchEt.setText("")
+                                }
                             }
                         }
                     }
@@ -87,10 +98,19 @@ class OpenStreamFragment : Fragment() {
                     }
 
                 })
+
+
             }
+
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        infiniteScroll()
     }
 
     private fun initRecyclerView() {
@@ -99,17 +119,28 @@ class OpenStreamFragment : Fragment() {
         binding.openstreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-    }
 
-
-    private fun moveToStream() {
-        findNavController().navigate(R.id.watchStreamFragment)
     }
+    
 
     private fun hideKeyboard(view: View) {
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun showKeywordCheckDialog() {
+        val dialog = KeywordCheckDialog(requireContext())
+        dialog.show()
+    }
 
+
+    private fun infiniteScroll() {
+        binding.rootView.viewTreeObserver.addOnScrollChangedListener {
+
+            // NestedScrollView의 ScrollY 값과 ScrollableView의 높이를 통해 스크롤 상태를 확인
+            if (binding.rootView.scrollY  >= binding.rootView.height) {
+
+            }
+        }
+    }
 }

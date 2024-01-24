@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="삭제 예정"
-        android:textSize="100sp"
+        android:textSize="80sp"
         android:textColor="@color/white"
         android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/daily_board_iv"

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
-    android:background="@color/main_color">
+    android:background="@drawable/bottom_sheet_layout">
 
     <View
         android:id="@+id/top_bar"
@@ -20,44 +20,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_rv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_comment"
-        android:layout_marginStart="23dp"
-        android:layout_marginEnd="21dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="21dp"
         android:layout_marginTop="37dp"
-        app:layout_constraintTop_toTopOf="@id/top_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/user_profile_iv"
+        android:layout_marginEnd="21dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-     />
-
-
+        app:layout_constraintBottom_toTopOf="@id/user_profile_iv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/top_bar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/item_comment" />
 
     <ImageView
         android:id="@+id/user_profile_iv"
         android:layout_width="50.57dp"
         android:layout_height="50.57dp"
         android:src="@drawable/basic_user_profile"
-        android:layout_marginTop="676dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginBottom="16.43dp"
         android:layout_marginStart="23dp"
-       app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintTop_toTopOf="@id/top_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/comment_et"
-        android:layout_width="283.19dp"
+        android:layout_width="0dp"
         android:layout_height="36.78dp"
         android:background="@drawable/diary_edit_text"
         android:hint="댓글 입력하기"
         android:textSize="20sp"
         android:paddingStart="18.39dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="8.28dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginTop="9.19dp"
+        app:layout_constraintEnd_toStartOf="@id/send_btn_iv"
         app:layout_constraintStart_toEndOf="@id/user_profile_iv"
         app:layout_constraintTop_toTopOf="@id/user_profile_iv"/>
 
@@ -68,50 +72,52 @@
         android:src="@drawable/send_ic"
         android:layout_marginTop="13dp"
         android:layout_marginStart="5dp"
+        android:layout_marginEnd="24.24dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/user_profile_iv"
         app:layout_constraintStart_toEndOf="@id/comment_et"/>
 
-<!--    기본화면-->
+    <!--    기본화면-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:visibility="visible"
         android:id="@+id/basic_comment_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_bar">
 
-    <ImageView
-        android:id="@+id/basic_comment_ic_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/basic_comment_ic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-       />
+        <ImageView
+            android:id="@+id/basic_comment_ic_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/basic_comment_ic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-    <ImageView
-        android:id="@+id/basic_comment1_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/basic_comment1"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/basic_comment_ic_iv"/>
+        <ImageView
+            android:id="@+id/basic_comment1_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/basic_comment1"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/basic_comment_ic_iv"/>
 
-    <ImageView
-        android:id="@+id/basic_comment2_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/basic_comment2"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/basic_comment1_iv"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/basic_comment2_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/basic_comment2"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/basic_comment1_iv"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <View

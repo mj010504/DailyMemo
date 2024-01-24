@@ -1,14 +1,13 @@
 package com.example.dailymemo.Service
 
 import android.util.Log
-import com.example.dailymemo.Auth.LoginFragment
 import com.example.dailymemo.Auth.LoginView
 import com.example.dailymemo.Auth.SearchingIdFragment
 import com.example.dailymemo.Auth.SignUpFragment
+import com.example.dailymemo.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 
 class LoginService {
 
@@ -60,6 +59,10 @@ class LoginService {
     fun isNicknameExist(id : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
+
+        loginService.isNicknameExist(id).enqueue(object : Callback<nicknameRepeatedResponse>{
+            override fun onResponse(call: Call<nicknameRepeatedResponse>, response: Response<nicknameRepeatedResponse> ) {
+
         val body : nicknameRepeatedRequest = nicknameRepeatedRequest(id);
         loginService.isNicknameExist(body).enqueue(object : Callback<nicknameRepeatedResponse>{
             override fun onResponse( call: Call<nicknameRepeatedResponse>,response: Response<nicknameRepeatedResponse> ) {
@@ -83,12 +86,28 @@ class LoginService {
     fun isEmailExist(email : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
+
+        loginService.isEmailExist(email).enqueue(object : Callback<emailRepeatedResponse>{
+            override fun onResponse(call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
+
         val body : emailRepeatedRequest = emailRepeatedRequest(email);
         loginService.isEmailExist(body).enqueue(object : Callback<emailRepeatedResponse>{
             override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
+
                 if(response.code()==200){
                     if(response.body()?.isExists == false){
                         signupView.checkEmailSuccess()
+
+
+                if(response.isSuccessful){
+                    if(response.code()==200){
+                        if(response.body()?.isExists == true){
+                            signupView.checkEmailSuccess()
+                        }
+                        else{
+
+                        }
+
                     }
                 }
             }

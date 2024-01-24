@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Setting.SettingFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/main_color">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/account_withdrawal_title_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/setting_title"
+            android:layout_marginTop="26.59dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/under_bar"
+            android:layout_width="0dp"
+            android:layout_height="1.5dp"
+            android:background="@color/sub_color"
+            android:layout_marginTop="18.79dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/account_withdrawal_title_iv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/account_withdrawal_layout"
+            android:layout_width="0dp"
+            android:layout_height="381dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginEnd="19dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/setting_layout"
+            app:layout_constraintTop_toTopOf="@id/under_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/account_withdrawal_tv"
+                android:layout_width="258dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="@string/account_withdrawal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <View
+            android:id="@+id/withdrawal_bar"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="59dp"
+            android:layout_marginEnd="59dp"
+            android:background="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/withdrawal_et"/>
+
+        <EditText
+            android:id="@+id/withdrawal_et"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_marginTop="100dp"
+            android:background="@color/main_color"
+            android:hint="입력"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/account_withdrawal_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/withdrawal_btn"
+            android:layout_width="0dp"
+            android:layout_height="86dp"
+            android:layout_marginStart="103dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="103dp"
+            android:background="@drawable/setting_layout"
+            android:text="탈퇴하기"
+            android:textColor="@color/half_black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/withdrawal_bar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+</androidx.core.widget.NestedScrollView>
