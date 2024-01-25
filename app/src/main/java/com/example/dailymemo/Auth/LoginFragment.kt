@@ -1,10 +1,13 @@
 package com.example.dailymemo.Auth
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
 import com.example.dailymemo.Service.LoginService
@@ -30,6 +33,31 @@ class LoginFragment : Fragment(),LoginView {
         }
         binding.loginfragSearchingIdTv.setOnClickListener{
             findNavController().navigate(R.id.searchingIdFragment)
+        }
+
+        binding.apply {
+            loginfragIdEt.addTextChangedListener (object: TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val inputText = s.toString()
+                    if(inputText.isNotEmpty()) {
+                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.withdrawal_btn_layout))
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+            })
         }
         // Inflate the layout for this fragment
         return binding.root

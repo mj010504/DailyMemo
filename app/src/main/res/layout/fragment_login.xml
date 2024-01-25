@@ -9,32 +9,36 @@
 
     <ImageView
         android:id="@+id/loginfrag_title_iv"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:src="@drawable/title_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/app_title_small_ic"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="200dp"/>
+        android:layout_marginTop="184.59dp"/>
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/loginfrag_id_et"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#E4E3DB"
+        android:background="@drawable/diary_edit_text"
+        android:paddingStart="22dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginfrag_title_iv"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="47.34dp"
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:layout_marginStart="19dp"
         android:layout_marginEnd="19dp"
         android:hint="아이디"/>
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/loginfrag_pw_et"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#E4E3DB"
+        android:background="@drawable/diary_edit_text"
+        android:paddingStart="22dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginfrag_id_et"
@@ -58,28 +62,64 @@
         app:layout_constraintTop_toBottomOf="@id/loginfrag_pw_et"
         android:layout_marginStart="19dp"
         android:layout_marginEnd="19dp"
-        android:background="#FF9900"/>
+        android:background="@drawable/login_btn_layout"/>
+
     <TextView
         android:id="@+id/loginfrag_searching_id_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="아이디 찾기    |   "
+        android:text="아이디 찾기"
+        android:textColor="@color/half_black"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginfrag_login_btn"
-        android:layout_marginStart="80dp"/>
+        android:layout_marginStart="71dp"/>
+
+<View
+    android:id="@+id/bar1"
+    android:layout_width="1dp"
+    android:layout_height="0dp"
+    android:background="@color/half_black"
+    android:layout_marginStart="19.49dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    app:layout_constraintStart_toEndOf="@id/loginfrag_searching_id_tv"
+    app:layout_constraintTop_toTopOf="@id/loginfrag_searching_id_tv"
+    app:layout_constraintBottom_toBottomOf="@id/loginfrag_searching_id_tv"/>
+
+
     <TextView
         android:id="@+id/loginfrag_searching_pw_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="비밀번호 찾기   |   "
-        app:layout_constraintStart_toEndOf="@id/loginfrag_searching_id_tv"
-        app:layout_constraintTop_toBottomOf="@id/loginfrag_login_btn"/>
+        android:text="비밀번호 찾기"
+        android:textColor="@color/half_black"
+        android:layout_marginStart="20.17dp"
+        app:layout_constraintStart_toEndOf="@id/bar1"
+        app:layout_constraintTop_toTopOf="@id/loginfrag_searching_id_tv"/>
+
+    <View
+        android:id="@+id/bar2"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/half_black"
+        android:layout_marginStart="19.49dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintStart_toEndOf="@id/loginfrag_searching_pw_tv"
+        app:layout_constraintTop_toTopOf="@id/loginfrag_searching_id_tv"
+        app:layout_constraintBottom_toBottomOf="@id/loginfrag_searching_id_tv"/>
+
+
     <TextView
         android:id="@+id/loginfrag_register_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="회원가입"
-        app:layout_constraintStart_toEndOf="@id/loginfrag_searching_pw_tv"
-        app:layout_constraintTop_toBottomOf="@id/loginfrag_login_btn"/>
+        android:layout_marginStart="18.23dp"
+        android:textColor="@color/half_black"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintStart_toEndOf="@id/bar2"
+        app:layout_constraintTop_toTopOf="@id/loginfrag_searching_id_tv"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

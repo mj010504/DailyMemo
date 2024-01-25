@@ -1,6 +1,8 @@
 package com.example.dailymemo.Auth
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +36,86 @@ class SignUpFragment : Fragment() {
 
         binding.signupRegisterBtn.setOnClickListener {
             register()
+        }
+
+        binding.apply {
+            signupIdTe.addTextChangedListener(object: TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val inputText = s.toString()
+                    if(inputText.isNotEmpty()) {
+                        signupIdchkBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+                    }
+                    else {
+                        signupIdchkBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+            })
+
+            signupEmailTe.addTextChangedListener(object: TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val inputText = s.toString()
+                    if(inputText.isNotEmpty()) {
+                        signupEmailBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+                    }
+                    else {
+                        signupEmailBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+            })
+
+            signupCertiTe.addTextChangedListener(object: TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val inputText = s.toString()
+                    if(inputText.isNotEmpty()) {
+                        signupCertiBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+                    }
+                    else {
+                        signupCertiBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+            })
         }
         // Inflate the layout for this fragment
         return binding.root
