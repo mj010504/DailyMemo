@@ -31,12 +31,51 @@ class LoginFragment : Fragment(),LoginView {
         binding.loginfragRegisterTv.setOnClickListener{
             findNavController().navigate(R.id.signUpFragment)
         }
-        binding.loginfragSearchingIdTv.setOnClickListener{
-            findNavController().navigate(R.id.searchingIdFragment)
+        binding.loginfragSearchingIdTv.setOnClickListener {
+            val searchingFragment = SearchingFragment(0)
+            binding.loginfragLoginBtn.visibility = View.GONE
+
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.login_fragment_view, searchingFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        binding.loginfragSearchingPwTv.setOnClickListener {
+            val searchingFragment = SearchingFragment(1)
+            binding.loginfragLoginBtn.visibility = View.GONE
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+            transaction.replace(R.id.login_fragment_view, searchingFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
         binding.apply {
             loginfragIdEt.addTextChangedListener (object: TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val inputText = s.toString()
+                    if(inputText.isNotEmpty()) {
+                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.withdrawal_btn_layout))
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+            })
+
+            binding.loginfragPwEt.addTextChangedListener (object: TextWatcher{
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,

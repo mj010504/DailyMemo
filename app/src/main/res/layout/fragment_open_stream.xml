@@ -40,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/searching_ic"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_marginTop="23.59dp"
         android:layout_marginEnd="24.49dp"
         app:layout_constraintEnd_toEndOf="parent"

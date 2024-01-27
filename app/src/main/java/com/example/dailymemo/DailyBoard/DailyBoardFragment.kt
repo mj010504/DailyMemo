@@ -199,8 +199,7 @@ class DailyBoardFragment : Fragment() {
                 streamChangeBtn.setBackgroundResource(R.drawable.menu_box_selected)
                 deleteBtn.visibility = INVISIBLE
                 streamRecyclerView.visibility = VISIBLE
-
-                val streamChangeRVAdpater = StreamChangeRVADapter()
+                val streamChangeRVAdpater = StreamChangeRVADapter(requireActivity())
                 streamRecyclerView.adapter = streamChangeRVAdpater
                 streamRecyclerView.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

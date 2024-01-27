@@ -9,6 +9,7 @@
         android:id="@+id/comment_modify_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -33,6 +34,7 @@
         android:id="@+id/delete_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintTop_toBottomOf="@id/comment_modify_btn"
         app:layout_constraintStart_toStartOf="parent">
 

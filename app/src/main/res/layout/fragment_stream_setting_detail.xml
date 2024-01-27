@@ -114,6 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/setting_ic"
+            android:foreground="?attr/selectableItemBackground"
             android:layout_marginEnd="-8dp"
             app:layout_constraintTop_toTopOf="@id/user_profile_iv"
             app:layout_constraintEnd_toEndOf="@id/user_profile_iv"/>

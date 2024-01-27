@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
 import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
@@ -39,6 +40,12 @@ class SignUpFragment : Fragment() {
         }
 
         binding.apply {
+            backIv.setOnClickListener {
+                val fragmentManager = getActivity()?.getSupportFragmentManager();
+                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.popBackStack();
+
+            }
             signupIdTe.addTextChangedListener(object: TextWatcher{
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -105,9 +112,11 @@ class SignUpFragment : Fragment() {
                     val inputText = s.toString()
                     if(inputText.isNotEmpty()) {
                         signupCertiBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+                        signupRegisterBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
                     }
                     else {
                         signupCertiBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
+                        signupRegisterBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
                     }
                 }
 

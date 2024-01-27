@@ -9,7 +9,10 @@
         android:id="@+id/loginFragment"
         android:name="com.example.dailymemo.Auth.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+
+    </fragment>
+
     <fragment
         android:id="@+id/searchingIdFragment"
         android:name="com.example.dailymemo.Auth.SearchingIdFragment"
@@ -85,10 +88,6 @@
         android:id="@+id/searchingIdFailedFragment"
         android:name="com.example.dailymemo.Auth.SearchingIdFailedFragment"
         android:label="SearchingIdFailedFragment" />
-    <activity
-        android:id="@+id/serachingActivity"
-        android:name="com.example.dailymemo.Auth.SerachingActivity"
-        android:label="SerachingActivity" />
     <fragment
         android:id="@+id/searchingIdSuccessFragment"
         android:name="com.example.dailymemo.Auth.SearchingIdSuccessFragment"
@@ -102,4 +101,10 @@
         android:id="@+id/streamSettingDetailFragment"
         android:name="com.example.dailymemo.Setting.StreamSetting.StreamSettingDetailFragment"
         android:label="StreamSettingDetailFragment" />
+    <fragment
+        android:id="@+id/searchingFragment"
+        android:name="com.example.dailymemo.Auth.SearchingFragment"
+        android:label="SearchingFragment">
+
+    </fragment>
 </navigation>

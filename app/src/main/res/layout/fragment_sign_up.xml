@@ -7,8 +7,19 @@
     tools:context=".Auth.SignUpFragment"
     android:background="#F0EFEA">
 
+    <ImageView
+        android:id="@+id/back_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_ic"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20.59dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
+
+    <ImageView
             android:id="@+id/signup_title_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,24 +39,26 @@
             app:layout_constraintTop_toBottomOf="@id/signup_title_iv"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="25dp"/>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/signup_idchk_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="19dp"
-            android:layout_marginStart="7dp"
-            app:layout_constraintStart_toEndOf="@id/signup_id_te"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/signup_title_iv"
-            android:text="중복확인"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:background="@drawable/point_color_25_5_btn_layout"
-            android:layout_marginTop="37dp"/>
-        <com.google.android.material.textfield.TextInputEditText
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signup_idchk_btn"
+        android:layout_width="89dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="19dp"
+        android:background="@drawable/point_color_25_5_btn_layout"
+        android:text="중복확인"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/signup_id_te"
+        app:layout_constraintTop_toBottomOf="@id/signup_title_iv" />
+
+    <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_id_te"
-            android:layout_width="230dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:paddingStart="15dp"
             android:layout_marginStart="17dp"
@@ -62,9 +75,9 @@
             android:text="영문 소문자와 숫자만 사용하여, 4~12자의 아이디를 입력해주세요."
             android:textAlignment="center"
             android:textColor="@color/point_color"
-            android:layout_marginStart="-3dp"
+            android:layout_marginEnd="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signup_idchk_btn"
-            app:layout_constraintStart_toStartOf="@id/signup_id_te"
             android:textSize="10sp"
             android:layout_marginTop="4dp"/>
 "
@@ -125,9 +138,10 @@
             android:textColor="@color/point_color"
             android:textSize="10sp"
             android:layout_marginTop="4dp"
-        android:layout_marginStart="-6dp"
+            android:layout_marginEnd="27dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signup_pwchk_te"
-            app:layout_constraintStart_toStartOf="@id/signup_pwchk_te"/>
+         />
         <TextView
             android:id="@+id/signup_name_tv"
             android:layout_width="wrap_content"
@@ -166,7 +180,7 @@
             android:textSize="15sp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_email_btn"
-            android:layout_width="0dp"
+            android:layout_width="89dp"
             android:layout_height="42dp"
             android:background="@drawable/point_color_25_5_btn_layout"
             android:text="인증전송"
@@ -180,7 +194,7 @@
             app:layout_constraintTop_toTopOf="@id/signup_email_te" />
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_email_te"
-            android:layout_width="220dp"
+            android:layout_width="0dp"
             android:layout_height="42dp"
             android:hint="본인 명의의 이메일"
             android:paddingStart="15dp"
@@ -199,8 +213,8 @@
             android:textSize="10sp"
             android:textColor="@color/point_color"
             android:textAlignment="center"
-            android:layout_marginStart="-6dp"
-            app:layout_constraintStart_toStartOf="@id/signup_email_te"
+            android:layout_marginEnd="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signup_email_te"
             android:layout_marginTop="4dp"/>
         <TextView
@@ -215,7 +229,7 @@
             android:layout_marginTop="45dp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_certi_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="89dp"
             android:layout_height="42dp"
             android:text="확인"
             android:textStyle="bold"
@@ -230,7 +244,7 @@
            />
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_certi_te"
-            android:layout_width="220dp"
+            android:layout_width="0dp"
             android:layout_height="42dp"
             android:paddingStart="17dp"
             android:layout_marginStart="19dp"

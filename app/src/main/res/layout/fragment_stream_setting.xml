@@ -114,6 +114,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/setting_ic"
                 android:layout_marginStart="9dp"
+                android:foreground="?attr/selectableItemBackground"
                 app:layout_constraintStart_toEndOf="@id/nickname_view"
                 app:layout_constraintTop_toTopOf="@id/nickname_view"
                 app:layout_constraintBottom_toBottomOf="@id/nickname_view"
