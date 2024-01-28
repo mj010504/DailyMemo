@@ -11,6 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
 import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.databinding.FragmentLoginBinding
 
 
@@ -65,7 +66,7 @@ class LoginFragment : Fragment(),LoginView {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     val inputText = s.toString()
                     if(inputText.isNotEmpty()) {
-                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.withdrawal_btn_layout))
+                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
                     }
                 }
 
@@ -88,7 +89,10 @@ class LoginFragment : Fragment(),LoginView {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     val inputText = s.toString()
                     if(inputText.isNotEmpty()) {
-                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.withdrawal_btn_layout))
+                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+                    }
+                    else {
+                        loginfragLoginBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
                     }
                 }
 
@@ -114,6 +118,11 @@ class LoginFragment : Fragment(),LoginView {
 
     override fun loginSuccess(){
         findNavController().navigate(R.id.openStreamFragment)
+    }
+
+    override fun loginFailed() {
+        val dialog = SampleDialog(requireContext(), "아이디 또는 비밀번호가 잘못되었습니다.")
+        dialog.show()
     }
 
 }

@@ -10,18 +10,19 @@ import android.view.WindowManager
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.DialogAutoIndexBinding
 import com.example.dailymemo.databinding.DialogBuyResultBinding
+import com.example.dailymemo.databinding.DialogSampleBinding
 
 class SampleDialog(context: Context, description : String) : Dialog(context) {
-    lateinit var binding: DialogBuyResultBinding
+    lateinit var binding: DialogSampleBinding
 
     var text = description
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DialogBuyResultBinding.inflate(LayoutInflater.from(context))
+        binding = DialogSampleBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
-        resize(this, 0.7f, 0.17f )
+        resize(this, 0.7f, 0.2f )
 
         window?.setBackgroundDrawableResource(R.drawable.white_dialog_layout)
 

@@ -38,7 +38,7 @@
             android:layout_marginTop="50dp"
             app:layout_constraintTop_toBottomOf="@id/signup_title_iv"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="25dp"/>
+            android:layout_marginStart="27dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signup_idchk_btn"
@@ -59,15 +59,17 @@
     <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_id_te"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="42dp"
             android:paddingStart="15dp"
             android:layout_marginStart="17dp"
             android:background="@drawable/setting_layout"
             app:layout_constraintStart_toEndOf="@id/signup_id_tv"
             app:layout_constraintEnd_toStartOf="@id/signup_idchk_btn"
-            app:layout_constraintTop_toBottomOf="@id/signup_title_iv"
+            app:layout_constraintTop_toTopOf="@id/signup_id_tv"
+        app:layout_constraintBottom_toBottomOf="@id/signup_id_tv"
             android:hint="아이디 입력"
-            android:layout_marginTop="37dp"/>
+            android:textSize="15sp"
+           />
         <TextView
             android:id="@+id/signup_idwarn_tv"
             android:layout_width="wrap_content"
@@ -95,9 +97,11 @@
             app:layout_constraintStart_toStartOf="parent"/>
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_pw_te"
+            android:inputType="textPassword"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:paddingStart="17dp"
+            android:textSize="15sp"
             android:background="@drawable/setting_layout"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="19dp"
@@ -119,9 +123,11 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/signup_pwchk_te"
+        android:inputType="textPassword"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="4dp"
+        android:textSize="15sp"
         android:background="@drawable/setting_layout"
         android:hint="새 비밀번호 입력 확인"
         android:paddingStart="17dp"
@@ -159,6 +165,7 @@
             android:layout_height="42dp"
             android:hint="이름 입력"
             android:paddingStart="15dp"
+            android:textSize="15sp"
             android:layout_marginStart="29dp"
             android:layout_marginEnd="19dp"
             android:background="@drawable/setting_layout"
@@ -180,7 +187,7 @@
             android:textSize="15sp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_email_btn"
-            android:layout_width="89dp"
+            android:layout_width="86dp"
             android:layout_height="42dp"
             android:background="@drawable/point_color_25_5_btn_layout"
             android:text="인증전송"
@@ -198,6 +205,7 @@
             android:layout_height="42dp"
             android:hint="본인 명의의 이메일"
             android:paddingStart="15dp"
+            android:textSize="15sp"
             android:background="@drawable/setting_layout"
             app:layout_constraintStart_toStartOf="@id/signup_name_te"
             app:layout_constraintTop_toBottomOf="@id/signup_name_te"
@@ -229,7 +237,7 @@
             android:layout_marginTop="45dp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_certi_btn"
-            android:layout_width="89dp"
+            android:layout_width="85dp"
             android:layout_height="42dp"
             android:text="확인"
             android:textStyle="bold"
@@ -247,12 +255,13 @@
             android:layout_width="0dp"
             android:layout_height="42dp"
             android:paddingStart="17dp"
-            android:layout_marginStart="19dp"
+            android:layout_marginStart="15dp"
             android:background="@drawable/setting_layout"
             app:layout_constraintStart_toEndOf="@id/signup_certi_tv"
             app:layout_constraintTop_toBottomOf="@id/signup_email_te"
             app:layout_constraintEnd_toStartOf="@id/signup_certi_btn"
             android:layout_marginTop="35dp"
+            android:textSize="15sp"
             android:hint="인증번호 입력"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_register_btn"

@@ -9,14 +9,17 @@ import com.example.dailymemo.R
 import com.example.dailymemo.databinding.FragmentSearchingIdBinding
 import com.example.dailymemo.databinding.FragmentSearchingIdSuccessBinding
 
-class SearchingIdSuccessFragment : Fragment() {
+class SearchingIdSuccessFragment(result : String) : Fragment() {
 
     lateinit var binding : FragmentSearchingIdSuccessBinding
+    val id = result
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
 
         binding = FragmentSearchingIdSuccessBinding.inflate(inflater,container,false)
 
@@ -24,6 +27,8 @@ class SearchingIdSuccessFragment : Fragment() {
             checkBtn.setOnClickListener {
                 moveToFragment(SearchingIdFragment())
             }
+
+            searchingIdSuccessResultTv.text = id
         }
         return binding.root
     }

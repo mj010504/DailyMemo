@@ -16,13 +16,17 @@ interface LoginRetrofitInterface {
     fun login(@Body loginRequest: LoginRequest) : Call<LoginResponse>
 
     @POST("verification/nickname-exists")
-    fun isNicknameExist(@Body nickname : nicknameRepeatedRequest) : Call<nicknameRepeatedResponse>
+    fun isNicknameExist(@Body nickName : String) : Call<nicknameRepeatedResponse>
 
     @POST("verification/email-exists")
-    fun isEmailExist(@Body email : emailRepeatedRequest) : Call<emailRepeatedResponse>
+    fun isEmailExist(@Body email : String) : Call<emailRepeatedResponse>
 
     @POST("verification/email-verification-request")
-    fun emailVerificationRequest(@Body emailVerifyRequest: EmailVerifyRequest) : Call<EmailVerifyResponse>
+    fun emailVerificationRequest(@Body email: String) : Call<EmailVerifyResponse>
+
+    @POST("verification/verify-email")
+    fun verifyEmail(@Body verifyRequest: verifyRequest) : Call<verifyEmailResponse>
+
 
     @POST("users/findmyid")
     fun searchingIDRequest(@Body searchingIDRequest: searchingIDRequest) : Call<searchingIDResponse>

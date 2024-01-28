@@ -2,6 +2,7 @@ package com.example.dailymemo.Auth
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,26 +12,34 @@ import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.DailyBoard.DailyBoardFragment
 import com.example.dailymemo.R
 import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.databinding.FragmentSearchingBinding
 import com.example.dailymemo.databinding.FragmentSearchingIdBinding
 
 
-class SearchingIdFragment : Fragment() {
+class SearchingIdFragment : Fragment(), SearchingIDView {
 
     lateinit var binding : FragmentSearchingIdBinding
+    lateinit var emailToken : String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         val searchingBinding = FragmentSearchingBinding.inflate(inflater,container,false)
+
         binding = FragmentSearchingIdBinding.inflate(inflater)
-        binding.searchingIdCertiBtn.setOnClickListener{
-            searchID()
-        }
+
 
         binding.apply {
-            searchingIdCertiTv.setOnClickListener {
-               moveToFragment(SearchingIdSuccessFragment())
+            searchingIdTelephoneBtn.setOnClickListener {
+                checkEmail()
+            }
+
+            searchingIdCertiBtn.setOnClickListener {
+                verify()
+            }
+
+            serachingIdBtn.setOnClickListener {
+                searchID()
             }
         }
 
@@ -92,14 +101,15 @@ class SearchingIdFragment : Fragment() {
 
 
     fun searchID(){
-        val loginService: LoginService = LoginService()
+        val loginService= LoginService()
         loginService.setSearchingIdView(this)
+        val name = binding.searchingIdNameTe.text.toString()
+        val email = binding.searchingIdTelephoneTe.text.toString()
 
-//        loginService.searchingId(email_verify_token)
+     loginService.searchingId(name, email, emailToken)
     }
 
-    fun success(){
-    }
+
 
     private fun moveToFragment(fragment: Fragment) {
         val newFragment = fragment
@@ -108,4 +118,72 @@ class SearchingIdFragment : Fragment() {
             .replace(R.id.searchingIdLayout, newFragment)
             .commit()
     }
+
+    override fun searchingIdSuccess(id : String) {
+        moveToFragment(SearchingIdSuccessFragment(id))
+    }
+
+    override fun searchingIdFailed() {
+        moveToFragment(SearchingIdFailedFragment())
+    }
+
+    override fun isEmailSuccess() {
+        val dialog = SampleDialog(requireContext(), "인증번호를\n발송하였습니다.")
+        dialog.show()
+        emailVerificationRequest()
+    }
+
+    override fun isEmailFailed() {
+        val dialog = SampleDialog(requireContext(), "존재하지 않는 이메일 주소입니다.")
+        dialog.show()
+    }
+
+    override fun emailVerifySuccess(token: String, code: String) {
+        emailToken = token
+        binding.searchingIdCertiTe.text = code.toEditable()
+    }
+
+    fun String.toEditable(): Editable {
+        return SpannableStringBuilder(this)
+    }
+
+    override fun emailVerifyFailed() {
+        val dialog = SampleDialog(requireContext(), "인증 요청에 실패했습니다.")
+        dialog.show()
+    }
+    fun checkEmail() {
+        val loginService= LoginService()
+        loginService.setSearchingIdView(this)
+
+        val email_input = binding.searchingIdTelephoneTe.text.toString()
+        loginService.searchingIdIsEmailExist(email_input)
+    }
+
+    fun emailVerificationRequest(){
+        val loginService = LoginService()
+        loginService.setSearchingIdView(this)
+
+        val email_input = binding.searchingIdTelephoneTe.text.toString()
+        loginService.searchingIdEmailVerificationRequest(email_input)
+    }
+
+    override fun verifySuccess() {
+        val dialog = SampleDialog(requireContext(), "인증번호가 확인되었습니다.")
+        dialog.show()
+        binding.serachingIdBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+    }
+
+    override fun verifyFailed() {
+        val dialog = SampleDialog(requireContext(), "인증번호가 올바르지\n않습니다.")
+        dialog.show()
+    }
+
+    private fun verify() {
+        val loginService = LoginService()
+        loginService.setSearchingIdView(this)
+
+        loginService.searchingIdVerifyEmail(emailToken, binding.searchingIdCertiTe.text.toString())
+    }
+
+
 }

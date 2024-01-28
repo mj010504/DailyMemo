@@ -2,32 +2,33 @@ package com.example.dailymemo.Service
 
 import android.util.Log
 import com.example.dailymemo.Auth.LoginView
+import com.example.dailymemo.Auth.SearchingIDView
 import com.example.dailymemo.Auth.SearchingIdFragment
 import com.example.dailymemo.Auth.SignUpFragment
 import com.example.dailymemo.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.sign
 
 class LoginService {
 
-    lateinit var loginView : LoginView
+    private lateinit var loginView : LoginView
 
-    lateinit var signupView : SignUpFragment
+    private lateinit var signupView : SignUpView
 
-    lateinit var searchingIDView : SearchingIdFragment
+    private lateinit var searchingIDView : SearchingIDView
 
-    @JvmName("setLoginView2")
+
     fun setLoginView(loginView: LoginView){
         this.loginView = loginView
     }
 
-    @JvmName("setSignupView2")
-    fun setSignupView(signupView : SignUpFragment){
+
+    fun setSignupView(signupView : SignUpView){
         this.signupView = signupView
     }
 
-    @JvmName("setSearchingIdView2")
     fun setSearchingIdView(searchingIdView: SearchingIdFragment){
         this.searchingIDView = searchingIdView
     }
@@ -40,41 +41,34 @@ class LoginService {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 Log.i("LoginService", response.toString())
                 if(response.code() == 200){
-                    Log.i("LoginService","로그인 성공")
                     loginView.loginSuccess()
                 }
-                else if(response.code() == 400){
-                    Log.i("LoginService", "유효하지않은 응답")
-                }
-                else if(response.code() == 401){
-                    Log.i("LoginService", "아이디 또는 비밀번호가 맞지 않음")
+                else {
+                    loginView.loginFailed()
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Log.i("LoginService", "통신상태 확인")
+
             }
         })
     }
     fun isNicknameExist(id : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-        val body : nicknameRepeatedRequest = nicknameRepeatedRequest(id);
-        loginService.isNicknameExist(body).enqueue(object : Callback<nicknameRepeatedResponse>{
+        loginService.isNicknameExist(id).enqueue(object : Callback<nicknameRepeatedResponse>{
             override fun onResponse( call: Call<nicknameRepeatedResponse>,response: Response<nicknameRepeatedResponse> ) {
-                Log.i("CheckIDService",response.code().toString())
                 if(response.code() == 200){
-                    if(response.body()?.result!!.isExists == true){
-
+                    if(response.body()?.result!!.exsists == false){
+                        signupView.isNickNameSuccess()
                     }
                     else{
-                        signupView.chkName = true
-                        Log.i("CheckIDService","사용가능한 아이디 입니다.")
+                        signupView.isNickNameFailed()
                     }
                 }
             }
             override fun onFailure(call: Call<nicknameRepeatedResponse>, t: Throwable) {
-
+                Log.d("failed", "404 nickName")
             }
         })
     }
@@ -82,16 +76,15 @@ class LoginService {
     fun isEmailExist(email : String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-        val body : emailRepeatedRequest = emailRepeatedRequest(email);
-        loginService.isEmailExist(body).enqueue(object : Callback<emailRepeatedResponse>{
+        loginService.isEmailExist(email).enqueue(object : Callback<emailRepeatedResponse>{
             override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
 
                 if(response.code()==200) {
                     if (response.body()?.isExists == false) {
-                        signupView.checkEmailSuccess()
+                        signupView.isEmailSuccess()
                     }
                     else{
-
+                        signupView.isEmailFailed()
                     }
                 }
             }
@@ -102,86 +95,161 @@ class LoginService {
         })
     }
 
+    fun searchingIdIsEmailExist(email : String){
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        loginService.isEmailExist(email).enqueue(object : Callback<emailRepeatedResponse>{
+            override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
+
+                if(response.code()==200) {
+                    if (response.body()?.isExists == false) {
+                        searchingIDView.isEmailSuccess()
+                    }
+                    else{
+                        searchingIDView.isEmailFailed()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<emailRepeatedResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+
+    // 이메일 인증 요청
     fun emailVerificationRequest(email: String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-        val body: EmailVerifyRequest = EmailVerifyRequest(email)
-        loginService.emailVerificationRequest(body).enqueue(object : Callback<EmailVerifyResponse>{
+        loginService.emailVerificationRequest(email).enqueue(object : Callback<EmailVerifyResponse>{
             override fun onResponse(
                 call: Call<EmailVerifyResponse>,
                 response: Response<EmailVerifyResponse>
             ) {
-                Log.i("EmailVerificationService","성공")
                 if(response.code() == 200){
-                    Log.i("EmailVerificationService","메일을 성공적으로 전송했습니다.")
-                    signupView.emailVerificationSuccess(response.body()!!.result.token)
+                    signupView.emailVerifySuccess(response.body()!!.result!!.token, response.body()!!.result!!.code)
                 }
-                else if(response.code() == 400){
-                    Log.i("EmailVerficationService","메일 전송에 실패했습니다.")
+                else {
+                    signupView.emailVerifyFailed()
                 }
             }
 
             override fun onFailure(call: Call<EmailVerifyResponse>, t: Throwable) {
-                Log.i("EmailVerificationService","err:(${t.message})")
+
             }
         })
     }
 
-    fun resigster(email_verify_token: String){
+    fun searchingIdEmailVerificationRequest(email: String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-        val id: String = signupView.binding.signupIdTe.text.toString()
-        val nickName: String = signupView.binding.signupNameTe.text.toString()
-        val pw: String = signupView.binding.signupPwTe.text.toString()
-        val tele: String = "01057585744"
-        val email: String = signupView.binding.signupEmailTe.text.toString()
-        val image_encoded: String = ""
+        loginService.emailVerificationRequest(email).enqueue(object : Callback<EmailVerifyResponse>{
+            override fun onResponse(
+                call: Call<EmailVerifyResponse>,
+                response: Response<EmailVerifyResponse>
+            ) {
+                if(response.code() == 200){
+                    searchingIDView.emailVerifySuccess(response.body()!!.result!!.token, response.body()!!.result!!.code)
+                }
+                else {
+                    searchingIDView.emailVerifyFailed()
+                }
+            }
 
-        val body : RegisterRequest = RegisterRequest(nickName,id,pw,tele,email, email_verify_token)
-        Log.i("RegisterService",body.toString())
-        loginService.register(body).enqueue(object : Callback<RegisterResponse>{
+            override fun onFailure(call: Call<EmailVerifyResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+
+    fun verifyEmail(token : String, code : String) {
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+        val verifyRequest = verifyRequest(token, code)
+        loginService.verifyEmail(verifyRequest).enqueue(object : Callback<verifyEmailResponse> {
+            override fun onResponse(
+                call: Call<verifyEmailResponse>,
+                response: Response<verifyEmailResponse>
+            ) {
+                if(response.code() == 200){
+                    signupView.verifySuccess()
+                }
+                else {
+                    signupView.verifyFailed()
+                }
+            }
+
+            override fun onFailure(call: Call<verifyEmailResponse>, t: Throwable) {
+
+            }
+
+
+        })
+    }
+
+    fun searchingIdVerifyEmail(token : String, code : String) {
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+        val verifyRequest = verifyRequest(token, code)
+        loginService.verifyEmail(verifyRequest).enqueue(object : Callback<verifyEmailResponse> {
+            override fun onResponse(
+                call: Call<verifyEmailResponse>,
+                response: Response<verifyEmailResponse>
+            ) {
+                if(response.code() == 200){
+                    searchingIDView.verifySuccess()
+                }
+                else {
+                    searchingIDView.verifyFailed()
+                }
+            }
+
+            override fun onFailure(call: Call<verifyEmailResponse>, t: Throwable) {
+
+            }
+
+
+        })
+    }
+
+    fun resigster(name : String,  nickName: String, password : String, phoneNumber : String, email : String, emailVerificationToken : String) {
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        val registerRequest = RegisterRequest(name, nickName, password, phoneNumber, email, emailVerificationToken)
+        loginService.register(registerRequest).enqueue(object: Callback<RegisterResponse>{
             override fun onResponse(
                 call: Call<RegisterResponse>,
                 response: Response<RegisterResponse>
             ) {
-                Log.i("RegisterService", response.code().toString())
-                if(response.code() == 200){
+                if(response.code() == 200) {
                     signupView.registerSuccess()
-                    Log.i("RegisterService","회원가입 성공")
                 }
-                if(response.code() == 400){
-                    Log.i("ResgisterService",response.message())
-                    if(response.body() != null)
-                        Log.i("RegisterService", response.body()!!.result.toString())
+                else {
+                    signupView.registerFailed()
                 }
             }
+
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                Log.i("RegisterService","err:${t.message}")
+
             }
+
         })
     }
 
-    fun searchingId(email_verify_token: String){
+        fun searchingId(name: String, email : String, emailVerificationToken: String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-        val name:String = searchingIDView.binding.searchingIdNameTe.text.toString()
-        val email:String = ""
-
-        val body : searchingIDRequest = searchingIDRequest(name, email, email_verify_token)
+        val body = searchingIDRequest(name, email, emailVerificationToken)
         loginService.searchingIDRequest(body).enqueue(object : Callback<searchingIDResponse>{
             override fun onResponse(
                 call: Call<searchingIDResponse>,
                 response: Response<searchingIDResponse>
             ) {
-                Log.i("SearchingIDService",response.code().toString())
-                if(response.code()==404){
-                    Log.i("SearchingIDService","사용자를 찾을 수 없음")
+                if(response.code() == 200) {
+                    searchingIDView.searchingIdSuccess(response.body()!!.result.nickName!!)
                 }
-                else if(response.code()==200){
-                    Log.i("SearchingIDService", "사용자를 찾았습니다.")
-                }
-                else if(response.code()==400){
-                    Log.i("SearchingIDService", "유효한 요청이 아님")
+                else {
+                    searchingIDView.searchingIdFailed()
                 }
             }
 

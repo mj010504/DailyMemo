@@ -9,11 +9,7 @@ class SearchingVPAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {
         return when(position) {
             0 -> SearchingIdFragment()
-            1 -> SearchingPasswordFragment()
-            2 -> SearchingIdSuccessFragment()
-            3 -> SearchingIdFailedFragment()
-            4 -> SearchingPasswordInputFragment()
-            else -> SearchingPasswordResetFragment()
+            else -> SearchingPasswordFragment()
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.MyStream.Dialog.AccountWithdrawalCheckDialog
 import com.example.dailymemo.R
 import com.example.dailymemo.Setting.Dialog.DeleteFailureDialog
+import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentAccountWithdrawalBinding
 
 
@@ -65,6 +66,14 @@ class AccountWithdrawalFragment : Fragment() {
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 
         binding.apply {
+
+            backIv.setOnClickListener {
+                val fragmentManager = getActivity()?.getSupportFragmentManager();
+                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.popBackStack();
+
+            }
+
             withdrawalEt.addTextChangedListener(object: TextWatcher{
                 override fun beforeTextChanged(
                     s: CharSequence?,

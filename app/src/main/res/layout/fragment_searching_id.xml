@@ -51,7 +51,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/searching_id_telephone_btn"
-            android:layout_width="89dp"
+            android:layout_width="85dp"
             android:layout_height="42dp"
             android:layout_marginStart="7dp"
             android:layout_marginTop="20dp"
@@ -90,7 +90,7 @@
             android:layout_marginTop="36dp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/searching_id_certi_btn"
-            android:layout_width="89dp"
+            android:layout_width="85dp"
             android:layout_height="42dp"
             android:text="확인"
             android:textSize="15sp"
@@ -115,6 +115,22 @@
             app:layout_constraintBottom_toBottomOf="@id/searching_id_certi_tv"
             app:layout_constraintEnd_toStartOf="@id/searching_id_certi_btn"
             />
+        
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/seraching_id_btn"
+            android:layout_width="0dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginEnd="19dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searching_id_certi_btn"
+            android:background="@drawable/point_color_25_5_btn_layout"
+            android:text="아이디 찾기"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

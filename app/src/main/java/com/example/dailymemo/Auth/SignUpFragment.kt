@@ -2,24 +2,27 @@ package com.example.dailymemo.Auth
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
 import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.Service.SignUpView
+import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentSignUpBinding
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(),SignUpView {
 
-    private var email_verify_token: String = ""
+    private lateinit var binding: FragmentSignUpBinding
 
-    lateinit var binding: FragmentSignUpBinding
-
-    var chkName: Boolean = false
+    private lateinit var emailToken : String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,12 +30,17 @@ class SignUpFragment : Fragment() {
     ): View? {
         binding = FragmentSignUpBinding.inflate(inflater)
 
+
         binding.signupIdchkBtn.setOnClickListener {
             checkNickname()
         }
 
         binding.signupEmailBtn.setOnClickListener {
             checkEmail()
+        }
+
+        binding.signupCertiBtn.setOnClickListener {
+            verify()
         }
 
         binding.signupRegisterBtn.setOnClickListener {
@@ -131,7 +139,7 @@ class SignUpFragment : Fragment() {
     }
 
     fun checkNickname() {
-        val loginService: LoginService = LoginService()
+        val loginService = LoginService()
         loginService.setSignupView(this)
 
         val nickname_input = binding.signupIdTe.text.toString()
@@ -139,7 +147,7 @@ class SignUpFragment : Fragment() {
     }
 
     fun checkEmail() {
-        val loginService: LoginService = LoginService()
+        val loginService= LoginService()
         loginService.setSignupView(this)
 
         val email_input = binding.signupEmailTe.text.toString()
@@ -147,31 +155,87 @@ class SignUpFragment : Fragment() {
     }
 
 
-    fun checkEmailSuccess(){
-        emailVerificationRequest()
-    }
 
     fun emailVerificationRequest(){
-        val loginService: LoginService = LoginService()
+        val loginService = LoginService()
         loginService.setSignupView(this)
 
         val email_input = binding.signupEmailTe.text.toString()
         loginService.emailVerificationRequest(email_input)
     }
 
-    fun emailVerificationSuccess(token : String){
-        this.email_verify_token = token
+    private fun verify() {
+        val loginService = LoginService()
+        loginService.setSignupView(this)
+
+        loginService.verifyEmail(emailToken, binding.signupCertiTe.text.toString())
     }
 
     fun register() {
-        val loginService: LoginService = LoginService()
+        val loginService = LoginService()
         loginService.setSignupView(this)
-
-        loginService.resigster(email_verify_token)
+            val name = binding.signupNameTe.text.toString()
+            val email = binding.signupEmailTe.text.toString()
+            val nickName = binding.signupIdTe.text.toString()
+            val phoneNumber = "01012341234"
+            val password = binding.signupPwTe.text.toString()
+        loginService.resigster(name, nickName, password, phoneNumber, email, emailToken)
     }
 
-    fun registerSuccess() {
+    override fun registerSuccess() {
         findNavController().navigate(R.id.loginFragment)
+        val dialog = SampleDialog(requireContext(), "회원가입이 완료되었습니다!")
+        dialog.show()
+    }
+
+    override fun registerFailed() {
+        val dialog = SampleDialog(requireContext(), "회원가입에 실패하였습니다.")
+        dialog.show()
+    }
+
+    override fun isNickNameSuccess() {
+        val dialog = SampleDialog(requireContext(), "사용가능한 아이디입니다.")
+        dialog.show()
+    }
+
+    override fun isNickNameFailed() {
+        val dialog = SampleDialog(requireContext(), "사용중인 아이디입니다.")
+        dialog.show()
+    }
+
+    override fun isEmailSuccess() {
+        val dialog = SampleDialog(requireContext(), "인증번호를\n발송하였습니다.")
+        dialog.show()
+        emailVerificationRequest()
+    }
+
+    override fun isEmailFailed() {
+        val dialog = SampleDialog(requireContext(), "존재하지 않는 이메일 주소입니다.")
+        dialog.show()
+    }
+
+    override fun emailVerifySuccess(token: String, code: String) {
+        emailToken = token
+        binding.signupCertiTe.text = code.toEditable()
+    }
+
+    fun String.toEditable(): Editable {
+        return SpannableStringBuilder(this)
+    }
+
+    override fun emailVerifyFailed() {
+        val dialog = SampleDialog(requireContext(), "인증 요청에 실패했습니다.")
+        dialog.show()
+    }
+
+    override fun verifySuccess() {
+        val dialog = SampleDialog(requireContext(), "인증번호가 확인되었습니다.")
+        dialog.show()
+    }
+
+    override fun verifyFailed() {
+        val dialog = SampleDialog(requireContext(), "인증번호가 올바르지\n않습니다.")
+        dialog.show()
     }
 
 
