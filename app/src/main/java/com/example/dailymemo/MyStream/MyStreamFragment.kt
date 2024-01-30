@@ -120,7 +120,7 @@ class MyStreamFragment : Fragment() {
         popupWindow.elevation = resources.getDimension(R.dimen.popup_card_elevation)
 
         val recyclerView = customMenuView.findViewById<RecyclerView>(R.id.stream_setting_rv)
-        val streamSettingRVAdapter = StreamSettingRVAdapter()
+        val streamSettingRVAdapter = StreamSettingRVAdapter(requireActivity())
         recyclerView.adapter = streamSettingRVAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

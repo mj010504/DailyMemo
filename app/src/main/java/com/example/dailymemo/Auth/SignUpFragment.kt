@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.fragment.findNavController
@@ -125,6 +126,42 @@ class SignUpFragment : Fragment(),SignUpView {
                     else {
                         signupCertiBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
                         signupRegisterBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+            })
+
+            signupPwchkTe.addTextChangedListener(object: TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val pwText = signupPwTe.text.toString()
+                    val pwchkText = signupPwchkTe.text.toString()
+
+                    if(pwchkText.isNotEmpty()) {
+                        signupPwwarnTv.visibility = INVISIBLE
+                        signupPwMessageTv.visibility = VISIBLE
+                        if(pwchkText != pwText) {
+                            signupPwMessageTv.text = "비밀번호가 일치하지 않습니다."
+                        }
+                        else {
+                            signupPwMessageTv.text = "비밀번호가 일치합니다."
+                        }
+                    }
+                    else {
+                        signupPwwarnTv.visibility = VISIBLE
+                        signupPwMessageTv.visibility = INVISIBLE
                     }
                 }
 

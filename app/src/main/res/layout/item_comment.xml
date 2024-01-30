@@ -6,7 +6,7 @@
     android:id="@+id/rootView"
     android:layout_marginBottom="20dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_profile_iv"
         android:layout_width="70dp"
         android:layout_height="52dp"
@@ -34,6 +34,13 @@
         app:layout_constraintTop_toBottomOf="@id/user_nickname_tv"
         app:layout_constraintStart_toStartOf="@id/user_nickname_tv"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menu_bar_layout"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/user_nickname_tv">
+
     <ImageView
         android:id="@+id/menu_bar_iv"
         android:layout_width="wrap_content"
@@ -41,7 +48,9 @@
         android:src="@drawable/menu_bar_ic"
         android:foreground="?attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/user_nickname_tv"/>
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/under_bar"

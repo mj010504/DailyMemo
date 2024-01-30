@@ -36,6 +36,7 @@ class MyStreamRVAdapter : RecyclerView.Adapter<MyStreamRVAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: MyStreamRVAdapter.ViewHolder, position: Int) {
         holder.bind(position)
         holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick() }
+        holder.binding.menuBarLayout.setOnClickListener { mitemClickListener.onMenuClick() }
     }
 
     override fun getItemCount(): Int = 4

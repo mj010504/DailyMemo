@@ -1,10 +1,13 @@
     package com.example.dailymemo.WatchStream.Comment
 
+    import android.app.Activity
+    import android.app.Dialog
     import android.content.Context
     import android.graphics.Color
     import android.graphics.Rect
     import android.graphics.drawable.ColorDrawable
     import android.os.Bundle
+    import android.util.DisplayMetrics
     import android.view.Gravity
     import androidx.fragment.app.Fragment
     import android.view.LayoutInflater
@@ -15,6 +18,7 @@
     import android.view.WindowManager
     import android.view.inputmethod.InputMethodManager
     import android.widget.EditText
+    import android.widget.FrameLayout
     import android.widget.ImageView
     import android.widget.PopupWindow
     import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +26,8 @@
     import androidx.recyclerview.widget.LinearLayoutManager
     import androidx.recyclerview.widget.PagerSnapHelper
     import androidx.recyclerview.widget.RecyclerView
+    import com.bumptech.glide.Glide
+    import com.bumptech.glide.load.engine.DiskCacheStrategy
     import com.example.dailymemo.R
     import com.example.dailymemo.Setting.StreamSetting.StreamSettingRVAdapter
     import com.example.dailymemo.WatchStream.WatchStreamRVAdpater
@@ -30,6 +36,7 @@
     import com.google.android.material.bottomsheet.BottomSheetBehavior
     import com.google.android.material.bottomsheet.BottomSheetDialog
     import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+    import java.io.File
 
     class CommentFragment : BottomSheetDialogFragment(){
 
@@ -40,6 +47,7 @@
             savedInstanceState: Bundle?
         ): View? {
             binding = FragmentCommentBinding.inflate(inflater, container, false)
+            // 키보드 자동으로 올라오는 것 방지
 
             return binding.root
         }
@@ -47,6 +55,11 @@
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
+            // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수 호출
+            val savedImagePath = loadSavedImagePath()
+            if (savedImagePath.isNotEmpty()) {
+                loadImageFromInternalStorage(savedImagePath)
+            }
 
             val dialog = dialog as? BottomSheetDialog
 
@@ -56,34 +69,45 @@
 
             initRecyclerView()
 
-            val editText = binding.commentEt
-
-            // 키보드가 나타날 때의 리스너 등록
-            editText.viewTreeObserver.addOnGlobalLayoutListener {
-                val r = Rect()
-                editText.getWindowVisibleDisplayFrame(r)
-                val screenHeight = editText.height
-                val keypadHeight = screenHeight - r.bottom
-
-                if (keypadHeight > screenHeight * 0.15) {
-                    // 키보드가 열려있는 상태에서의 동작 (올리기)
-                    val location = IntArray(2)
-                    editText.getLocationOnScreen(location)
-                    val editTextBottom = location[1] + editText.height
-                    val margin = editTextBottom - r.bottom
-                    editText.scrollBy(0, margin)
-                } else {
-                    // 키보드가 닫혀있는 상태에서의 동작 (내리기)
-                    editText.scrollBy(0, 0)
-                }
-            }
-
-            // 키보드 자동으로 올라오는 것 방지
-            activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+//            val editText = binding.commentEt
+//
+//            // 키보드가 나타날 때의 리스너 등록
+//            editText.viewTreeObserver.addOnGlobalLayoutListener {
+//                val r = Rect()
+//                editText.getWindowVisibleDisplayFrame(r)
+//                val screenHeight = editText.height
+//                val keypadHeight = screenHeight - r.bottom
+//
+//                if (keypadHeight > screenHeight * 0.15) {
+//                    // 키보드가 열려있는 상태에서의 동작 (올리기)
+//                    val location = IntArray(2)
+//                    editText.getLocationOnScreen(location)
+//                    val editTextBottom = location[1] + editText.height
+//                    val margin = editTextBottom - r.bottom
+//                    editText.scrollBy(0, margin)
+//                } else {
+//                    // 키보드가 닫혀있는 상태에서의 동작 (내리기)
+//                    editText.scrollBy(0, 0)
+//                }
+//            }
+//
+//            // 키보드 자동으로 올라오는 것 방지
+//            activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         }
 
+//        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//            val dialog = super.onCreateDialog(savedInstanceState)
+//
+//            dialog.setOnShowListener { dialogInterface ->
+//                val bottomSheetDialog = dialogInterface as BottomSheetDialog
+//                setupRatio(bottomSheetDialog)
+//            }
+//
+//            return dialog
+//        }
+
         private fun initRecyclerView() {
-            val commentRVAdapter = CommentRVAdapter()
+            val commentRVAdapter = CommentRVAdapter(requireActivity())
             binding.commentRv.adapter = commentRVAdapter
             binding.commentRv.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -141,11 +165,11 @@
 
             //댓글 삭제
             deleteBtn.setOnClickListener {
-                if(position == 0 ) {
-                    showBasic()
-                }
                adapter.removeItem(position)
                 popupWindow.dismiss()
+                if(adapter.itemCount == 0 ) {
+                    showBasic()
+                }
             }
 
         }
@@ -174,7 +198,41 @@
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
+//        private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {
+//
+//            val bottomSheet = binding.parent
+//            val layoutParams = bottomSheet.layoutParams
+//            layoutParams.height = getBottomSheetDialogDefaultHeight()
+//            bottomSheet.layoutParams = layoutParams
+//        }
+//
+//        private fun getBottomSheetDialogDefaultHeight(): Int {
+//            return getWindowHeight() * 80 / 100
+//        }
+//
+//        private fun getWindowHeight(): Int {
+//            // Calculate window height for fullscreen use
+//            val displayMetrics = DisplayMetrics()
+//            (context as? Activity)?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+//            return displayMetrics.heightPixels
+//        }
 
+        // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수
+        private fun loadImageFromInternalStorage(filePath: String) {
+            Glide.with(this)
+                .load(File(filePath))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(binding.userProfileIv)
+
+
+        }
+
+        // 저장된 이미지의 파일 경로를 불러오는 함수
+        private fun loadSavedImagePath(): String {
+            val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+            return preferences.getString("user_profile_image_path", "") ?: ""
+        }
 
 
     }

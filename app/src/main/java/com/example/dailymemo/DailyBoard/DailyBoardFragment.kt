@@ -100,9 +100,13 @@ class DailyBoardFragment : Fragment() {
         }
 
         // 키보드 자동으로 올라오는 것 방지
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         binding.apply {
+
+            menuBarLayout.setOnClickListener {
+                showMenu()
+            }
 
             // 바텀 다이얼로그
             menuBarIv.setOnClickListener {
@@ -124,6 +128,7 @@ class DailyBoardFragment : Fragment() {
                 diaryBasicTextTv.visibility = INVISIBLE
             }
 
+            binding.streamNameTv.text = "일상"
         }
 
 
@@ -273,6 +278,11 @@ class DailyBoardFragment : Fragment() {
             .skipMemoryCache(true)
             .into(binding.topUserProfileIv)
 
+        Glide.with(this)
+            .load(File(filePath))
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .into(binding.clickUserProfileIv)
     }
 
     // 저장된 이미지의 파일 경로를 불러오는 함수
@@ -298,7 +308,7 @@ class DailyBoardFragment : Fragment() {
 
         val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ?"
         val selectionArgs = arrayOf(midnight.timeInMillis.toString())
-        val sortOrder = "${MediaStore.Images.ImageColumns.DATE_TAKEN} DESC" //내림차순
+        val sortOrder = "${MediaStore.Images.ImageColumns.DATE_TAKEN} ASC" //오름차순
 
         val cursor = requireContext().contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
