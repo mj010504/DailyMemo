@@ -1,7 +1,11 @@
     package com.example.dailymemo.WatchStream.Comment
 
     import android.content.Context
+    import android.content.Context.INPUT_METHOD_SERVICE
     import android.os.Bundle
+    import android.text.Editable
+    import android.text.SpannableStringBuilder
+    import android.util.Log
     import android.view.Gravity
     import android.view.LayoutInflater
     import android.view.View
@@ -11,6 +15,7 @@
     import android.view.inputmethod.InputMethodManager
     import android.widget.PopupWindow
     import androidx.constraintlayout.widget.ConstraintLayout
+    import androidx.core.content.ContextCompat.getSystemService
     import androidx.recyclerview.widget.LinearLayoutManager
     import com.bumptech.glide.Glide
     import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -25,18 +30,21 @@
 
         lateinit var binding : FragmentCommentBinding
 
+
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
             binding = FragmentCommentBinding.inflate(inflater, container, false)
-            // 키보드 자동으로 올라오는 것 방지
+
+            initRecyclerView()
 
             return binding.root
         }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
+
 
             // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수 호출
             val savedImagePath = loadSavedImagePath()
@@ -49,8 +57,6 @@
             dialog?.let {
                 it.behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
-
-            initRecyclerView()
 
 //            val editText = binding.commentEt
 //
@@ -89,7 +95,7 @@
 //            return dialog
 //        }
 
-        private fun initRecyclerView() {
+        private fun initRecyclerView() : CommentRVAdapter {
             val commentRVAdapter = CommentRVAdapter(requireActivity())
             binding.commentRv.adapter = commentRVAdapter
             binding.commentRv.layoutManager =
@@ -105,17 +111,18 @@
             }
 
             commentRVAdapter.setMyItemClickListener(object : CommentRVAdapter.MyItemClickListener {
-                override fun onMenuClick(menu: ConstraintLayout, position: Int) {
-                    showPopupMenu(commentRVAdapter,menu, position)
+                override fun onMenuClick(menu: ConstraintLayout, position: Int, commentText : String) {
+                    showPopupMenu(commentRVAdapter,menu, position, commentText)
                 }
             })
 
+            return commentRVAdapter
 
         }
 
 
 
-        private fun showPopupMenu(adapter : CommentRVAdapter, anchorView: View, position : Int) {
+        private fun showPopupMenu(adapter : CommentRVAdapter, anchorView: View, position : Int, commentText : String) {
             val inflater = LayoutInflater.from(requireContext())
             val customMenuView = inflater.inflate(R.layout.my_comment_popup_menu_layout, null)
 
@@ -144,6 +151,30 @@
             // 댓글 수정
             modifyBtn.setOnClickListener {
                 popupWindow.dismiss()
+                binding.commentEt.text = commentText.toEditable()
+
+                // 키보드 올리기
+                binding.commentEt.requestFocus()
+                val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                binding.commentEt.postDelayed({inputMethodManager.showSoftInput(binding.commentEt, 0)}, 100)
+
+                binding.sendBtnIv.setOnClickListener {
+                    if(binding.commentEt.text.toString().length > 0) {
+                        val commentRVAdapter = adapter
+                        commentRVAdapter.updateItem(position, binding.commentEt.text.toString())
+                        binding.commentEt.text = null
+                        hideKeyboard(it)
+
+                        binding.sendBtnIv.setOnClickListener {
+                            if(binding.commentEt.text.toString().length > 0) {
+                                commentRVAdapter.addItem(binding.commentEt.text.toString())
+                                binding.commentEt.text = null
+                                hideKeyboard(it)
+                                removeBasic()
+                            }
+                        }
+                    }
+                }
             }
 
             //댓글 삭제
@@ -155,6 +186,10 @@
                 }
             }
 
+        }
+
+        fun String.toEditable(): Editable {
+            return SpannableStringBuilder(this)
         }
 
         private fun removeBasic() {
@@ -176,8 +211,7 @@
         }
 
         private fun hideKeyboard(view: View) {
-            val imm =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 

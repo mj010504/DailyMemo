@@ -114,6 +114,8 @@
             android:id="@+id/comment_et"
             android:layout_width="0dp"
             android:layout_height="36.78dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:background="@drawable/diary_edit_text"
             android:hint="댓글 입력하기"
             android:textSize="20sp"

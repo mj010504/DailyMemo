@@ -2,6 +2,7 @@ package com.example.dailymemo.WatchStream.Comment
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,7 +25,7 @@ class CommentRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<Commen
     val userProfile = getProfieImage()
 
     interface MyItemClickListener {
-        fun onMenuClick(menu: ConstraintLayout, position: Int)
+        fun onMenuClick(menu: ConstraintLayout, position: Int, commentText : String)
     }
 
     private lateinit var mitemClickListener : MyItemClickListener
@@ -47,6 +48,17 @@ class CommentRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<Commen
         }
     }
 
+    fun updateItem(position: Int, newComment: String) {
+        if (position >= 0 && position < comments.size) {
+            Log.d("commentModify", "success")
+            comments[position] = newComment
+            notifyItemChanged(position)
+        }
+        else {
+            Log.d("commentModify", position.toString() + "failed" + comments.size)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ItemCommentBinding = ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -54,8 +66,8 @@ class CommentRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<Commen
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick(holder.binding.rootView, position) }
-        holder.binding.menuBarLayout.setOnClickListener {  mitemClickListener.onMenuClick(holder.binding.rootView, position) }
+        holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick(holder.binding.rootView, position, holder.binding.commentContentTv.text.toString() ) }
+        holder.binding.menuBarLayout.setOnClickListener {  mitemClickListener.onMenuClick(holder.binding.rootView, position, holder.binding.commentContentTv.text.toString()) }
         holder.bind(comments[position])
     }
 
