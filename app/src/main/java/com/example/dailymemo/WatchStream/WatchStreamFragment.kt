@@ -35,7 +35,7 @@ class WatchStreamFragment : Fragment() {
         initRecyclerView()
 
         binding.apply{
-            wsCommentLayout.setOnClickListener {
+            commentBtnLayout.setOnClickListener {
                 showMenu()
             }
 

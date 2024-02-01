@@ -1,38 +1,21 @@
     package com.example.dailymemo.WatchStream.Comment
 
-    import android.app.Activity
-    import android.app.Dialog
     import android.content.Context
-    import android.graphics.Color
-    import android.graphics.Rect
-    import android.graphics.drawable.ColorDrawable
     import android.os.Bundle
-    import android.util.DisplayMetrics
     import android.view.Gravity
-    import androidx.fragment.app.Fragment
     import android.view.LayoutInflater
     import android.view.View
     import android.view.View.INVISIBLE
     import android.view.View.VISIBLE
     import android.view.ViewGroup
-    import android.view.WindowManager
     import android.view.inputmethod.InputMethodManager
-    import android.widget.EditText
-    import android.widget.FrameLayout
-    import android.widget.ImageView
     import android.widget.PopupWindow
     import androidx.constraintlayout.widget.ConstraintLayout
-    import androidx.fragment.app.DialogFragment
     import androidx.recyclerview.widget.LinearLayoutManager
-    import androidx.recyclerview.widget.PagerSnapHelper
-    import androidx.recyclerview.widget.RecyclerView
     import com.bumptech.glide.Glide
     import com.bumptech.glide.load.engine.DiskCacheStrategy
     import com.example.dailymemo.R
-    import com.example.dailymemo.Setting.StreamSetting.StreamSettingRVAdapter
-    import com.example.dailymemo.WatchStream.WatchStreamRVAdpater
     import com.example.dailymemo.databinding.FragmentCommentBinding
-    import com.example.dailymemo.databinding.FragmentMyStreamBinding
     import com.google.android.material.bottomsheet.BottomSheetBehavior
     import com.google.android.material.bottomsheet.BottomSheetDialog
     import com.google.android.material.bottomsheet.BottomSheetDialogFragment

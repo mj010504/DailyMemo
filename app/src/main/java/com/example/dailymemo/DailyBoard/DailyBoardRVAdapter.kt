@@ -12,10 +12,10 @@
     import com.example.dailymemo.databinding.ItemDailyBoardBinding
 
 
-    class DailyBoardRVAdapter(private val context: Context,private val photoList: ArrayList<Uri>) : RecyclerView.Adapter<DailyBoardRVAdapter.ViewHolder>() {
+    class DailyBoardRVAdapter(private val context: Context,private val photoList: ArrayList<Uri>, private val isDeleteList : ArrayList<Boolean>) : RecyclerView.Adapter<DailyBoardRVAdapter.ViewHolder>() {
 
         interface ItemClickListener{
-            fun onPhotoClick()
+
         }
 
         private lateinit var itemClickListener: ItemClickListener
@@ -36,7 +36,6 @@
 
         override fun onBindViewHolder(holder: DailyBoardRVAdapter.ViewHolder, position: Int) {
             holder.bind(photoList[position])
-            holder.binding.dailyBoardIv.setOnClickListener { itemClickListener.onPhotoClick() }
         }
 
         override fun getItemCount(): Int = photoList.size
@@ -49,11 +48,14 @@
                     .into(binding.dailyBoardIv)
             }
 
-            fun removeItem() {
+            fun removeItem(pos : Int) {
                 binding.deleteView.visibility = View.VISIBLE
-                binding.deleteExpectedTv.visibility = View.VISIBLE
+                isDeleteList[pos] = false
             }
 
+            fun getIsDelete(pos : Int) : Boolean {
+                return isDeleteList[pos]
+            }
 
         }
 

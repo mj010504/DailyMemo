@@ -16,6 +16,17 @@ import java.io.File
 class StreamChangeRVADapter(activity : FragmentActivity): RecyclerView.Adapter<StreamChangeRVADapter.ViewHolder>(){
 
     val act = activity
+    val streams = arrayOf("일상", "여행", " 맛집")
+
+    interface MyItemClickListener {
+        fun onStreamDiaryClick()
+    }
+
+    private lateinit var mitemClickListener : MyItemClickListener
+    fun setMyItemClickListener(itemClickListener: MyItemClickListener) {
+        mitemClickListener = itemClickListener
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -27,9 +38,10 @@ class StreamChangeRVADapter(activity : FragmentActivity): RecyclerView.Adapter<S
 
     override fun onBindViewHolder(holder: StreamChangeRVADapter.ViewHolder, position: Int) {
         holder.bind(position)
+        holder.binding.streamDiaryLayout.setOnClickListener { mitemClickListener.onStreamDiaryClick() }
     }
 
-    override fun getItemCount(): Int = 1
+    override fun getItemCount(): Int = 3
     inner class ViewHolder(val binding: ItemStreamBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
             val preferences = act.getPreferences(Context.MODE_PRIVATE)
@@ -40,7 +52,7 @@ class StreamChangeRVADapter(activity : FragmentActivity): RecyclerView.Adapter<S
                 .skipMemoryCache(true)
                 .into(binding.userProfileIv)
 
-            binding.streamNameTv.text = "일상"
+            binding.streamNameTv.text = streams[pos]
         }
 
 

@@ -55,7 +55,7 @@ data class RegisterRequest(
     @SerializedName("phoneNumber") val phoneNumber: String,
     @SerializedName("email") val email: String,
     //@SerializedName("profilePhoto") val profilePhoto: String,
-    @SerializedName("emailVerificationToken") val emailVerificationToken: String
+    @SerializedName("emailVerificationToken") val emailVerificationToken: String?
 )
 data class Register_result(
     @SerializedName("id") val id : Int?,
@@ -105,6 +105,6 @@ data class verifyEmailResult(
 )
 
 data class verifyRequest(
-    @SerializedName("token") val token : String,
+    @SerializedName("token") val token : String?,
     @SerializedName("code") val code : String
 )

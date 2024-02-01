@@ -23,7 +23,7 @@ class SignUpFragment : Fragment(),SignUpView {
 
     private lateinit var binding: FragmentSignUpBinding
 
-    private lateinit var emailToken : String
+    private var emailToken : String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -20,4 +20,5 @@
     <color name="delete">#FF0000</color>
     <color name="impossible">#FF1B1B</color>
     <color name="login_color">#F7C475</color>
+    <color name="daily_box">#DCDACF</color>
 </resources>

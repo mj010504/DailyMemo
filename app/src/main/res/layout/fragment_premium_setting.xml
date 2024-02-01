@@ -39,6 +39,7 @@
         android:textStyle="bold"
         android:textSize="20sp"
         android:textColor="@color/black"
+        android:fontFamily="@font/title_font"
         android:layout_marginTop="26.59dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

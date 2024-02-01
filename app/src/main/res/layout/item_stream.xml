@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/stream_box"
     android:foreground="?attr/selectableItemBackground"
+    android:id="@+id/stream_diary_layout"
     android:layout_marginEnd="20dp">
 
     <de.hdodenhof.circleimageview.CircleImageView

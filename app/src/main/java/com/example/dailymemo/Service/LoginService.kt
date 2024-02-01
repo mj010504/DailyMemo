@@ -164,7 +164,7 @@ class LoginService {
     }
 
 
-    fun verifyEmail(token : String, code : String) {
+    fun verifyEmail(token : String?, code : String) {
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
         val verifyRequest = verifyRequest(token, code)
         loginService.verifyEmail(verifyRequest).enqueue(object : Callback<verifyEmailResponse> {
@@ -212,7 +212,7 @@ class LoginService {
         })
     }
 
-    fun resigster(name : String,  nickName: String, password : String, phoneNumber : String, email : String, emailVerificationToken : String) {
+    fun resigster(name : String,  nickName: String, password : String, phoneNumber : String, email : String, emailVerificationToken : String?) {
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
         val registerRequest = RegisterRequest(name, nickName, password, phoneNumber, email, emailVerificationToken)

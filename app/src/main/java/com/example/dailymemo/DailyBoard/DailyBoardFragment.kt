@@ -1,16 +1,14 @@
 package com.example.dailymemo.DailyBoard
 
-import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,51 +20,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.marginTop
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.INVISIBLE
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.dailymemo.MyStream.MyStreamRVAdapter
-import com.example.dailymemo.OpenStream.OpenStreamRVAdapter
+import com.example.dailymemo.MyStream.StreamSettingRVAdapter
 import com.example.dailymemo.R
-import com.example.dailymemo.Setting.StreamSetting.StreamSettingRVAdapter
+import com.example.dailymemo.databinding.DailyboardStreamPopupMenuLayoutBinding
 import com.example.dailymemo.databinding.FragmentDailyBoardBinding
-import com.example.dailymemo.databinding.ItemDailyBoardBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 
 class DailyBoardFragment : Fragment() {
 
     lateinit var binding: FragmentDailyBoardBinding
-    private var isPhoto = false
     private var imageList = ArrayList<Uri>()
+    private var isdeleteList = ArrayList<Boolean>()
+    private var isDiaryPreview = false
 
 
     override fun onCreateView(
@@ -76,59 +60,51 @@ class DailyBoardFragment : Fragment() {
         binding = FragmentDailyBoardBinding.inflate(inflater, container, false)
 
 
-        val editText = binding.diaryEt
-        val rootView = binding.rootView
-
-        // 키보드가 나타날 때의 리스너 등록
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val r = Rect()
-            rootView.getWindowVisibleDisplayFrame(r)
-            val screenHeight = rootView.height
-            val keypadHeight = screenHeight - r.bottom
-
-            if (keypadHeight > screenHeight * 0.15) {
-                // 키보드가 열려있는 상태에서의 동작 (올리기)
-                val location = IntArray(2)
-                editText.getLocationOnScreen(location)
-                val editTextBottom = location[1] + editText.height + 35
-                val margin = editTextBottom - r.bottom
-                rootView.scrollTo(0, margin)
-            } else {
-                // 키보드가 닫혀있는 상태에서의 동작 (내리기)
-                rootView.scrollTo(0, 0)
-            }
-        }
+//        val editText = binding.diaryEt
+//        val rootView = binding.rootView
+//
+//        // 키보드가 나타날 때의 리스너 등록
+//        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+//            val r = Rect()
+//            rootView.getWindowVisibleDisplayFrame(r)
+//            val screenHeight = rootView.height
+//            val keypadHeight = screenHeight - r.bottom
+//
+//            if (keypadHeight > screenHeight * 0.15) {
+//                // 키보드가 열려있는 상태에서의 동작 (올리기)
+//                val location = IntArray(2)
+//                editText.getLocationOnScreen(location)
+//                val editTextBottom = location[1] + editText.height + 35
+//                val margin = editTextBottom - r.bottom
+//                rootView.scrollTo(0, margin)
+//            } else {
+//                // 키보드가 닫혀있는 상태에서의 동작 (내리기)
+//                rootView.scrollTo(0, 0)
+//            }
+//        }
 
         // 키보드 자동으로 올라오는 것 방지
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         binding.apply {
 
-            menuBarLayout.setOnClickListener {
-                showMenu()
+            diaryInputBtnLayout.setOnClickListener {
+                showStreamDiaryMenu()
             }
 
-            // 바텀 다이얼로그
-            menuBarIv.setOnClickListener {
-                showMenu()
+            diaryPreviewBtnLayout.setOnClickListener {
+                onDiaryPreviewClick()
             }
 
-            sendBtnIv.setOnClickListener {
-                diaryEt.visibility = INVISIBLE
-                sendBtnIv.visibility = INVISIBLE
-                diaryTextTv.text = diaryEt.text
-                diaryTextTv.visibility = VISIBLE
-
-                hideKeyboard(it)
+            deleteLayout.setOnClickListener {
+                removePhoto()
             }
 
-            diaryBasicTextTv.setOnClickListener {
-                diaryEt.visibility = VISIBLE
-                sendBtnIv.visibility = VISIBLE
-                diaryBasicTextTv.visibility = INVISIBLE
+            polygonDownIv.setOnClickListener {
+                showStreamPopupMenu(streamProfileIv, binding.streamProfileIv.drawable, binding.streamNameTv.text.toString())
             }
 
-            binding.streamNameTv.text = "일상"
+
         }
 
 
@@ -147,25 +123,19 @@ class DailyBoardFragment : Fragment() {
         getImage()
         basicSetting()
         initRecyclerView()
-
     }
 
     private fun initRecyclerView() {
-        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(),imageList)
+        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(),imageList, isdeleteList)
         binding.dailyBoardRv.adapter = dailyBoardRVAdapter
         binding.dailyBoardRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        dailyBoardRVAdapter.setITemClickListener(object : DailyBoardRVAdapter.ItemClickListener {
-            override fun onPhotoClick() {
-                showInfo(isPhoto)
-                isPhoto = !isPhoto
-            }
 
-        })
         binding.dailyBoardRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 updateCount()
+                updateDeleteText()
             }
         })
 
@@ -174,77 +144,18 @@ class DailyBoardFragment : Fragment() {
 
     }
 
-    private fun basicSetting() {
-        if (imageList.size > 0) {
-            binding.basicIv.visibility = INVISIBLE
-            binding.basicTv.visibility = INVISIBLE
-        }
-    }
-
-    private fun showMenu() {
-        if (imageList.size > 0) {
-            val bottomSheetView = layoutInflater.inflate(R.layout.bottom_menu_layout, null)
-            val bottomSheetDialog = BottomSheetDialog(requireContext())
-            bottomSheetDialog.setContentView(bottomSheetView)
-            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-            val deleteBtn = bottomSheetView.findViewById<ConstraintLayout>(R.id.delete_layout)
-            deleteBtn.setOnClickListener {
-                removePhoto()
-
-                val deleteTitle = bottomSheetView.findViewById<TextView>(R.id.delete_tv)
-                deleteTitle.text = "삭제 취소"
-            }
-
-            val streamChangeBtn =
-                bottomSheetView.findViewById<ConstraintLayout>(R.id.stream_change_layout)
-            val streamRecyclerView =
-                bottomSheetView.findViewById<RecyclerView>(R.id.stream_change_rv)
-            streamChangeBtn.setOnClickListener {
-                streamChangeBtn.setBackgroundResource(R.drawable.menu_box_selected)
-                deleteBtn.visibility = INVISIBLE
-                streamRecyclerView.visibility = VISIBLE
-                val streamChangeRVAdpater = StreamChangeRVADapter(requireActivity())
-                streamRecyclerView.adapter = streamChangeRVAdpater
-                streamRecyclerView.layoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-            }
-
-            bottomSheetDialog.show()
-
-        }
-    }
-
-    private fun removePhoto() {
+    private fun updateDeleteText() {
         var layoutManager = binding.dailyBoardRv.layoutManager
-//        var visibleItemCount = layoutManager?.childCount
         var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
-
-        val viewHolder =
-            binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
-        viewHolder?.removeItem()
-    }
-
-
-    private fun showInfo(isPhoto: Boolean) {
-
-        if (isPhoto == true) {
-            binding.infoView.visibility = View.INVISIBLE
-            binding.clickUserProfileIv.visibility = View.INVISIBLE
-            binding.streamNameTv.visibility = View.INVISIBLE
-            binding.countLayout.visibility = View.INVISIBLE
+        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
+        var isDelete = viewHolder!!.getIsDelete(pos)
+        if(isDelete) {
+            binding.deleteTv.visibility = VISIBLE
+            binding.deletedTv.visibility = INVISIBLE
         }
-
-
-        if (isPhoto == false) {
-            binding.infoView.visibility = View.VISIBLE
-            binding.clickUserProfileIv.visibility = View.VISIBLE
-            binding.streamNameTv.visibility = View.VISIBLE
-            binding.countLayout.visibility = View.VISIBLE
-
-            updateCount()
-
+        else {
+            binding.deleteTv.visibility = INVISIBLE
+            binding.deletedTv.visibility = VISIBLE
         }
     }
 
@@ -258,6 +169,53 @@ class DailyBoardFragment : Fragment() {
         binding.countTv.text = "$currentPos/$total"
     }
 
+    private fun basicSetting() {
+        if (imageList.size > 0) {
+            binding.basicIv.visibility = INVISIBLE
+            binding.basicTv.visibility = INVISIBLE
+            binding.countLayout.visibility = VISIBLE
+        }
+    }
+
+    private fun showStreamDiaryMenu() {
+        if (imageList.size > 0) {
+            val bottomSheetView = layoutInflater.inflate(R.layout.bottom_stream_diary_menu_layout, null)
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            bottomSheetDialog.setContentView(bottomSheetView)
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+            val streamRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.stream_change_rv)
+            val streamChangeRVAdpater = StreamChangeRVADapter(requireActivity())
+            streamRecyclerView.adapter = streamChangeRVAdpater
+            streamRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+            streamChangeRVAdpater.setMyItemClickListener(object : StreamChangeRVADapter.MyItemClickListener{
+                override fun onStreamDiaryClick() {
+                    showDiaryMenu()
+                }
+
+            } )
+
+
+            bottomSheetDialog.show()
+        }
+    }
+
+
+    private fun removePhoto() {
+        var layoutManager = binding.dailyBoardRv.layoutManager
+//        var visibleItemCount = layoutManager?.childCount
+        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+
+        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
+        viewHolder?.removeItem(pos)
+        updateDeleteText()
+    }
+
+
+
+
     private fun hideKeyboard(view: View) {
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -270,19 +228,7 @@ class DailyBoardFragment : Fragment() {
             .load(File(filePath))
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
-            .into(binding.userProfileIv)
-
-        Glide.with(this)
-            .load(File(filePath))
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
-            .into(binding.topUserProfileIv)
-
-        Glide.with(this)
-            .load(File(filePath))
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
-            .into(binding.clickUserProfileIv)
+            .into(binding.streamProfileIv)
     }
 
     // 저장된 이미지의 파일 경로를 불러오는 함수
@@ -361,6 +307,8 @@ class DailyBoardFragment : Fragment() {
                                 )
 
                             imageList.add(imageUri)
+                            // isdeleteList에 true 추가
+                            isdeleteList.add(true)
 
                             Log.d(
                                 "cursor",
@@ -406,6 +354,117 @@ class DailyBoardFragment : Fragment() {
         return compressedBitmapList
     }
 
+
+    private fun showDiaryMenu() {
+        val bottomSheetFragment = DiaryFragment()
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+
+    }
+
+    private fun onDiaryPreviewClick() {
+
+        if(isDiaryPreview) {
+            isDiaryPreview = !isDiaryPreview
+            ChangeUpHeight()
+
+            binding.apply {
+                diaryPreviewBtnLayout.setBackgroundResource(R.drawable.menu_box_selected)
+
+                streamLayout.visibility = INVISIBLE
+                deleteLayout.visibility = INVISIBLE
+
+                diaryPreviewActiveTv.visibility = VISIBLE
+                dateTv.visibility = VISIBLE
+                diaryTextPreviewLayout.visibility = VISIBLE
+
+                diaryPreviewTv.text = "미리보기 취소"
+            }
+        }
+        else {
+            isDiaryPreview = !isDiaryPreview
+            ChangeDownHeight()
+            binding.apply {
+                diaryPreviewBtnLayout.setBackgroundResource(R.drawable.menu_box)
+
+                streamLayout.visibility = VISIBLE
+                deleteLayout.visibility = VISIBLE
+
+                diaryPreviewActiveTv.visibility = INVISIBLE
+                dateTv.visibility = INVISIBLE
+                diaryTextPreviewLayout.visibility = INVISIBLE
+
+                diaryPreviewTv.text = "일기 미리보기"
+            }
+            }
+        }
+
+
+    private fun ChangeUpHeight() {
+        val newHeight = resources.getDimensionPixelSize(R.dimen.diary_preview) // 예시로 리소스에서 값을 가져옴
+        // 기존 LayoutParams를 가져오기
+        val layoutParams = binding.menuLayout.layoutParams as ConstraintLayout.LayoutParams
+        // LayoutParams의 height 속성 변경
+        layoutParams.height = newHeight
+        // 변경된 LayoutParams를 설정
+        binding.menuLayout.layoutParams = layoutParams
+    }
+
+    private fun ChangeDownHeight() {
+        val newHeight = resources.getDimensionPixelSize(R.dimen.diary_preview_cancle) // 예시로 리소스에서 값을 가져옴
+        // 기존 LayoutParams를 가져오기
+        val layoutParams = binding.menuLayout.layoutParams as ConstraintLayout.LayoutParams
+        // LayoutParams의 height 속성 변경
+        layoutParams.height = newHeight
+        // 변경된 LayoutParams를 설정
+        binding.menuLayout.layoutParams = layoutParams
+    }
+
+    private fun showStreamPopupMenu(anchorView: View, streamProfile: Drawable, streamName : String) {
+        val inflater = LayoutInflater.from(requireContext())
+        val customMenuView = inflater.inflate(R.layout.dailyboard_stream_popup_menu_layout, null)
+
+        val popupStreamProfile = customMenuView.findViewById<ImageView>(R.id.popup_stream_profile_iv)
+        val popupStreamName = customMenuView.findViewById<TextView>(R.id.popup_stream_name_tv)
+
+
+
+        popupStreamProfile.setImageDrawable(streamProfile)
+        popupStreamName.text = streamName
+
+
+        // Customize PopupWindow
+        val popupWindow = PopupWindow(
+            customMenuView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        // Get the location of the anchorView on the screen
+        val location = IntArray(2)
+        anchorView.getLocationOnScreen(location)
+
+        // Calculate xOffset and yOffset to align top-right of popup with top-right of anchorView
+        val xOffset = location[0]
+        val yOffset = location[1]
+
+        // Set location
+        popupWindow?.showAtLocation(anchorView, Gravity.NO_GRAVITY, xOffset, yOffset)
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+        popupWindow.elevation = resources.getDimension(R.dimen.popup_card_elevation)
+
+        val recyclerView = customMenuView.findViewById<RecyclerView>(R.id.stream_list_rv)
+        val dailyBoardStreamRVAdapter = DailyBoardStreamRVAdapter(requireActivity(),binding.streamNameTv.text.toString())
+        recyclerView.adapter = dailyBoardStreamRVAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+
+        val upBtn = customMenuView.findViewById<ImageView>(R.id.fold_up_btn_iv)
+        upBtn.setOnClickListener {
+            popupWindow.dismiss()
+        }
+    }
 }
 
 

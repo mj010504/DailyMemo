@@ -1,18 +1,12 @@
-package com.example.dailymemo.Setting.StreamSetting
+package com.example.dailymemo.MyStream
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.dailymemo.DailyBoard.DailyBoardRVAdapter
 import com.example.dailymemo.R
-import com.example.dailymemo.databinding.ItemDailyBoardBinding
 import com.example.dailymemo.databinding.ItemStreamTypeBinding
 import java.io.File
 
@@ -20,24 +14,26 @@ class StreamSettingRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<
 
     val act = activity
     val userProfile = getProfieImage()
+    val streams = arrayOf("일상", "여행", "맛집")
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StreamSettingRVAdapter.ViewHolder {
+    ): ViewHolder {
         val binding: ItemStreamTypeBinding = ItemStreamTypeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: StreamSettingRVAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = 1
+    override fun getItemCount(): Int = 3
 
     inner class ViewHolder(val binding: ItemStreamTypeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
-            binding.streamNameTv.text = "일상"
+            binding.streamNameTv.text = streams[pos]
 
             if(userProfile != null) {
                 binding.userProfileIv.setImageDrawable(userProfile)
