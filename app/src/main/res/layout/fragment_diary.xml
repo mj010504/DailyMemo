@@ -49,6 +49,22 @@
             app:layout_constraintTop_toTopOf="@id/user_profile_iv"
             />
 
+        <TextView
+            android:id="@+id/modify_diary_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:visibility="invisible"
+            android:text="수정"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/point_color"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="33.15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/user_profile_iv"/>
+
+
         <EditText
             android:id="@+id/diary_et"
             android:background="@color/main_color"

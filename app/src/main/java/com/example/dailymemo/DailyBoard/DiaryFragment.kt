@@ -3,6 +3,8 @@ package com.example.dailymemo.DailyBoard
 import android.content.Context
 import android.os.Bundle
 import android.service.voice.VoiceInteractionSession.VisibleActivityCallback
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -46,11 +48,20 @@ class DiaryFragment : BottomSheetDialogFragment() {
                     diaryEt.visibility = INVISIBLE
                     diaryTextTv.text = diaryEt.text.toString()
                     diaryTextTv.visibility = VISIBLE
+                    sendBtnIv.visibility = INVISIBLE
+                    modifyDiaryBtn.visibility = VISIBLE
                 }
                 else {
                     val dailog = SampleDialog(requireContext(), "일기를 작성해주세요.")
                     dailog.show()
                 }
+            }
+
+            modifyDiaryBtn.setOnClickListener {
+               diaryTextTv.visibility = INVISIBLE
+                diaryEt.visibility = VISIBLE
+                diaryEt.text = diaryTextTv.text.toString().toEditable()
+                sendBtnIv.visibility = VISIBLE
             }
         }
         return binding.root
@@ -71,6 +82,10 @@ class DiaryFragment : BottomSheetDialogFragment() {
             it.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
+    }
+
+    fun String.toEditable(): Editable {
+        return SpannableStringBuilder(this)
     }
 
 

@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.Dialog.StreamNameChangeDialog
 import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentStreamSettingDetailBinding
 import java.io.File
@@ -23,6 +24,8 @@ import java.io.FileOutputStream
 class StreamSettingDetailFragment : Fragment() {
 
     lateinit var binding : FragmentStreamSettingDetailBinding
+
+
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -42,6 +45,14 @@ class StreamSettingDetailFragment : Fragment() {
     ): View? {
         binding = FragmentStreamSettingDetailBinding.inflate(inflater,container,false)
 
+        // 초기값 설정,
+        val bundle = arguments
+        if (bundle != null) {
+            val streamName = bundle.getString("streamName")
+            binding.streamNameTv.text = streamName
+            binding.streamTypeTv.text = streamName
+        }
+
         binding.apply {
             settingIcIv.setOnClickListener {
                 openGallery()
@@ -49,9 +60,15 @@ class StreamSettingDetailFragment : Fragment() {
 
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
-                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.beginTransaction()?.remove(StreamSettingDetailFragment())?.commit();
                 fragmentManager?.popBackStack();
 
+            }
+
+            streamNameChangeBtn.setOnClickListener {
+
+                val dialog = StreamNameChangeDialog(requireContext())
+                dialog.show()
             }
         }
 

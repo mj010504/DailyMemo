@@ -74,6 +74,32 @@
         app:layout_constraintTop_toTopOf="parent"
    />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/count_layout"
+            android:layout_width="76dp"
+            android:layout_height="37dp"
+            app:layout_constraintBottom_toBottomOf="@id/stream_rv"
+            app:layout_constraintEnd_toEndOf="@id/stream_rv"
+            android:background="@drawable/count_box"
+            >
+
+            <TextView
+                android:id="@+id/count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="count"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/like_btn_layout"

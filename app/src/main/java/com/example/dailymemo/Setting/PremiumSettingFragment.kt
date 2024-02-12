@@ -1,10 +1,13 @@
-package com.example.dailymemo.Setting.Dialog
+package com.example.dailymemo.Setting
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.dailymemo.Setting.Dialog.AutoIndexDialog
+import com.example.dailymemo.Setting.Dialog.BuyStreamDialog
+import com.example.dailymemo.Setting.Dialog.RemoveAdDialog
 import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentPremiumSettingBinding
 

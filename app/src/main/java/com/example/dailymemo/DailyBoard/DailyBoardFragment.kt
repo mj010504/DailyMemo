@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -34,6 +35,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dailymemo.MyStream.StreamSettingRVAdapter
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.databinding.DailyboardStreamPopupMenuLayoutBinding
 import com.example.dailymemo.databinding.FragmentDailyBoardBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -100,7 +102,7 @@ class DailyBoardFragment : Fragment() {
                 removePhoto()
             }
 
-            polygonDownIv.setOnClickListener {
+            streamLayout.setOnClickListener {
                 showStreamPopupMenu(streamProfileIv, binding.streamProfileIv.drawable, binding.streamNameTv.text.toString())
             }
 
@@ -123,6 +125,13 @@ class DailyBoardFragment : Fragment() {
         getImage()
         basicSetting()
         initRecyclerView()
+        var cl =  compressImages(imageList)
+        // compressedBitmapList의 각 Bitmap을 Base64로 인코딩하여 문자열로 변환
+        val bitmapStringList = cl.map { bitmapToBase64(it) }
+
+// 변환된 문자열 리스트 출력
+        Log.d("bittmap", bitmapStringList[0])
+
     }
 
     private fun initRecyclerView() {
@@ -199,6 +208,10 @@ class DailyBoardFragment : Fragment() {
 
 
             bottomSheetDialog.show()
+        }
+        else {
+            val dialog = SampleDialog(requireContext(),"사진을 등록해야 일기 작성이 가능합니다.")
+            dialog.show()
         }
     }
 
@@ -354,6 +367,15 @@ class DailyBoardFragment : Fragment() {
         return compressedBitmapList
     }
 
+    // Bitmap을 Base64로 인코딩하는 함수
+    fun bitmapToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+    }
+
+
 
     private fun showDiaryMenu() {
         val bottomSheetFragment = DiaryFragment()
@@ -363,7 +385,7 @@ class DailyBoardFragment : Fragment() {
 
     private fun onDiaryPreviewClick() {
 
-        if(isDiaryPreview) {
+        if(isDiaryPreview == false) {
             isDiaryPreview = !isDiaryPreview
             ChangeUpHeight()
 

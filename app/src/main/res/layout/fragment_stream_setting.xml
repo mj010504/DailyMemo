@@ -62,67 +62,21 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stream_layout"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/stream_rv"
             android:layout_width="0dp"
-            android:layout_height="201dp"
-            android:layout_marginStart="19dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/setting_layout"
-            app:layout_constraintTop_toTopOf="@id/under_bar"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_stream_setting"
+            android:orientation="vertical"
+            android:layout_marginStart="17dp"
+            android:layout_marginEnd="17dp"
+            android:layout_marginTop="15dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_profile_iv"
-                android:layout_width="105dp"
-                android:layout_height="105dp"
-                android:src="@drawable/basic_user_profile"
-                android:layout_marginTop="25dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/nickname_view"
-                android:layout_width="179dp"
-                android:layout_height="35dp"
-                android:background="@drawable/nickname_layout"
-                android:layout_marginTop="9dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/user_profile_iv"/>
-
-            <TextView
-                android:id="@+id/user_nickname_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="일상"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="@id/nickname_view"
-                app:layout_constraintBottom_toBottomOf="@id/nickname_view"
-                app:layout_constraintStart_toStartOf="@id/nickname_view"
-                app:layout_constraintEnd_toEndOf="@id/nickname_view"/>
-
-
-
-            <ImageView
-                android:id="@+id/setting_ic_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/setting_ic"
-                android:layout_marginStart="9dp"
-                android:foreground="?attr/selectableItemBackground"
-                app:layout_constraintStart_toEndOf="@id/nickname_view"
-                app:layout_constraintTop_toTopOf="@id/nickname_view"
-                app:layout_constraintBottom_toBottomOf="@id/nickname_view"
-
-                />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@id/under_bar"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

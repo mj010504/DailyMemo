@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.Dialog.ResetPasswordDialog
 import com.example.dailymemo.databinding.FragmentSettingBinding
 import java.io.File
 import java.io.FileOutputStream
@@ -31,9 +32,6 @@ import java.nio.file.Files.delete
 class SettingFragment : Fragment() {
 
     lateinit var binding : FragmentSettingBinding
-
-
-
 
 
     override fun onCreateView(
@@ -54,6 +52,11 @@ class SettingFragment : Fragment() {
 
             settingIcIv.setOnClickListener {
                 findNavController().navigate(R.id.streamSettingFragment)
+            }
+
+            changePasswordTv.setOnClickListener {
+                val dailog = ResetPasswordDialog(requireContext())
+                dailog.show()
             }
         }
 

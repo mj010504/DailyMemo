@@ -6,9 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.dailymemo.DailyBoard.DailyBoardRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentStreamSettingBinding
@@ -25,11 +29,8 @@ class StreamSettingFragment : Fragment() {
     ): View? {
 
         binding = FragmentStreamSettingBinding.inflate(inflater,container,false)
-
+        initRecyclerView()
         binding.apply {
-            settingIcIv.setOnClickListener {
-                findNavController().navigate(R.id.streamSettingDetailFragment)
-            }
 
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
@@ -44,27 +45,27 @@ class StreamSettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수 호출
-        val savedImagePath = loadSavedImagePath()
-        if (savedImagePath.isNotEmpty()) {
-            loadImageFromInternalStorage(savedImagePath)
-        }
+
     }
 
+    private fun initRecyclerView() {
+        val settingStreamSettingRVAdapter = SettingStreamSettingRVAdapter(requireActivity())
+        binding.streamRv.adapter = settingStreamSettingRVAdapter
+        binding.streamRv.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-    // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수
-    private fun loadImageFromInternalStorage(filePath: String) {
-        Glide.with(this)
-            .load(File(filePath))
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
-            .into(binding.userProfileIv)
+        settingStreamSettingRVAdapter.setMyItemClickListener(object: SettingStreamSettingRVAdapter.MyItemClickListener{
+            override fun onSettingClick(streamName: String,) {
+                val bundle = Bundle()
+                bundle.putString("streamName", streamName)
+                moveToStreamDetailFragment(bundle)
+            }
+
+        })
     }
 
-    // 저장된 이미지의 파일 경로를 불러오는 함수
-    private fun loadSavedImagePath(): String {
-        val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        return preferences.getString("user_profile_image_path", "") ?: ""
+    private fun moveToStreamDetailFragment(bundle: Bundle) {
+        findNavController().navigate(R.id.streamSettingDetailFragment, bundle)
     }
 
 }
