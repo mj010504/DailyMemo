@@ -1,5 +1,6 @@
 package com.example.dailymemo.OpenStream.Retrofit.Response
 
+import com.example.dailymemo.MyStream.Retrofit.Response.post
 import com.google.gson.annotations.SerializedName
 import java.time.LocalDate
 
@@ -16,15 +17,6 @@ data class OpenStreamResult (
     @SerializedName("hasNext") val hasNext : Boolean,
     @SerializedName("isFirst") val isFirst : Boolean,
     @SerializedName("isLast") val isLast : Boolean,
-    @SerializedName("photoList") val photoList : List<photo>
+    @SerializedName("postList") val postList : List<post>
 )
 
-data class photo (
-    @SerializedName("postId") val postId : Int,
-    @SerializedName("nickname") val nickname : String,
-    @SerializedName("postImg") val postImg : List<String>,
-    @SerializedName("likes") val likes : Int,
-    @SerializedName("isLike") val isLike : Boolean,
-    @SerializedName("comments") val comments : Int,
-    @SerializedName("createdAt") val createdAt : LocalDate
-)

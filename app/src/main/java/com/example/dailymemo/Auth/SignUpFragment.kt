@@ -10,16 +10,15 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.fragment.findNavController
 import com.example.dailymemo.R
-import com.example.dailymemo.Service.LoginService
-import com.example.dailymemo.Service.SignUpView
+import com.example.dailymemo.Auth.Retrofit.LoginService
+import com.example.dailymemo.Auth.Retrofit.SignUpView
 import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.WatchStream.WatchStreamFragment
 import com.example.dailymemo.databinding.FragmentSignUpBinding
 
-class SignUpFragment : Fragment(),SignUpView {
+class SignUpFragment : Fragment(), SignUpView {
 
     private lateinit var binding: FragmentSignUpBinding
 
@@ -51,7 +50,7 @@ class SignUpFragment : Fragment(),SignUpView {
         binding.apply {
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
-                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.beginTransaction()?.remove(SignUpFragment())?.commit();
                 fragmentManager?.popBackStack();
 
             }
@@ -214,9 +213,8 @@ class SignUpFragment : Fragment(),SignUpView {
             val name = binding.signupNameTe.text.toString()
             val email = binding.signupEmailTe.text.toString()
             val nickName = binding.signupIdTe.text.toString()
-            val phoneNumber = "01012341234"
             val password = binding.signupPwTe.text.toString()
-        loginService.resigster(name, nickName, password, phoneNumber, email, emailToken)
+        loginService.resigster(name, nickName, password, email, emailToken)
     }
 
     override fun registerSuccess() {

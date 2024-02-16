@@ -1,5 +1,7 @@
 package com.example.dailymemo.MyStream.Retrofit
 
+import android.util.Log
+import com.example.dailymemo.MainView
 import com.example.dailymemo.MyStream.Retrofit.Response.diaryPublicTypeResponse
 import com.example.dailymemo.MyStream.Retrofit.Response.makeMyStreamResponse
 import com.example.dailymemo.MyStream.Retrofit.Response.modifyMyStreamRequest
@@ -18,9 +20,14 @@ import retrofit2.Response
 
 class MyStreamService {
     private lateinit var myStreamView: MyStreamView
+    private lateinit var mainView : MainView
 
     fun setMyStreamView(myStreamView: MyStreamView) {
         this.myStreamView = myStreamView
+    }
+
+    fun setMainView(mainView: MainView) {
+        this.mainView = mainView
     }
 
     fun showMystream(streamId : Int, userId: Int, page : Int) {
@@ -31,7 +38,12 @@ class MyStreamService {
                 call: Call<openMyStreamResponse>,
                 response: Response<openMyStreamResponse>
             ) {
+                if (response.code() == 200) {
+                    myStreamView.showMyStreamSuccess(response.body()!!)
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<openMyStreamResponse>, t: Throwable) {
@@ -49,7 +61,9 @@ class MyStreamService {
                 call: Call<searchMyStreamResponse>,
                 response: Response<searchMyStreamResponse>
             ) {
-
+                if (response.code() == 200) {
+                    myStreamView.searchMyStreamSuccess(response.body()!!)
+                }
             }
 
             override fun onFailure(call: Call<searchMyStreamResponse>, t: Throwable) {
@@ -67,8 +81,13 @@ class MyStreamService {
                 call: Call<showWatchStreamResponse>,
                 response: Response<showWatchStreamResponse>
             ) {
+                if (response.code() == 200) {
+
+                    mainView.showWatchStreamSuccess(response.body()!!.result.streamList)
+                }
 
             }
+
 
             override fun onFailure(call: Call<showWatchStreamResponse>, t: Throwable) {
 
@@ -85,6 +104,10 @@ class MyStreamService {
                 call: Call<makeMyStreamResponse>,
                 response: Response<makeMyStreamResponse>
             ) {
+                if (response.code() == 200) {
+                    mainView.makeMyStreamSuccess(response.body()!!.result.streamId, response.body()!!.result.streamName)
+                }
+
 
             }
 
@@ -122,7 +145,9 @@ class MyStreamService {
                 call: Call<diaryPublicTypeResponse>,
                 response: Response<diaryPublicTypeResponse>
             ) {
-
+                if (response.code() == 200) {
+                    myStreamView.diaryPublicTypeSuccess(response.body()!!.result.isPublic)
+                }
             }
 
             override fun onFailure(call: Call<diaryPublicTypeResponse>, t: Throwable) {
@@ -169,14 +194,17 @@ class MyStreamService {
             })
         }
 
-        fun removeMyStreamDiary(streamId : Int) {
+        fun removeMyStreamDiary(postId : Int) {
             val myStreamService = getRetrofit().create(MyStreamRetrofitInterface::class.java)
 
-            myStreamService.removeMyStreamDiary(streamId).enqueue(object :Callback<removeMyStreamDiaryResponse>{
+            myStreamService.removeMyStreamDiary(postId).enqueue(object :Callback<removeMyStreamDiaryResponse>{
                 override fun onResponse(
                     call: Call<removeMyStreamDiaryResponse>,
                     response: Response<removeMyStreamDiaryResponse>
                 ) {
+                    if (response.code() == 200) {
+                        myStreamView.removeMyStreamDiarySuccess()
+                    }
 
                 }
 

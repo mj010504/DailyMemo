@@ -27,7 +27,7 @@ class SearchingPasswordResetFragment : Fragment() {
 
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
-                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.beginTransaction()?.remove(SearchingPasswordResetFragment())?.commit();
                 fragmentManager?.popBackStack();
 
             }

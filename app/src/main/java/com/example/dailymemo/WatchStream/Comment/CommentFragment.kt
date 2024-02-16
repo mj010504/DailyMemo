@@ -15,21 +15,36 @@
     import android.view.inputmethod.InputMethodManager
     import android.widget.PopupWindow
     import androidx.constraintlayout.widget.ConstraintLayout
-    import androidx.core.content.ContextCompat.getSystemService
+    import androidx.fragment.app.FragmentActivity
     import androidx.recyclerview.widget.LinearLayoutManager
     import com.bumptech.glide.Glide
     import com.bumptech.glide.load.engine.DiskCacheStrategy
+    import com.example.dailymemo.MyStream.Retrofit.Response.post
+    import com.example.dailymemo.OpenStream.Retrofit.OpenStreamService
+    import com.example.dailymemo.OpenStream.Retrofit.Response.CommentResult
+    import com.example.dailymemo.OpenStream.Retrofit.Response.ShowCommentResponse
+    import com.example.dailymemo.OpenStream.Retrofit.Response.ShowCommentResult
     import com.example.dailymemo.R
     import com.example.dailymemo.databinding.FragmentCommentBinding
     import com.google.android.material.bottomsheet.BottomSheetBehavior
     import com.google.android.material.bottomsheet.BottomSheetDialog
     import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+    import com.google.android.material.internal.ViewUtils.hideKeyboard
     import java.io.File
 
-    class CommentFragment : BottomSheetDialogFragment(){
+    class CommentFragment(activity: FragmentActivity, postId : Int) : BottomSheetDialogFragment(), CommentView  {
+
+        val act = activity
 
         lateinit var binding : FragmentCommentBinding
+        var hasNext = false
+        var page : Int = 1
+        val postId = postId
+        var jwt = getMyJwt()
+        private lateinit var adapter : CommentRVAdapter
 
+        lateinit var commentList: List<CommentResult>
+        var listSize: Int = 0
 
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +52,7 @@
         ): View? {
             binding = FragmentCommentBinding.inflate(inflater, container, false)
 
-            initRecyclerView()
+
 
             return binding.root
         }
@@ -58,53 +73,37 @@
                 it.behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
 
-//            val editText = binding.commentEt
-//
-//            // 키보드가 나타날 때의 리스너 등록
-//            editText.viewTreeObserver.addOnGlobalLayoutListener {
-//                val r = Rect()
-//                editText.getWindowVisibleDisplayFrame(r)
-//                val screenHeight = editText.height
-//                val keypadHeight = screenHeight - r.bottom
-//
-//                if (keypadHeight > screenHeight * 0.15) {
-//                    // 키보드가 열려있는 상태에서의 동작 (올리기)
-//                    val location = IntArray(2)
-//                    editText.getLocationOnScreen(location)
-//                    val editTextBottom = location[1] + editText.height
-//                    val margin = editTextBottom - r.bottom
-//                    editText.scrollBy(0, margin)
-//                } else {
-//                    // 키보드가 닫혀있는 상태에서의 동작 (내리기)
-//                    editText.scrollBy(0, 0)
-//                }
-//            }
-//
-//            // 키보드 자동으로 올라오는 것 방지
-//            activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         }
 
-//        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//            val dialog = super.onCreateDialog(savedInstanceState)
-//
-//            dialog.setOnShowListener { dialogInterface ->
-//                val bottomSheetDialog = dialogInterface as BottomSheetDialog
-//                setupRatio(bottomSheetDialog)
-//            }
-//
-//            return dialog
-//        }
+        override fun onResume() {
+            super.onResume()
 
-        private fun initRecyclerView() : CommentRVAdapter {
-            val commentRVAdapter = CommentRVAdapter(requireActivity())
+            showComment(jwt, postId, page)
+        }
+
+        private fun getMyJwt() : String? {
+            val spf = act.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            return spf.getString("jwt", null)
+        }
+
+
+        private fun initRecyclerView(commentList : ArrayList<CommentResult>, listSize: Int) : CommentRVAdapter {
+            val commentRVAdapter = CommentRVAdapter(requireActivity(), commentList, listSize)
             binding.commentRv.adapter = commentRVAdapter
+            adapter = commentRVAdapter
             binding.commentRv.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
+            if(adapter.itemCount == 0 ) {
+                showBasic()
+            }
+            else {
+                removeBasic()
+            }
+
             binding.sendBtnIv.setOnClickListener {
                 if(binding.commentEt.text.toString().length > 0) {
-                    commentRVAdapter.addItem(binding.commentEt.text.toString())
-                    binding.commentEt.text = null
+                    writeComment(jwt, postId, binding.commentEt.text.toString())
                     hideKeyboard(it)
                     removeBasic()
                 }
@@ -160,15 +159,14 @@
 
                 binding.sendBtnIv.setOnClickListener {
                     if(binding.commentEt.text.toString().length > 0) {
-                        val commentRVAdapter = adapter
-                        commentRVAdapter.updateItem(position, binding.commentEt.text.toString())
+                        val commentId = adapter.getCommentId(position)
+                        changeComment(jwt, commentId, binding.commentEt.text.toString())
                         binding.commentEt.text = null
                         hideKeyboard(it)
 
                         binding.sendBtnIv.setOnClickListener {
                             if(binding.commentEt.text.toString().length > 0) {
-                                commentRVAdapter.addItem(binding.commentEt.text.toString())
-                                binding.commentEt.text = null
+                               writeComment(jwt, postId,binding.commentEt.text.toString())
                                 hideKeyboard(it)
                                 removeBasic()
                             }
@@ -179,7 +177,8 @@
 
             //댓글 삭제
             deleteBtn.setOnClickListener {
-               adapter.removeItem(position)
+                val commentId = adapter.getCommentId(position)
+                removeComment(jwt, commentId)
                 popupWindow.dismiss()
                 if(adapter.itemCount == 0 ) {
                     showBasic()
@@ -251,5 +250,61 @@
             return preferences.getString("user_profile_image_path", "") ?: ""
         }
 
+        private fun showComment(jwt: String?, postId : Int, page : Int) {
+            val openStreamService = OpenStreamService()
+            openStreamService.setCommentView(this)
+            openStreamService.showComment(jwt, postId, page)
+        }
 
+        override fun showCommentSuccess(resp: ShowCommentResponse) {
+            if (resp.result.hasNext) {
+                hasNext = true
+                page += 1
+            } else {
+                hasNext = false
+            }
+
+            commentList = resp.result.commentList
+            listSize = resp.result.listSize
+
+
+            val commentArrayList = ArrayList(commentList)
+            initRecyclerView(commentArrayList, listSize)
+        }
+
+        private fun writeComment(jwt: String?, postId: Int, detail : String) {
+            val openStreamService = OpenStreamService()
+            openStreamService.setCommentView(this)
+            openStreamService.writeComment(jwt, postId, detail)
+        }
+
+        override fun writeCommentSuccess(resp: CommentResult) {
+            adapter.addItem(resp)
+            binding.commentEt.text = null
+        }
+
+        private fun changeComment(jwt : String?, commentId: Int, detail : String) {
+            val openStreamService = OpenStreamService()
+            openStreamService.setCommentView(this)
+            openStreamService.changeComment(jwt, commentId, detail)
+        }
+
+        override fun changeCommentSuccess(resp: CommentResult, detail : String) {
+            adapter.updateItem(resp.commentId ,detail)
+            binding.commentEt.text = null
+        }
+
+        private fun removeComment(jwt: String?, commentId : Int) {
+            val openStreamService = OpenStreamService()
+            openStreamService.setCommentView(this)
+            openStreamService.removeComment(jwt, commentId)
+        }
+
+
+        override fun removeCommentSuccess(commentId: Int) {
+          adapter.removeItem(commentId)
+            if(adapter.itemCount == 0) {
+                showBasic()
+            }
+        }
     }

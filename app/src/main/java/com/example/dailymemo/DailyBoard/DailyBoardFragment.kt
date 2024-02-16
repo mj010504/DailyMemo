@@ -25,6 +25,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -33,6 +34,14 @@ import androidx.recyclerview.widget.RecyclerView.INVISIBLE
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.dailymemo.DailyBoard.Retrofit.DailyBoardService
+import com.example.dailymemo.DailyBoard.Retrofit.DailyBoardView
+import com.example.dailymemo.DailyBoard.Retrofit.Response.Diary
+import com.example.dailymemo.DailyBoard.Retrofit.Response.DiaryPhoto
+import com.example.dailymemo.DailyBoard.Retrofit.Response.showDailyBoardResponse
+import com.example.dailymemo.DailyBoard.Retrofit.Response.showDiaryPreviewResponse
+import com.example.dailymemo.DailyBoard.Retrofit.Response.storeImageResponse
+import com.example.dailymemo.DailyBoard.Retrofit.Response.writeDiaryRequest
 import com.example.dailymemo.MyStream.StreamSettingRVAdapter
 import com.example.dailymemo.R
 import com.example.dailymemo.Setting.Dialog.SampleDialog
@@ -41,18 +50,25 @@ import com.example.dailymemo.databinding.FragmentDailyBoardBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 
-class DailyBoardFragment : Fragment() {
+class DailyBoardFragment : Fragment(), DailyBoardView {
 
     lateinit var binding: FragmentDailyBoardBinding
     private var imageList = ArrayList<Uri>()
-    private var isdeleteList = ArrayList<Boolean>()
     private var isDiaryPreview = false
+    private var pageNum = 1
+    private var hasNext = false
 
 
     override fun onCreateView(
@@ -60,30 +76,6 @@ class DailyBoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDailyBoardBinding.inflate(inflater, container, false)
-
-
-//        val editText = binding.diaryEt
-//        val rootView = binding.rootView
-//
-//        // 키보드가 나타날 때의 리스너 등록
-//        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-//            val r = Rect()
-//            rootView.getWindowVisibleDisplayFrame(r)
-//            val screenHeight = rootView.height
-//            val keypadHeight = screenHeight - r.bottom
-//
-//            if (keypadHeight > screenHeight * 0.15) {
-//                // 키보드가 열려있는 상태에서의 동작 (올리기)
-//                val location = IntArray(2)
-//                editText.getLocationOnScreen(location)
-//                val editTextBottom = location[1] + editText.height + 35
-//                val margin = editTextBottom - r.bottom
-//                rootView.scrollTo(0, margin)
-//            } else {
-//                // 키보드가 닫혀있는 상태에서의 동작 (내리기)
-//                rootView.scrollTo(0, 0)
-//            }
-//        }
 
         // 키보드 자동으로 올라오는 것 방지
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -95,8 +87,13 @@ class DailyBoardFragment : Fragment() {
             }
 
             diaryPreviewBtnLayout.setOnClickListener {
-                onDiaryPreviewClick()
-            }
+                if(isDiaryPreview == false) {
+                    showDiaryPreview(diaryphotoId = 1, streamId = 1)
+                }
+                else {
+                    DiaryPreviewClose()
+                }
+             }
 
             deleteLayout.setOnClickListener {
                 removePhoto()
@@ -125,17 +122,39 @@ class DailyBoardFragment : Fragment() {
         getImage()
         basicSetting()
         initRecyclerView()
-        var cl =  compressImages(imageList)
-        // compressedBitmapList의 각 Bitmap을 Base64로 인코딩하여 문자열로 변환
-        val bitmapStringList = cl.map { bitmapToBase64(it) }
 
-// 변환된 문자열 리스트 출력
-        Log.d("bittmap", bitmapStringList[0])
 
     }
 
+    override fun onResume() {
+        super.onResume()
+//        if(imageList.size > 0) {
+//            val bitmapList = compressImages(imageList)
+//            val images = bitmapList.map { bitmapToBase64(it)}
+//            storeImage(diaryId, images)
+//
+//        }
+
+//
+//        var cl =  compressImages(imageList)
+//        Log.d("bittmap1", cl[0].toString() )
+//        // compressedBitmapList의 각 Bitmap을 Base64로 인코딩하여 문자열로 변환
+//        val bitmapStringList = cl.map { bitmapToBase64(it) }
+//
+//        saveBase64ListToFile(requireContext(), bitmapStringList, "base64_list.txt")
+//
+//// 파일에서 Base64 문자열 리스트를 불러오기
+//        val loadedBase64List = readBase64ListFromFile(requireContext(), "base64_list.txt")
+//
+//
+//        val bitmap = stringToBitmap(loadedBase64List[0])
+//        binding.streamProfileIv.setImageBitmap(bitmap)
+    }
+
+
+
     private fun initRecyclerView() {
-        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(),imageList, isdeleteList)
+        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(),imageList)
         binding.dailyBoardRv.adapter = dailyBoardRVAdapter
         binding.dailyBoardRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -153,20 +172,6 @@ class DailyBoardFragment : Fragment() {
 
     }
 
-    private fun updateDeleteText() {
-        var layoutManager = binding.dailyBoardRv.layoutManager
-        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
-        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
-        var isDelete = viewHolder!!.getIsDelete(pos)
-        if(isDelete) {
-            binding.deleteTv.visibility = VISIBLE
-            binding.deletedTv.visibility = INVISIBLE
-        }
-        else {
-            binding.deleteTv.visibility = INVISIBLE
-            binding.deletedTv.visibility = VISIBLE
-        }
-    }
 
     private fun updateCount() {
         var layoutManager = binding.dailyBoardRv.layoutManager
@@ -216,15 +221,30 @@ class DailyBoardFragment : Fragment() {
     }
 
 
-    private fun removePhoto() {
-        var layoutManager = binding.dailyBoardRv.layoutManager
-//        var visibleItemCount = layoutManager?.childCount
-        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
-
-        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
-        viewHolder?.removeItem(pos)
-        updateDeleteText()
-    }
+//    private fun removePhoto() {
+//        var layoutManager = binding.dailyBoardRv.layoutManager
+////        var visibleItemCount = layoutManager?.childCount
+//        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+//
+//        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
+//        viewHolder?.removeItem(pos)
+//        updateDeleteText()
+//    }
+//
+//    private fun updateDeleteText() {
+//        var layoutManager = binding.dailyBoardRv.layoutManager
+//        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+//        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
+//        var isDelete = viewHolder!!.getIsDelete(pos)
+//        if(isDelete) {
+//            binding.deleteTv.visibility = VISIBLE
+//            binding.deletedTv.visibility = INVISIBLE
+//        }
+//        else {
+//            binding.deleteTv.visibility = INVISIBLE
+//            binding.deletedTv.visibility = VISIBLE
+//        }
+//    }
 
 
 
@@ -320,8 +340,7 @@ class DailyBoardFragment : Fragment() {
                                 )
 
                             imageList.add(imageUri)
-                            // isdeleteList에 true 추가
-                            isdeleteList.add(true)
+
 
                             Log.d(
                                 "cursor",
@@ -368,11 +387,17 @@ class DailyBoardFragment : Fragment() {
     }
 
     // Bitmap을 Base64로 인코딩하는 함수
-    fun bitmapToBase64(bitmap: Bitmap): String {
+    private fun bitmapToBase64(bitmap: Bitmap): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+    }
+
+    private fun stringToBitmap(base64: String) : Bitmap {
+        val encodeByte = Base64.decode(base64, Base64.NO_WRAP)
+
+        return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
     }
 
 
@@ -383,42 +408,44 @@ class DailyBoardFragment : Fragment() {
 
     }
 
-    private fun onDiaryPreviewClick() {
 
-        if(isDiaryPreview == false) {
-            isDiaryPreview = !isDiaryPreview
-            ChangeUpHeight()
+    private fun DiaryPreviewClose() {
+        isDiaryPreview = !isDiaryPreview
+        ChangeDownHeight()
+        binding.apply {
+            diaryPreviewBtnLayout.setBackgroundResource(R.drawable.menu_box)
 
-            binding.apply {
-                diaryPreviewBtnLayout.setBackgroundResource(R.drawable.menu_box_selected)
+            streamLayout.visibility = VISIBLE
+            deleteLayout.visibility = VISIBLE
 
-                streamLayout.visibility = INVISIBLE
-                deleteLayout.visibility = INVISIBLE
+            diaryPreviewActiveTv.visibility = INVISIBLE
+            dateTv.visibility = INVISIBLE
+            diaryTextPreviewLayout.visibility = INVISIBLE
 
-                diaryPreviewActiveTv.visibility = VISIBLE
-                dateTv.visibility = VISIBLE
-                diaryTextPreviewLayout.visibility = VISIBLE
-
-                diaryPreviewTv.text = "미리보기 취소"
-            }
+            diaryPreviewTv.text = "일기 미리보기"
         }
-        else {
-            isDiaryPreview = !isDiaryPreview
-            ChangeDownHeight()
-            binding.apply {
-                diaryPreviewBtnLayout.setBackgroundResource(R.drawable.menu_box)
+    }
 
-                streamLayout.visibility = VISIBLE
-                deleteLayout.visibility = VISIBLE
+    private fun DiaryPreviewOpen(detail : String, dateString : String) {
+        isDiaryPreview = !isDiaryPreview
+        ChangeUpHeight()
 
-                diaryPreviewActiveTv.visibility = INVISIBLE
-                dateTv.visibility = INVISIBLE
-                diaryTextPreviewLayout.visibility = INVISIBLE
+        binding.apply {
+            diaryPreviewBtnLayout.setBackgroundResource(R.drawable.menu_box_selected)
 
-                diaryPreviewTv.text = "일기 미리보기"
-            }
-            }
+            streamLayout.visibility = INVISIBLE
+            deleteLayout.visibility = INVISIBLE
+
+            diaryPreviewActiveTv.visibility = VISIBLE
+            dateTv.visibility = VISIBLE
+            diaryTextPreviewLayout.visibility = VISIBLE
+
+            diaryPreviewDetailTv.text = detail
+            dateTv.text = dateString
+
+            diaryPreviewTv.text = "미리보기 취소"
         }
+    }
 
 
     private fun ChangeUpHeight() {
@@ -487,6 +514,87 @@ class DailyBoardFragment : Fragment() {
             popupWindow.dismiss()
         }
     }
+
+    private fun showDailyBoard(userId : Int, page : Int) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDailyBoardView(this)
+        dailyBoardService.showDailyBoard(userId, page)
+    }
+
+    override fun onShowDailyBoardSuccess(resp: showDailyBoardResponse) {
+        if(resp.result.hasNext) {
+            pageNum += 1
+            hasNext = true
+        }
+        else {
+            hasNext = false
+        }
+
+
+    }
+
+    private fun storeImage(diaryId : Int, images : List<String>) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDailyBoardView(this)
+        dailyBoardService.storeImage(diaryId, images)
+    }
+
+    override fun storeImageSuccess(resp: storeImageResponse) {
+        Log.d("storeImage", "succcess")
+    }
+
+    private fun showDiaryPreview(diaryphotoId : Int, streamId : Int) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDailyBoardView(this)
+        dailyBoardService.showDiaryPreview(diaryphotoId, streamId)
+    }
+
+    override fun showDiaryPreviewSuccess(resp: showDiaryPreviewResponse) {
+        val detail = resp.result.detail
+        val date = resp.result.createdAt
+        val dateString = convertDateFormat(date)
+        DiaryPreviewOpen(detail, dateString)
+    }
+
+    fun convertDateFormat(inputDate: String): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val dateTime = LocalDateTime.parse(inputDate, formatter)
+        val outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일")
+        return dateTime.format(outputFormatter)
+    }
+
+    private fun changeDailyBoardStream(diaryphotoId: Int, streamName: String) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDailyBoardView(this)
+        dailyBoardService.changeDailyBoardStream(diaryphotoId, streamName)
+    }
+
+    override fun changeDailyBoardStreamSuccess() {
+        val dialog = SampleDialog(requireContext(),"스트림이 변경되었습니다!")
+        dialog.show()
+    }
+
+    private fun onDailyBoardRemoveBtnClick(dirayPhotoId : Int) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDailyBoardView(this)
+        dailyBoardService.onDailyBoardRemoveBtnClick(dirayPhotoId)
+    }
+
+    override fun onDailyBoardRemoveBtnClick(status: Boolean) {
+        if(status) {
+            removePhoto()
+        }
+    }
+
+    private fun removePhoto() {
+        binding.deleteTv.visibility = VISIBLE
+        binding.deletedTv.visibility = INVISIBLE
+    }
+
+    private fun updateDeleteText() {
+
+    }
+
 }
 
 

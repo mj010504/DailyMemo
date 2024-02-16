@@ -1,4 +1,4 @@
-package com.example.dailymemo.Auth
+package com.example.dailymemo.Auth.Retrofit
 
 interface SearchingIDView {
     fun searchingIdSuccess(id : String)

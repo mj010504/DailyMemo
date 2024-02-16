@@ -1,15 +1,11 @@
-package com.example.dailymemo.Service
+package com.example.dailymemo.Auth.Retrofit
 
 import android.util.Log
-import com.example.dailymemo.Auth.LoginView
-import com.example.dailymemo.Auth.SearchingIDView
 import com.example.dailymemo.Auth.SearchingIdFragment
-import com.example.dailymemo.Auth.SignUpFragment
 import com.example.dailymemo.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.sign
 
 class LoginService {
 
@@ -39,9 +35,11 @@ class LoginService {
         val body : LoginRequest = LoginRequest(id,pw)
         loginService.login(body).enqueue(object : Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                Log.i("LoginService", response.toString())
+
                 if(response.code() == 200){
-                    loginView.loginSuccess()
+                    val token = response.body()!!.result.token
+                    val userId = response.body()!!.result.userId
+                    loginView.loginSuccess(token, userId)
                 }
                 else {
                     loginView.loginFailed()
@@ -57,7 +55,7 @@ class LoginService {
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
         loginService.isNicknameExist(id).enqueue(object : Callback<nicknameRepeatedResponse>{
-            override fun onResponse( call: Call<nicknameRepeatedResponse>,response: Response<nicknameRepeatedResponse> ) {
+            override fun onResponse(call: Call<nicknameRepeatedResponse>, response: Response<nicknameRepeatedResponse> ) {
                 if(response.code() == 200){
                     if(response.body()?.result!!.exsists == false){
                         signupView.isNickNameSuccess()
@@ -77,7 +75,7 @@ class LoginService {
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
         loginService.isEmailExist(email).enqueue(object : Callback<emailRepeatedResponse>{
-            override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
+            override fun onResponse(call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
 
                 if(response.code()==200) {
                     if (response.body()?.isExists == false) {
@@ -99,7 +97,7 @@ class LoginService {
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
         loginService.isEmailExist(email).enqueue(object : Callback<emailRepeatedResponse>{
-            override fun onResponse( call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
+            override fun onResponse(call: Call<emailRepeatedResponse>, response: Response<emailRepeatedResponse>) {
 
                 if(response.code()==200) {
                     if (response.body()?.isExists == false) {
@@ -212,10 +210,10 @@ class LoginService {
         })
     }
 
-    fun resigster(name : String,  nickName: String, password : String, phoneNumber : String, email : String, emailVerificationToken : String?) {
+    fun resigster(name : String,  nickName: String, password : String,email : String, emailVerificationToken : String?) {
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
-        val registerRequest = RegisterRequest(name, nickName, password, phoneNumber, email, emailVerificationToken)
+        val registerRequest = RegisterRequest(name, nickName, password,email, emailVerificationToken)
         loginService.register(registerRequest).enqueue(object: Callback<RegisterResponse>{
             override fun onResponse(
                 call: Call<RegisterResponse>,

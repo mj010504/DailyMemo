@@ -10,8 +10,8 @@ data class LikeResponse (
 )
 
 data class LikeResult (
-    @SerializedName("code") val postId : Int,
-    @SerializedName("code") val likes : Int,
-    @SerializedName("code") val like_check : String,
+    @SerializedName("postId") val postId : Int,
+    @SerializedName("likes") val likes : Int,
+    @SerializedName("like_check") val like_check : Boolean,
 )
 

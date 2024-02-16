@@ -1,5 +1,8 @@
 package com.example.dailymemo.OpenStream
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -10,8 +13,9 @@ import com.example.dailymemo.databinding.ItemOpenstreamLayoutBinding
 import com.example.dailymemo.databinding.ItemOpenstreamPhotoLayoutBinding
 
 
-class PhotoRVAdapter: RecyclerView.Adapter<PhotoRVAdapter.ViewHolder>() {
+class PhotoRVAdapter(postImg : List<String>): RecyclerView.Adapter<PhotoRVAdapter.ViewHolder>() {
 
+    val images = postImg
 
     interface MyItemClickListener {
         fun onStreamClick()
@@ -33,11 +37,18 @@ class PhotoRVAdapter: RecyclerView.Adapter<PhotoRVAdapter.ViewHolder>() {
         holder.binding.photoCv.setOnClickListener {mitemClickListener.onStreamClick()}
     }
 
-    override fun getItemCount(): Int = 4
+    override fun getItemCount(): Int = images.size
     inner class ViewHolder(val binding: ItemOpenstreamPhotoLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos: Int) {
-
+            val bitmap = stringToBitmap(images[pos])
+            binding.photoIv.setImageBitmap(bitmap)
         }
 
     }
+}
+
+private fun stringToBitmap(base64: String) : Bitmap {
+    val encodeByte = Base64.decode(base64, Base64.NO_WRAP)
+
+    return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
 }

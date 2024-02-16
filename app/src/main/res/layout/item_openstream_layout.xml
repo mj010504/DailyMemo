@@ -47,7 +47,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_profile_iv"
-        ></androidx.recyclerview.widget.RecyclerView>
+      />
 
     <ImageView
         android:id="@+id/like_iv"

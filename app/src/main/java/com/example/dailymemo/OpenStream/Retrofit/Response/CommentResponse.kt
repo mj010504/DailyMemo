@@ -3,19 +3,16 @@ package com.example.dailymemo.OpenStream.Retrofit.Response
 import com.google.gson.annotations.SerializedName
 import org.w3c.dom.Comment
 
+
+
 data class WriteCommentResponse (
     @SerializedName("isSuccess") val isSuccess : Boolean,
     @SerializedName("code") val code : String,
     @SerializedName("message") val message : String,
-    @SerializedName("result") val result : WriteCommentResult
+    @SerializedName("result") val result : CommentResult
 )
 
-data class WriteCommentResult (
-    @SerializedName("commentId") val commentId : Int,
-    @SerializedName("nickName") val nickName : String,
-    @SerializedName("detail") val detail : String,
-    @SerializedName("isAuthor") val isAuthor : Boolean
-)
+
 
 data class ShowCommentResponse (
     @SerializedName("isSuccess") val isSuccess : Boolean,
@@ -26,13 +23,16 @@ data class ShowCommentResponse (
 
 data class ShowCommentResult(
     @SerializedName("listSize") val listSize : Int,
+    @SerializedName("hasNext") val hasNext : Boolean,
+    @SerializedName("isFirst") val isFirst : Boolean,
+    @SerializedName("isLast") val isLast : Boolean,
     @SerializedName("commentList") val commentList : List<CommentResult>
 )
 
 data class CommentResult(
     @SerializedName("commentId") val commentId : Int,
-    @SerializedName("nickName") val nickName : String,
-    @SerializedName("detail") val detail : String,
+    @SerializedName("nickname") val nickName : String,
+    @SerializedName("detail") var detail : String,
     @SerializedName("isAuthor") val isAuthor : Boolean
 )
 
@@ -51,12 +51,6 @@ data class ChangeCommentResponse(
     @SerializedName("isSuccess") val isSuccess : Boolean,
     @SerializedName("code") val code : String,
     @SerializedName("message") val message : String,
-    @SerializedName("result") val result : ChangeCommentResult
+    @SerializedName("result") val result : CommentResult
 )
 
-data class ChangeCommentResult(
-    @SerializedName("commentId") val commentId : Int,
-    @SerializedName("nickName") val nickName : String,
-    @SerializedName("detail") val detail : String,
-    @SerializedName("isAuthor") val isAuthor : Boolean
-)

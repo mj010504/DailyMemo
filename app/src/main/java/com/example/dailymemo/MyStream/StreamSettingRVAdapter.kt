@@ -14,7 +14,16 @@ class StreamSettingRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<
 
     val act = activity
     val userProfile = getProfieImage()
-    val streams = arrayOf("일상", "여행", "맛집")
+   var streams = getStreamNames()
+
+    interface MyItemClickListener {
+        fun onStreamClick(streamName : String)
+    }
+
+    private lateinit var mitemClickListener : MyItemClickListener
+    fun seMyItemClickListener(itemClickListener: MyItemClickListener) {
+        mitemClickListener = itemClickListener
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,6 +36,7 @@ class StreamSettingRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
+        holder.binding.streamLayout.setOnClickListener { mitemClickListener.onStreamClick(streams[position]) }
     }
 
     override fun getItemCount(): Int = 3
@@ -64,6 +74,17 @@ class StreamSettingRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<
         }
     }
 
+    private fun getStreamNames() : MutableList<String> {
+        var streams = mutableListOf<String>()
+        for(index in 1..3) {
+            val spf = act.getSharedPreferences("Streams", Context.MODE_PRIVATE)
+            val streamName = spf.getString("stream"+index, "일상")
+            streams.add(streamName!!)
+        }
+
+        return streams
     }
+
+}
 
 

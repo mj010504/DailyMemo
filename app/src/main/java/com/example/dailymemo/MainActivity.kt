@@ -1,5 +1,6 @@
 package com.example.dailymemo
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
+import com.example.dailymemo.MyStream.Retrofit.MyStreamService
+import com.example.dailymemo.MyStream.Retrofit.Response.stream
 import com.example.dailymemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -36,10 +39,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
 
       this.onBackPressedDispatcher.addCallback(this, callback)
@@ -55,6 +61,9 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+
 
 
     private fun setBottomNavigationVisiblity() {
@@ -139,5 +148,8 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+
+
 
 }

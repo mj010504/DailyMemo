@@ -34,7 +34,7 @@ class StreamSettingFragment : Fragment() {
 
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
-                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.beginTransaction()?.remove(StreamSettingFragment())?.commit();
                 fragmentManager?.popBackStack();
 
             }

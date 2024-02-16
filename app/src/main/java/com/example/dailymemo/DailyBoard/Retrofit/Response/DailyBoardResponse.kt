@@ -16,14 +16,14 @@ data class showDailyBoardResult(
     @SerializedName("hasNext") val hasNext : Boolean,
     @SerializedName("isFirst") val isFirst : Boolean,
     @SerializedName("isLast") val isLast : Boolean,
-    @SerializedName("diaryList") val diaryList : List<Diary>
+    @SerializedName("diaryList") val diaryList : List<Diary>?
 )
 
 data class Diary(
     @SerializedName("id") val id  : Int,
     @SerializedName("detail") val detail : String,
     @SerializedName("isPublic") val isPublic: Boolean,
-    @SerializedName("diaryPhotoList") val diaryPhotoList: diaryPhotoList
+    @SerializedName("diaryPhotoList") val diaryPhotoList: List<DiaryPhoto>
 )
 
 
@@ -69,10 +69,10 @@ data class storeImageResult(
     @SerializedName("id") val id : Int,
     @SerializedName("detail") val detail : String,
     @SerializedName("isPublic") val isPublic: Boolean,
-    @SerializedName("diaryPhotoList") val diaryPhotoList : diaryPhotoList
+    @SerializedName("diaryPhotoList") val diaryPhotoList : List<DiaryPhoto>
 )
 
-data class diaryPhotoList(
+data class DiaryPhoto(
     @SerializedName("id") val id : Int,
     @SerializedName("url") val url : String,
     @SerializedName("status") val status : Boolean,

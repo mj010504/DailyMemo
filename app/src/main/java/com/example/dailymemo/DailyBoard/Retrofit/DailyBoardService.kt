@@ -15,13 +15,17 @@ import com.example.dailymemo.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Body
 
 class DailyBoardService {
     private lateinit var dailyBoardView: DailyBoardView
+    private lateinit var diaryView : DiaryView
 
-    fun setMyStreamView(dailyBoardView: DailyBoardView) {
+    fun setDailyBoardView(dailyBoardView: DailyBoardView) {
         this.dailyBoardView = dailyBoardView
+    }
+
+    fun setDirayView(diaryView: DiaryView) {
+        this.diaryView = diaryView
     }
 
     fun showDailyBoard(userId : Int, page : Int) {
@@ -32,7 +36,12 @@ class DailyBoardService {
                 call: Call<showDailyBoardResponse>,
                 response: Response<showDailyBoardResponse>
             ) {
+                if(response.code() == 200) {
+                    dailyBoardView.onShowDailyBoardSuccess(response.body()!!)
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<showDailyBoardResponse>, t: Throwable) {
@@ -52,7 +61,12 @@ class DailyBoardService {
                     call: Call<ChangeStreamResponse>,
                     response: Response<ChangeStreamResponse>
                 ) {
+                    if(response.code() == 200) {
+                        dailyBoardView.changeDailyBoardStreamSuccess()
+                    }
+                    else {
 
+                    }
                 }
 
                 override fun onFailure(call: Call<ChangeStreamResponse>, t: Throwable) {
@@ -63,15 +77,20 @@ class DailyBoardService {
             })
     }
 
-    fun onDailyBoardRemoveBtnClick(dailyPhotoId: Int) {
+    fun onDailyBoardRemoveBtnClick(diaryPhotoId: Int) {
         val dailyBoardService = getRetrofit().create(DailyBoardRetoriftinterface::class.java)
 
-        dailyBoardService.onDailyBoardRemoveBtnClick(dailyPhotoId).enqueue(object: Callback<onDailyBoardRemoveBtnClickResponse>{
+        dailyBoardService.onDailyBoardRemoveBtnClick(diaryPhotoId).enqueue(object: Callback<onDailyBoardRemoveBtnClickResponse>{
             override fun onResponse(
                 call: Call<onDailyBoardRemoveBtnClickResponse>,
                 response: Response<onDailyBoardRemoveBtnClickResponse>
             ) {
+                if(response.code() == 200) {
+                    dailyBoardView.onDailyBoardRemoveBtnClick(response.body()!!.result.status)
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<onDailyBoardRemoveBtnClickResponse>, t: Throwable) {
@@ -90,7 +109,12 @@ class DailyBoardService {
                 call: Call<storeImageResponse>,
                 response: Response<storeImageResponse>
             ) {
+                if(response.code() == 200) {
+                    dailyBoardView.storeImageSuccess(response.body()!!)
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<storeImageResponse>, t: Throwable) {
@@ -109,7 +133,12 @@ class DailyBoardService {
                 call: Call<writeDiaryResponse>,
                 response: Response<writeDiaryResponse>
             ) {
+                if(response.code() == 200) {
+                   diaryView.writeDiarySuccess()
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<writeDiaryResponse>, t: Throwable) {
@@ -127,7 +156,12 @@ class DailyBoardService {
                 call: Call<showStreamDiaryResponse>,
                 response: Response<showStreamDiaryResponse>
             ) {
+                if(response.code() == 200) {
+                    diaryView.showStreamDiarySuccess(response.body()!!)
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<showStreamDiaryResponse>, t: Throwable) {
@@ -146,7 +180,12 @@ class DailyBoardService {
                 call: Call<showDiaryPreviewResponse>,
                 response: Response<showDiaryPreviewResponse>
             ) {
+                if(response.code() == 200) {
+                    dailyBoardView.showDiaryPreviewSuccess(response.body()!!)
+                }
+                else {
 
+                }
             }
 
             override fun onFailure(call: Call<showDiaryPreviewResponse>, t: Throwable) {

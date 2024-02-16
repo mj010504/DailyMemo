@@ -75,7 +75,9 @@
     <fragment
         android:id="@+id/watchStreamFragment"
         android:name="com.example.dailymemo.WatchStream.WatchStreamFragment"
-        android:label="WatchStreamFragment" />
+        android:label="WatchStreamFragment"/>
+
+
     <fragment
         android:id="@+id/accountWithdrawalFragment"
         android:name="com.example.dailymemo.Setting.AccountWithdrawalFragment"
@@ -107,4 +109,8 @@
         android:label="SearchingFragment">
 
     </fragment>
+    <dialog
+        android:id="@+id/diaryFragment"
+        android:name="com.example.dailymemo.DailyBoard.DiaryFragment"
+        android:label="DiaryFragment" />
 </navigation>

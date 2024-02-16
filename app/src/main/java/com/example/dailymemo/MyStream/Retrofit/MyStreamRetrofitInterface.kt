@@ -18,33 +18,34 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MyStreamRetrofitInterface {
     @GET("stream/private/my/{streamId}")
-    fun showMyStream(@Query("streamId") streamId : Int, @Query("userId") userId : Int, @Query("page") page : Int ) : Call<openMyStreamResponse>
+    fun showMyStream(@Path("streamId", encoded = true) streamId : Int, @Query("userId") userId : Int, @Query("page") page : Int ) : Call<openMyStreamResponse>
 
-    @GET("stream/private/search/{userId?page={page}&query={query}")
-    fun searchMystream(@Query("userId") userId : Int, @Query("query") query : String, @Query("page") page : Int) : Call<searchMyStreamResponse>
+    @GET("stream/private/search/{userId}")
+    fun searchMystream(@Path("userId", encoded = true) userId : Int, @Query("query") query : String, @Query("page") page : Int) : Call<searchMyStreamResponse>
 
-    @GET("stream/private/my?userId={userId}&page={page}")
+    @GET("stream/private/my")
     fun showWatchStream(@Query("userId") userId: Int, @Query("page") page: Int) : Call<showWatchStreamResponse>
 
-    @POST("stream/private/my?userId={userId}&streamName={streamName}")
+    @POST("stream/private/my")
     fun makeMyStream(@Query("userId") userId : Int, @Query("streamName") streamName : String) : Call<makeMyStreamResponse>
 
     @PUT("stream/private/posts/{postId}")
     fun modifyMyStream(@Query("postId") postId : Int, @Body modifyMyStreamRequest : modifyMyStreamRequest): Call<modifyMyStreamResponse>
 
     @PUT("stream/private/post-visible/{userId}/{postId}")
-    fun diaryPublicType(@Query("userId") userId : Int, @Query("postId") postId :Int, @Body isPublic : Boolean) : Call<diaryPublicTypeResponse>
+    fun diaryPublicType(@Path("userId", encoded = true) userId : Int, @Path("postId", encoded = true) postId :Int, @Body isPublic : Boolean) : Call<diaryPublicTypeResponse>
 
     @PUT("stream/private/post-visible/{userId}/{streamId}")
-    fun streamPublicType(@Query("userId") userId : Int, @Query("streamId") streamId :Int, @Body isPublic : Boolean) : Call<streamPublicTypeResponse>
+    fun streamPublicType(@Path("userId", encoded = true) userId : Int, @Path("streamId", encoded = true) streamId :Int, @Body isPublic : Boolean) : Call<streamPublicTypeResponse>
 
     @DELETE("stream/private/my/{streamId}")
-    fun removeMyStream(@Query("streamId") streamId : Int) : Call<removeMyStreamResponse>
+    fun removeMyStream(@Path("streamId", encoded = true) streamId : Int) : Call<removeMyStreamResponse>
 
-    @DELETE("stream/private/post/{postId}")
-    fun removeMyStreamDiary(@Query("postId") postId : Int) : Call<removeMyStreamDiaryResponse>
+    @DELETE("stream/private/my/post/{postId}")
+    fun removeMyStreamDiary(@Path("postId", encoded = true) postId : Int) : Call<removeMyStreamDiaryResponse>
 }

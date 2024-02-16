@@ -26,7 +26,8 @@ data class post(
     @SerializedName("likes") val likes : Int,
     @SerializedName("isLike") val isLike : Boolean,
     @SerializedName("comments") val comments : Int,
-    @SerializedName("createdAt") val createdAt : String
+    @SerializedName("createdAt") val createdAt : String,
+    @SerializedName("isPublic") val isPublic: Boolean
 )
 
 data class searchMyStreamResponse(

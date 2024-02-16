@@ -37,7 +37,7 @@ class PremiumSettingFragment : Fragment() {
 
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
-                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.beginTransaction()?.remove(PremiumSettingFragment())?.commit();
                 fragmentManager?.popBackStack();
 
             }

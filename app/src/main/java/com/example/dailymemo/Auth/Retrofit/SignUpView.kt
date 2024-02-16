@@ -1,4 +1,4 @@
-package com.example.dailymemo.Service
+package com.example.dailymemo.Auth.Retrofit
 
 interface SignUpView {
     fun isNickNameSuccess()

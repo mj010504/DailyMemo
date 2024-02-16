@@ -1,19 +1,26 @@
 package com.example.dailymemo.MyStream
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.ItemMystreamLayoutBinding
 import com.example.dailymemo.databinding.ItemMystreamPhotoLayoutBinding
+import java.nio.charset.StandardCharsets
 
-class MyPhotoRVAdapter(private val parentPos: Int) : RecyclerView.Adapter<MyPhotoRVAdapter.ViewHolder>() {
+class MyPhotoRVAdapter(postImg : List<String>) : RecyclerView.Adapter<MyPhotoRVAdapter.ViewHolder>() {
 
-    val images = listOf(R.drawable.daily1,R.drawable.daily2, R.drawable.daily3, R.drawable.daily1)
+    val images = postImg
 
     interface MyItemClickListener {
         fun onStreamClick()
     }
+
 
     private lateinit var mitemClickListener : MyItemClickListener
     fun seMyItemClickListener(itemClickListener: MyItemClickListener) {
@@ -31,12 +38,19 @@ class MyPhotoRVAdapter(private val parentPos: Int) : RecyclerView.Adapter<MyPhot
         holder.binding.photoCv.setOnClickListener { mitemClickListener.onStreamClick() }
     }
 
-    override fun getItemCount(): Int = 4
+    override fun getItemCount(): Int = images.size
 
     inner class ViewHolder(val binding: ItemMystreamPhotoLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos: Int) {
-            binding.photoIv.setImageResource(images[parentPos])
+            val bitmap = stringToBitmap(images[pos])
+            binding.photoIv.setImageBitmap(bitmap)
         }
 
     }
 }
+
+    private fun stringToBitmap(base64: String) : Bitmap {
+        val encodeByte = Base64.decode(base64, Base64.NO_WRAP)
+
+        return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
+    }

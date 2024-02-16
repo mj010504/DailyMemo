@@ -8,12 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.example.dailymemo.DailyBoard.DailyBoardFragment
+import com.example.dailymemo.Auth.Retrofit.SearchingIDView
 import com.example.dailymemo.R
-import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.Auth.Retrofit.LoginService
 import com.example.dailymemo.Setting.Dialog.SampleDialog
-import com.example.dailymemo.databinding.FragmentSearchingBinding
 import com.example.dailymemo.databinding.FragmentSearchingIdBinding
 
 

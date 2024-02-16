@@ -8,11 +8,12 @@
     import androidx.recyclerview.widget.LinearLayoutManager
     import androidx.recyclerview.widget.RecyclerView
     import com.bumptech.glide.Glide
+    import com.example.dailymemo.DailyBoard.Retrofit.Response.Diary
     import com.example.dailymemo.R
     import com.example.dailymemo.databinding.ItemDailyBoardBinding
 
 
-    class DailyBoardRVAdapter(private val context: Context,private val photoList: ArrayList<Uri>, private val isDeleteList : ArrayList<Boolean>) : RecyclerView.Adapter<DailyBoardRVAdapter.ViewHolder>() {
+    class DailyBoardRVAdapter(private val context: Context, private val photoList: ArrayList<Uri>) : RecyclerView.Adapter<DailyBoardRVAdapter.ViewHolder>() {
 
         interface ItemClickListener{
 
@@ -22,7 +23,6 @@
         fun setITemClickListener(mitemClickListener: ItemClickListener) {
             itemClickListener = mitemClickListener
         }
-
 
 
         override fun onCreateViewHolder(
@@ -48,13 +48,8 @@
                     .into(binding.dailyBoardIv)
             }
 
-            fun removeItem(pos : Int) {
+            fun removeItem() {
                 binding.deleteView.visibility = View.VISIBLE
-                isDeleteList[pos] = false
-            }
-
-            fun getIsDelete(pos : Int) : Boolean {
-                return isDeleteList[pos]
             }
 
         }

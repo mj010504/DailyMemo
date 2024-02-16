@@ -1,17 +1,22 @@
-package com.example.dailymemo.Service
+package com.example.dailymemo.Auth.Retrofit
 
 import com.google.gson.annotations.SerializedName
-import retrofit2.http.Query
-import java.io.Serial
-import java.time.LocalDateTime
 
 data class LoginRequest(
     @SerializedName("nickName") val nickName : String,
     @SerializedName("password") val password : String
 )
 data class LoginResponse(
+    @SerializedName("isSuccess") val isSuccess :Boolean,
+    @SerializedName("code") val code : String,
+    @SerializedName("message") val message : String,
+    @SerializedName("result") val result : loginResult
+)
+
+data class loginResult(
     @SerializedName("token") val token : String,
-    @SerializedName("nickName") val nickName : String
+    @SerializedName("nickName") val nickName : String,
+    @SerializedName("userId") val userId : Int
 )
 
 
@@ -52,7 +57,7 @@ data class RegisterRequest(
     @SerializedName("name") val name : String,
     @SerializedName("nickName") val nickName : String,
     @SerializedName("password") val password : String,
-    @SerializedName("phoneNumber") val phoneNumber: String,
+//    @SerializedName("phoneNumber") val phoneNumber: String,
     @SerializedName("email") val email: String,
     //@SerializedName("profilePhoto") val profilePhoto: String,
     @SerializedName("emailVerificationToken") val emailVerificationToken: String?

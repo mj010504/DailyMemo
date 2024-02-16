@@ -1,5 +1,6 @@
 package com.example.dailymemo.Auth
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,15 +8,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
+import com.example.dailymemo.Auth.Retrofit.LoginView
 import com.example.dailymemo.R
-import com.example.dailymemo.Service.LoginService
+import com.example.dailymemo.Auth.Retrofit.LoginService
 import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.databinding.FragmentLoginBinding
 
 
-class LoginFragment : Fragment(),LoginView {
+class
+LoginFragment : Fragment(), LoginView {
 
     lateinit var binding: FragmentLoginBinding
 
@@ -116,13 +118,24 @@ class LoginFragment : Fragment(),LoginView {
         loginService.login(id_text,pw_text)
     }
 
-    override fun loginSuccess(){
+    override fun loginSuccess(token : String, userId : Int){
         findNavController().navigate(R.id.openStreamFragment)
+        //토큰 저장
+        val spf = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val editor = spf.edit()
+        editor.putString("jwt", token)
+        editor.putInt("userId", userId)
+
+        editor.apply()
+
     }
 
     override fun loginFailed() {
         val dialog = SampleDialog(requireContext(), "아이디 또는 비밀번호가 잘못되었습니다.")
         dialog.show()
     }
+
+
+
 
 }

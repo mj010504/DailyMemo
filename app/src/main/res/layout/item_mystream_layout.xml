@@ -19,12 +19,12 @@
 
     <ImageView
         android:id="@+id/lock_ic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/mysream_lock_ic"
+        android:layout_width="12dp"
+        android:layout_height="13dp"
         android:layout_marginStart="10dp"
+        android:src="@drawable/mysream_lock_ic"
         app:layout_constraintStart_toEndOf="@id/date_tv"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/menu_bar_layout"

@@ -18,6 +18,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.dailymemo.DailyBoard.Retrofit.DailyBoardService
+import com.example.dailymemo.DailyBoard.Retrofit.DiaryView
+import com.example.dailymemo.DailyBoard.Retrofit.Response.showStreamDiaryResponse
 import com.example.dailymemo.R
 import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.WatchStream.Comment.CommentRVAdapter
@@ -27,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 
-class DiaryFragment : BottomSheetDialogFragment() {
+class DiaryFragment : BottomSheetDialogFragment(),DiaryView {
 
 
     lateinit var binding: FragmentDiaryBinding
@@ -45,11 +48,7 @@ class DiaryFragment : BottomSheetDialogFragment() {
 
             sendBtnIv.setOnClickListener {
                 if(diaryEt.text.isNotEmpty()) {
-                    diaryEt.visibility = INVISIBLE
-                    diaryTextTv.text = diaryEt.text.toString()
-                    diaryTextTv.visibility = VISIBLE
-                    sendBtnIv.visibility = INVISIBLE
-                    modifyDiaryBtn.visibility = VISIBLE
+                    writeDiary(streamId = 1, diaryEt.text.toString())
                 }
                 else {
                     val dailog = SampleDialog(requireContext(), "일기를 작성해주세요.")
@@ -58,10 +57,13 @@ class DiaryFragment : BottomSheetDialogFragment() {
             }
 
             modifyDiaryBtn.setOnClickListener {
-               diaryTextTv.visibility = INVISIBLE
-                diaryEt.visibility = VISIBLE
-                diaryEt.text = diaryTextTv.text.toString().toEditable()
-                sendBtnIv.visibility = VISIBLE
+                if (diaryEt.text.isNotEmpty()) {
+                    writeDiary(streamId = 1, diaryEt.text.toString())
+                    diaryTextTv.visibility = INVISIBLE
+                    diaryEt.visibility = VISIBLE
+                    diaryEt.text = diaryTextTv.text.toString().toEditable()
+                    sendBtnIv.visibility = VISIBLE
+                }
             }
         }
         return binding.root
@@ -81,6 +83,8 @@ class DiaryFragment : BottomSheetDialogFragment() {
         dialog?.let {
             it.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+
+        showStreamDiary(streamId = 1)
 
     }
 
@@ -111,6 +115,40 @@ class DiaryFragment : BottomSheetDialogFragment() {
     private fun loadSavedImagePath(): String {
         val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
         return preferences.getString("user_profile_image_path", "") ?: ""
+    }
+
+    private fun writeDiary(streamId : Int, detail : String) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDirayView(this)
+        dailyBoardService.writeDiary(streamId, detail)
+    }
+
+    override fun writeDiarySuccess() {
+        binding.apply {
+            diaryEt.visibility = INVISIBLE
+            diaryTextTv.text = diaryEt.text.toString()
+            diaryTextTv.visibility = VISIBLE
+            sendBtnIv.visibility = INVISIBLE
+            modifyDiaryBtn.visibility = VISIBLE
+        }
+    }
+
+    private fun showStreamDiary(streamId : Int) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDirayView(this)
+        dailyBoardService.showStreamDiary(streamId)
+    }
+
+    override fun showStreamDiarySuccess(resp: showStreamDiaryResponse) {
+        if(resp.result.detail.isNotEmpty()) {
+           binding.apply {
+               diaryEt.visibility = INVISIBLE
+               diaryTextTv.text = resp.result.detail
+               diaryTextTv.visibility = VISIBLE
+               sendBtnIv.visibility = INVISIBLE
+               modifyDiaryBtn.visibility = VISIBLE
+           }
+        }
     }
 
 

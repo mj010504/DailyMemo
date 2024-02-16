@@ -69,7 +69,7 @@ class AccountWithdrawalFragment : Fragment() {
 
             backIv.setOnClickListener {
                 val fragmentManager = getActivity()?.getSupportFragmentManager();
-                fragmentManager?.beginTransaction()?.remove(WatchStreamFragment())?.commit();
+                fragmentManager?.beginTransaction()?.remove(AccountWithdrawalFragment())?.commit();
                 fragmentManager?.popBackStack();
 
             }

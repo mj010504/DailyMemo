@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,16 +14,21 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.dailymemo.OpenStream.Retrofit.Response.CommentResult
+
 import com.example.dailymemo.R
 import com.example.dailymemo.databinding.ItemCommentBinding
 
 import java.io.File
 
 
-class CommentRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<CommentRVAdapter.ViewHolder>() {
+class CommentRVAdapter(activity: FragmentActivity,
+                       private var commentList: ArrayList<CommentResult>, var listSize: Int
+) : RecyclerView.Adapter<CommentRVAdapter.ViewHolder>() {
 
     val act = activity
     val userProfile = getProfieImage()
+
 
     interface MyItemClickListener {
         fun onMenuClick(menu: ConstraintLayout, position: Int, commentText : String)
@@ -33,30 +39,43 @@ class CommentRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<Commen
         mitemClickListener = itemClickListener
     }
 
-    private var comments = mutableListOf<String>()
 
-    fun addItem(item : String) {
-        comments.add(item)
-        notifyItemInserted(comments.size - 1)
+
+
+
+    fun addItem(item :CommentResult) {
+        commentList.add(item)
+        notifyItemInserted(commentList.size - 1)
+
     }
 
-    fun removeItem(position: Int) {
-        if (position >= 0 && position < comments.size) {
-            comments.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, itemCount)
+    fun removeItem(commentId: Int) {
+        for ((index, comment) in commentList.withIndex()) {
+            if(comment.commentId == commentId) {
+                commentList.removeAt(index)
+                notifyItemRemoved(index)
+                notifyItemRangeChanged(index, itemCount)
+                break
+            }
         }
+
+
     }
 
-    fun updateItem(position: Int, newComment: String) {
-        if (position >= 0 && position < comments.size) {
-            Log.d("commentModify", "success")
-            comments[position] = newComment
-            notifyItemChanged(position)
-        }
-        else {
-            Log.d("commentModify", position.toString() + "failed" + comments.size)
-        }
+    fun updateItem(commentId: Int, newComment: String) {
+
+        for ((index, comment) in commentList.withIndex()) {
+                    if (comment.commentId == commentId) {
+                        comment.detail = newComment
+                        notifyItemChanged(index)
+                        break  // 원하는 comment를 찾았으니 반복문 종료
+                    }
+                }
+
+    }
+
+    fun getCommentId(pos : Int) : Int {
+        return commentList[pos].commentId
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -68,19 +87,24 @@ class CommentRVAdapter(activity: FragmentActivity) : RecyclerView.Adapter<Commen
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick(holder.binding.rootView, position, holder.binding.commentContentTv.text.toString() ) }
         holder.binding.menuBarLayout.setOnClickListener {  mitemClickListener.onMenuClick(holder.binding.rootView, position, holder.binding.commentContentTv.text.toString()) }
-        holder.bind(comments[position])
+        holder.bind(commentList[position])
     }
 
-    override fun getItemCount(): Int = comments.size
+    override fun getItemCount(): Int = commentList.size
 
     inner class ViewHolder(val binding: ItemCommentBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(comment: String) {
-                binding.commentContentTv.text = comment
-                if(userProfile != null) {
+
+        fun bind(comment: CommentResult) {
+                binding.commentContentTv.text = comment.detail
+                binding.userNicknameTv.text = comment.nickName
+
+                if(userProfile != null && comment.isAuthor) {
                     binding.userProfileIv.setImageDrawable(userProfile)
                 }
-            else {
+                else {
                     binding.userProfileIv.setImageResource(R.drawable.basic_user_profile)
+                    binding.menuBarIv.visibility = INVISIBLE
+                    binding.menuBarLayout.visibility = INVISIBLE
                 }
         }
 

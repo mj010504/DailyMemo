@@ -4,32 +4,54 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.dailymemo.DailyBoard.DailyBoardRVAdapter
+import com.example.dailymemo.MainActivity
 import com.example.dailymemo.MyStream.Dialog.DeleteCheckDailog
-import com.example.dailymemo.MyStream.Dialog.SampleDialog
+import com.example.dailymemo.MyStream.Dialog.KeywordCheckDialog
+import com.example.dailymemo.MyStream.Retrofit.MyStreamService
+import com.example.dailymemo.MyStream.Retrofit.MyStreamView
+import com.example.dailymemo.MyStream.Retrofit.Response.openMyStreamResponse
+import com.example.dailymemo.MyStream.Retrofit.Response.post
+import com.example.dailymemo.MyStream.Retrofit.Response.searchMyStreamResponse
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.databinding.FragmentMyStreamBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 
 
-class MyStreamFragment : Fragment() {
+class MyStreamFragment : Fragment(), MyStreamView {
 
 
     lateinit var binding: FragmentMyStreamBinding
+    var page : Int = 1
+    var hasNext : Boolean = false
+    var searchPage : Int = 1
+    var searchHasNext = false
+
+    lateinit var postList : List<post>
+    var listSize : Int  = 0
+    var userId = 1
+
+    lateinit var adapter : MyStreamRVAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +59,72 @@ class MyStreamFragment : Fragment() {
     ): View? {
         binding = FragmentMyStreamBinding.inflate(inflater, container, false)
 
-        initRecyclerView()
 
         binding.apply {
             userProfileIv.setOnClickListener {
                 showPopupMenu(userProfileIv)
             }
+
+            searchingIv.setOnClickListener {
+                searchEt.visibility = View.VISIBLE
+                searchEt.addTextChangedListener(object: TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        searchingIv.visibility = View.INVISIBLE
+                        searchTv.visibility = View.VISIBLE
+
+                        val inputText = s.toString()
+                        if(inputText.isEmpty()) {
+                            searchTv.text = "취소"
+
+                            searchTv.setOnClickListener {
+                                hideKeyboard(it)
+                                searchTv.visibility = View.INVISIBLE
+                                searchingIv.visibility = View.VISIBLE
+                            }
+                        }
+                        else {
+                            searchTv.text = "검색"
+                            searchTv.setOnClickListener {
+                                val keyword = searchEt.text.toString()
+                                if(keyword.length < 2) {
+                                    showKeywordCheckDialog()
+                                }
+                                else {
+                                    searchMyStream(userId, keyword, searchPage )
+
+                                    searchTv.visibility = View.INVISIBLE
+                                    searchingIv.visibility = View.VISIBLE
+
+                                    searchEt.hint = "'$keyword'에 대한 검색결과"
+                                    searchEt.setText("")
+                                }
+                            }
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+
+                    }
+
+                })
+
+
+            }
+
         }
 
 
@@ -58,12 +140,29 @@ class MyStreamFragment : Fragment() {
             loadImageFromInternalStorage(savedImagePath)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val sharedPreferences = requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
+        val streamId = sharedPreferences.getInt("일상", 1)
+        userId = getMyUserId()
+
+
+        showMyStream(streamId, userId, page)
+
         infiniteScroll()
     }
 
-    private fun initRecyclerView() {
-        val myStreamRVAdapter = MyStreamRVAdapter()
+    private fun getMyUserId() : Int {
+        val spf = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        return spf.getInt("userId", 1)
+    }
+
+    private fun initRecyclerView(postList: ArrayList<post>, listSize : Int) {
+        val myStreamRVAdapter = MyStreamRVAdapter(requireActivity(),listSize, postList, parentFragmentManager)
         binding.mystreamRv.adapter = myStreamRVAdapter
+        adapter = myStreamRVAdapter
         binding.mystreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         myStreamRVAdapter.seMyItemClickListener(object: MyStreamRVAdapter.MyItemClickListener {
@@ -71,6 +170,16 @@ class MyStreamFragment : Fragment() {
                 showMenu()
             }
         })
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun showKeywordCheckDialog() {
+        val dialog = KeywordCheckDialog(requireContext())
+        dialog.show()
     }
 
 
@@ -95,7 +204,7 @@ class MyStreamFragment : Fragment() {
         val yOffset = location[1]
 
         // Set location
-        popupWindow?.showAtLocation(anchorView, Gravity.NO_GRAVITY, xOffset, yOffset)
+        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, xOffset, yOffset)
         popupWindow.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         popupWindow.elevation = resources.getDimension(R.dimen.popup_card_elevation)
 
@@ -105,7 +214,15 @@ class MyStreamFragment : Fragment() {
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
+        streamSettingRVAdapter.seMyItemClickListener(object: StreamSettingRVAdapter.MyItemClickListener {
+            override fun onStreamClick(streamName: String) {
+                val sharedPreferences = requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
+                val streamId = sharedPreferences.getInt(streamName, 1)
 
+                showMyStream(streamId, userId, page)
+            }
+
+        })
     }
 
     private fun showMenu() {
@@ -118,19 +235,22 @@ class MyStreamFragment : Fragment() {
             val lockBtn = bottomSheetView.findViewById<ConstraintLayout>(R.id.stream_lock_layout)
             val deleteBtn = bottomSheetView.findViewById<ConstraintLayout>(R.id.stream_delete_layout)
 
-            lockBtn.setOnClickListener {
+        var layoutManager = binding.mystreamRv.layoutManager
+        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+        val postId = adapter.getPostId(pos)
+
+
+        lockBtn.setOnClickListener {
                 val lockTitle = bottomSheetView.findViewById<TextView>(R.id.stream_lock_tv)
                 lockTitle.text = "숨기기 해제"
                 bottomSheetDialog.dismiss()
 
-                val dialog = SampleDialog(requireContext())
-                dialog.show()
             }
 
             deleteBtn.setOnClickListener {
+
+                removeMyStreamDiary(postId)
                 bottomSheetDialog.dismiss()
-                val dialog = DeleteCheckDailog(requireContext())
-                dialog.show()
             }
 
             bottomSheetDialog.show()
@@ -156,14 +276,108 @@ class MyStreamFragment : Fragment() {
     }
 
     private fun infiniteScroll() {
-        binding.rootView.viewTreeObserver.addOnScrollChangedListener {
+        if(searchHasNext == true) {
+            binding.mystreamRootView.viewTreeObserver.addOnScrollChangedListener {
+                // NestedScrollView의 ScrollY 값과 ScrollableView의 높이를 통해 스크롤 상태를 확인
+                if (binding.mystreamRootView.scrollY >= binding.mystreamRootView.height) {
 
-            // NestedScrollView의 ScrollY 값과 ScrollableView의 높이를 통해 스크롤 상태를 확인
-            if (binding.rootView.scrollY  >= binding.rootView.height) {
-                Log.d("layoutTotal", "total succs")
-
+                }
             }
         }
+        else if(hasNext == true) {
+            binding.mystreamRootView.viewTreeObserver.addOnScrollChangedListener {
+                // NestedScrollView의 ScrollY 값과 ScrollableView의 높이를 통해 스크롤 상태를 확인
+                if (binding.mystreamRootView.scrollY >= binding.mystreamRootView.height) {
+
+
+                }
+            }
+        }
+    }
+
+    private fun showMyStream(streamId: Int, userId : Int, page: Int) {
+        val myStreamService = MyStreamService()
+        myStreamService.setMyStreamView(this)
+        myStreamService.showMystream(streamId, userId, page)
+    }
+
+    override fun showMyStreamSuccess(resp: openMyStreamResponse) {
+
+        if(resp.result.hasNext) {
+            hasNext = true
+            page += 1
+        }
+        else {
+            hasNext = false
+        }
+
+        postList = resp.result.postList
+        listSize = resp.result.listSize
+
+
+            val postArrayList = ArrayList(postList)
+            initRecyclerView(postArrayList, listSize)
+
+    }
+
+    private fun searchMyStream(userId : Int, query : String, page : Int) {
+        val myStreamService = MyStreamService()
+        myStreamService.setMyStreamView(this)
+        myStreamService.searchMyStream(userId, query, page)
+    }
+
+    override fun searchMyStreamSuccess(resp: searchMyStreamResponse) {
+        if(resp.result.hasNext) {
+            searchHasNext = true
+            searchPage += 1
+        }
+        else {
+            searchHasNext = false
+        }
+
+        postList = resp.result.postList
+        listSize = resp.result.listSize
+
+        val postArrayList = ArrayList(postList)
+
+        initRecyclerView(postArrayList, listSize)
+    }
+
+    private fun diaryPublicType(userId : Int, postId: Int, isPublic: Boolean) {
+        val myStreamService = MyStreamService()
+        myStreamService.setMyStreamView(this)
+        myStreamService.diaryPublicType(userId, postId, isPublic)
+    }
+
+    override fun diaryPublicTypeSuccess(isPublic: Boolean) {
+        if(isPublic == false) {
+            val dialog = SampleDialog(requireContext(), "일기가 비공개되었습니다.")
+            dialog.show()
+        }
+        else {
+            val dialog = SampleDialog(requireContext(), "일기가 공개되었습니다.")
+            dialog.show()
+        }
+    }
+
+    private fun removeMyStreamDiary(postId : Int) {
+        val myStreamService = MyStreamService()
+        myStreamService.setMyStreamView(this)
+        myStreamService.removeMyStreamDiary(postId)
+
+    }
+
+
+
+    override fun removeMyStreamDiarySuccess() {
+
+        var layoutManager = binding.mystreamRv.layoutManager
+        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+
+
+        adapter.removeItem(pos - 1)
+        val dialog = SampleDialog(requireContext(), "일기가 삭제되었습니다.")
+        dialog.show()
     }
 }
 

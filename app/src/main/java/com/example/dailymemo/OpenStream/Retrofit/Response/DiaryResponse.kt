@@ -19,6 +19,6 @@ data class DiaryResult (
     @SerializedName("likes") val likes : Int,
     @SerializedName ("comments") val comments : Int,
     @SerializedName("isPublic") val isPublic : Boolean,
-    @SerializedName("createdAt") val createdAt : LocalDate
+    @SerializedName("createdAt") val createdAt : String
 )
 
