@@ -16,10 +16,10 @@ import java.io.File
 class StreamChangeRVADapter(activity : FragmentActivity): RecyclerView.Adapter<StreamChangeRVADapter.ViewHolder>(){
 
     val act = activity
-    val streams = arrayOf("일상", "여행", " 맛집")
+    val streams = getStreamNames()
 
     interface MyItemClickListener {
-        fun onStreamDiaryClick()
+        fun onStreamDiaryClick(streamName: String)
     }
 
     private lateinit var mitemClickListener : MyItemClickListener
@@ -38,10 +38,10 @@ class StreamChangeRVADapter(activity : FragmentActivity): RecyclerView.Adapter<S
 
     override fun onBindViewHolder(holder: StreamChangeRVADapter.ViewHolder, position: Int) {
         holder.bind(position)
-        holder.binding.streamDiaryLayout.setOnClickListener { mitemClickListener.onStreamDiaryClick() }
+        holder.binding.streamDiaryLayout.setOnClickListener { mitemClickListener.onStreamDiaryClick(holder.binding.streamNameTv.text.toString()) }
     }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = streams.size
     inner class ViewHolder(val binding: ItemStreamBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
             val preferences = act.getPreferences(Context.MODE_PRIVATE)
@@ -57,4 +57,16 @@ class StreamChangeRVADapter(activity : FragmentActivity): RecyclerView.Adapter<S
 
 
     }
+
+    private fun getStreamNames() : MutableList<String> {
+        var streams = mutableListOf<String>()
+        for(index in 1..3) {
+            val spf = act.getSharedPreferences("Streams", Context.MODE_PRIVATE)
+            val streamName = spf.getString("stream"+index, "일상")
+            streams.add(streamName!!)
+        }
+
+        return streams
+    }
+
 }

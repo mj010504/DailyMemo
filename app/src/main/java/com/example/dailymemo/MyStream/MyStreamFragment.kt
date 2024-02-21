@@ -144,8 +144,9 @@ class MyStreamFragment : Fragment(), MyStreamView {
 
     override fun onResume() {
         super.onResume()
-        val sharedPreferences = requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
-        val streamId = sharedPreferences.getInt("일상", 1)
+        val spf = requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
+        val streamName = spf.getString("stream"+1, "일상")
+        val streamId = spf.getInt(streamName, 1)
         userId = getMyUserId()
 
 
@@ -166,8 +167,8 @@ class MyStreamFragment : Fragment(), MyStreamView {
         binding.mystreamRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         myStreamRVAdapter.seMyItemClickListener(object: MyStreamRVAdapter.MyItemClickListener {
-            override fun onMenuClick() {
-                showMenu()
+            override fun onMenuClick(isPublic: Boolean) {
+                showMenu(isPublic)
             }
         })
     }
@@ -220,12 +221,14 @@ class MyStreamFragment : Fragment(), MyStreamView {
                 val streamId = sharedPreferences.getInt(streamName, 1)
 
                 showMyStream(streamId, userId, page)
+
+                popupWindow.dismiss()
             }
 
         })
     }
 
-    private fun showMenu() {
+    private fun showMenu(isPublic: Boolean) {
 
             val bottomSheetView = layoutInflater.inflate(R.layout.mystream_bottom_menu_layout, null)
             val bottomSheetDialog = BottomSheetDialog(requireContext())
@@ -237,14 +240,23 @@ class MyStreamFragment : Fragment(), MyStreamView {
 
         var layoutManager = binding.mystreamRv.layoutManager
         var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+
+        val lockTitle = bottomSheetView.findViewById<TextView>(R.id.stream_lock_tv)
+        if(isPublic) {
+            lockTitle.text = "숨기기"
+        }
+        else {
+            lockTitle.text = "공개하기"
+        }
+
+
         val postId = adapter.getPostId(pos)
 
 
         lockBtn.setOnClickListener {
-                val lockTitle = bottomSheetView.findViewById<TextView>(R.id.stream_lock_tv)
-                lockTitle.text = "숨기기 해제"
+                diaryPublicType(userId, postId, !isPublic)
+                adapter.updateIsPublic(pos, !isPublic)
                 bottomSheetDialog.dismiss()
-
             }
 
             deleteBtn.setOnClickListener {
@@ -375,7 +387,7 @@ class MyStreamFragment : Fragment(), MyStreamView {
         var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
 
 
-        adapter.removeItem(pos - 1)
+        adapter.removeItem(pos)
         val dialog = SampleDialog(requireContext(), "일기가 삭제되었습니다.")
         dialog.show()
     }

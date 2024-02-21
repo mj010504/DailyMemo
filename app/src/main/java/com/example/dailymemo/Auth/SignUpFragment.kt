@@ -183,7 +183,7 @@ class SignUpFragment : Fragment(), SignUpView {
     }
 
     fun checkEmail() {
-        val loginService= LoginService()
+        val loginService = LoginService()
         loginService.setSignupView(this)
 
         val email_input = binding.signupEmailTe.text.toString()

@@ -9,7 +9,6 @@ data class OpenStreamResponse (
     @SerializedName("code") val code : String,
     @SerializedName("message") val message : String,
     @SerializedName("result") val result : OpenStreamResult
-
 )
 
 data class OpenStreamResult (
@@ -18,5 +17,32 @@ data class OpenStreamResult (
     @SerializedName("isFirst") val isFirst : Boolean,
     @SerializedName("isLast") val isLast : Boolean,
     @SerializedName("postList") val postList : List<post>
+)
+
+data class changeProfileImageResponse(
+    @SerializedName("isSuccess") val isSuccess : Boolean,
+    @SerializedName("code") val code : String,
+    @SerializedName("message") val message : String,
+    @SerializedName("result") val result : changeProfileImageResult
+)
+
+data class changeProfileImageResult(
+    @SerializedName("profilePhoto") val profilePhoto : String
+)
+
+data class ChangeProfileRequest(
+    @SerializedName("profilePhoto") val profilePhoto: String
+)
+
+data class ChangeStreamNameReqeust(
+    @SerializedName("keyword") val keyword: String,
+    @SerializedName("streamId") val streamId : Int
+)
+
+data class changeStreamNameResponse(
+    @SerializedName("isSuccess") val isSuccess : Boolean,
+    @SerializedName("code") val code : String,
+    @SerializedName("message") val message : String,
+    @SerializedName("result") val result : Boolean
 )
 

@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -25,8 +26,6 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +37,7 @@ import com.example.dailymemo.DailyBoard.Retrofit.DailyBoardService
 import com.example.dailymemo.DailyBoard.Retrofit.DailyBoardView
 import com.example.dailymemo.DailyBoard.Retrofit.Response.Diary
 import com.example.dailymemo.DailyBoard.Retrofit.Response.DiaryPhoto
+import com.example.dailymemo.DailyBoard.Retrofit.Response.ImageRequest
 import com.example.dailymemo.DailyBoard.Retrofit.Response.showDailyBoardResponse
 import com.example.dailymemo.DailyBoard.Retrofit.Response.showDiaryPreviewResponse
 import com.example.dailymemo.DailyBoard.Retrofit.Response.storeImageResponse
@@ -49,17 +49,23 @@ import com.example.dailymemo.databinding.DailyboardStreamPopupMenuLayoutBinding
 import com.example.dailymemo.databinding.FragmentDailyBoardBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 
 
 class DailyBoardFragment : Fragment(), DailyBoardView {
@@ -69,6 +75,11 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
     private var isDiaryPreview = false
     private var pageNum = 1
     private var hasNext = false
+    lateinit var adapter : DailyBoardRVAdapter
+
+    var isEmpty = true
+
+    lateinit var diaryList : List<Diary>
 
 
     override fun onCreateView(
@@ -88,7 +99,11 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
 
             diaryPreviewBtnLayout.setOnClickListener {
                 if(isDiaryPreview == false) {
-                    showDiaryPreview(diaryphotoId = 1, streamId = 1)
+                    val streamName = binding.streamNameTv.text.toString()
+                    val spf = requireActivity().getSharedPreferences("Streams",Context.MODE_PRIVATE)
+                    val streamId = spf.getInt(streamName, 1)
+
+                    showDiaryPreview(streamId)
                 }
                 else {
                     DiaryPreviewClose()
@@ -96,7 +111,17 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
              }
 
             deleteLayout.setOnClickListener {
-                removePhoto()
+                var layoutManager = binding.dailyBoardRv.layoutManager
+                var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+                val diaryPhotoId = adapter.getdiaryPhotoIdByPosition(pos)
+                onDailyBoardRemoveBtnClick(diaryPhotoId)
+                adapter.udpateStatus(pos)
+               if( adapter.getStatus(pos)) {
+                   removePhoto()
+               }
+                else {
+                    nonRemovePhoto()
+               }
             }
 
             streamLayout.setOnClickListener {
@@ -119,42 +144,85 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
             loadImageFromInternalStorage(savedImagePath)
         }
 
-        getImage()
-        basicSetting()
-        initRecyclerView()
+        val sharedPreferences = requireActivity().getSharedPreferences("time", Context.MODE_PRIVATE)
+        val lastTime = sharedPreferences.getLong("lastTime", 0)
+
+
+        getImage(lastTime)
+
+        val jwt = getMyJwt()
+        val userId = getMyUserId()
+
+
+        if(imageList.size > 0) {
+            Log.d("lastTime", imageList.size.toString() )
+            val base64List : ImageRequest = getBase64List(imageList)
+            storeImage(jwt, base64List)
+        }
+        else {
+            showDailyBoard(jwt, userId, pageNum)
+        }
+
 
 
     }
+
 
     override fun onResume() {
         super.onResume()
-//        if(imageList.size > 0) {
-//            val bitmapList = compressImages(imageList)
-//            val images = bitmapList.map { bitmapToBase64(it)}
-//            storeImage(diaryId, images)
-//
-//        }
 
-//
-//        var cl =  compressImages(imageList)
-//        Log.d("bittmap1", cl[0].toString() )
-//        // compressedBitmapList의 각 Bitmap을 Base64로 인코딩하여 문자열로 변환
-//        val bitmapStringList = cl.map { bitmapToBase64(it) }
-//
-//        saveBase64ListToFile(requireContext(), bitmapStringList, "base64_list.txt")
-//
-//// 파일에서 Base64 문자열 리스트를 불러오기
-//        val loadedBase64List = readBase64ListFromFile(requireContext(), "base64_list.txt")
-//
-//
-//        val bitmap = stringToBitmap(loadedBase64List[0])
-//        binding.streamProfileIv.setImageBitmap(bitmap)
+        }
+
+
+    fun saveBase64ListToFile(context: Context, base64List: List<String>, fileName: String) {
+        try {
+            val fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+            val outputStreamWriter = OutputStreamWriter(fileOutputStream)
+
+            for (base64String in base64List) {
+                outputStreamWriter.write("$base64String\n")
+            }
+
+            outputStreamWriter.close()
+            fileOutputStream.close()
+            Log.d("FileSave", "Base64 List saved to file: $fileName")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
 
-    private fun initRecyclerView() {
-        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(),imageList)
+    private fun getBase64List(images: List<Uri>) : ImageRequest{
+        val cl : List<Bitmap> = compressImages(images)
+        val resizeBitmapList = resizeBitmapList(cl, 100, 100)
+        var base64List = resizeBitmapList.map{ bitmapToBase64(it)}
+        val imageRequest = ImageRequest(base64List)
+
+
+        saveBase64ListToFile(requireContext(), base64List, "base64_list.txt")
+
+        return imageRequest
+    }
+
+
+
+    private fun getMyUserId() : Int {
+        val spf = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        return spf.getInt("userId", 1)
+    }
+
+
+    private fun getMyJwt() : String? {
+        val spf = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        return spf.getString("jwt", null)
+    }
+
+
+    private fun initRecyclerView(diaryList : ArrayList<Diary>) {
+
+        val dailyBoardRVAdapter = DailyBoardRVAdapter(requireContext(), diaryList)
+        adapter = dailyBoardRVAdapter
         binding.dailyBoardRv.adapter = dailyBoardRVAdapter
         binding.dailyBoardRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -163,7 +231,16 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 updateCount()
-                updateDeleteText()
+                var layoutManager = binding.dailyBoardRv.layoutManager
+                var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+                val status = adapter.getStatus(pos)
+
+                if(status) {
+                    removePhoto()
+                }
+                else {
+                    nonRemovePhoto()
+                }
             }
         })
 
@@ -184,15 +261,29 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
     }
 
     private fun basicSetting() {
-        if (imageList.size > 0) {
+
+        for(diary in diaryList) {
+           if (diary.diaryPhotoList.isNotEmpty() ) {
+               isEmpty = false
+               break
+           }
+
+        }
+
+        if (isEmpty == false) {
             binding.basicIv.visibility = INVISIBLE
             binding.basicTv.visibility = INVISIBLE
             binding.countLayout.visibility = VISIBLE
         }
+        else {
+            binding.basicIv.visibility = VISIBLE
+            binding.basicTv.visibility = VISIBLE
+            binding.countLayout.visibility = INVISIBLE
+        }
     }
 
     private fun showStreamDiaryMenu() {
-        if (imageList.size > 0) {
+        if (diaryList.isNotEmpty()) {
             val bottomSheetView = layoutInflater.inflate(R.layout.bottom_stream_diary_menu_layout, null)
             val bottomSheetDialog = BottomSheetDialog(requireContext())
             bottomSheetDialog.setContentView(bottomSheetView)
@@ -205,8 +296,10 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
             streamChangeRVAdpater.setMyItemClickListener(object : StreamChangeRVADapter.MyItemClickListener{
-                override fun onStreamDiaryClick() {
-                    showDiaryMenu()
+                override fun onStreamDiaryClick(streamName: String) {
+                    val sharedPreferences = requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
+                    val streamId = sharedPreferences.getInt(streamName, 1)
+                    showDiaryMenu(streamId)
                 }
 
             } )
@@ -221,39 +314,6 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
     }
 
 
-//    private fun removePhoto() {
-//        var layoutManager = binding.dailyBoardRv.layoutManager
-////        var visibleItemCount = layoutManager?.childCount
-//        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
-//
-//        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
-//        viewHolder?.removeItem(pos)
-//        updateDeleteText()
-//    }
-//
-//    private fun updateDeleteText() {
-//        var layoutManager = binding.dailyBoardRv.layoutManager
-//        var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
-//        val viewHolder = binding.dailyBoardRv.findViewHolderForAdapterPosition(pos) as? DailyBoardRVAdapter.ViewHolder
-//        var isDelete = viewHolder!!.getIsDelete(pos)
-//        if(isDelete) {
-//            binding.deleteTv.visibility = VISIBLE
-//            binding.deletedTv.visibility = INVISIBLE
-//        }
-//        else {
-//            binding.deleteTv.visibility = INVISIBLE
-//            binding.deletedTv.visibility = VISIBLE
-//        }
-//    }
-
-
-
-
-    private fun hideKeyboard(view: View) {
-        val imm =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
 
     // 저장된 이미지를 불러와서 이미지뷰에 설정하는 함수
     private fun loadImageFromInternalStorage(filePath: String) {
@@ -272,13 +332,19 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
 
     private fun getCursor(): Cursor? {
 
-
         val projection = arrayOf(
             MediaStore.Images.ImageColumns._ID,
             MediaStore.Images.ImageColumns.DATE_TAKEN
         )
 
+
         val today = Calendar.getInstance()
+
+        val sharedPreferences = requireActivity().getSharedPreferences("time", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putLong("lastTime", today.timeInMillis)
+        editor.apply()
+
         val midnight = today.apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
@@ -298,15 +364,12 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
         )
 
 
-
         return cursor
 
     }
 
-    private fun getImage() {
-        //내부 오류가 발생하는 경우, 쿼리 결과는 특정 제공자에 따라 달라집니다. null을 반환하기로 선택할 수도 있고, Exception을 발생시킬 수도 있습니다.
-        //따라서 try catch & try 내에서도 cursor이 null로 반환되는 경우를 모두 처리해줌.
-        lifecycleScope.launch { //비동기 처리
+    private fun getImage(lasttime: Long) {
+
             try {
                 val cursor = getCursor()
                 when (cursor?.count) {
@@ -316,49 +379,44 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
 
                     0 -> {
                         Log.d("cursor", "cursor count = 0")
-
                     }
 
                     else -> {
-
                         while (cursor.moveToNext()) {
-
                             val idColNum =
                                 cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
                             val dateTakenColNum =
                                 cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN)
 
-
                             val id = cursor.getLong(idColNum)
                             val dateTaken = cursor.getLong(dateTakenColNum)
 
 
-                            val imageUri =
-                                ContentUris.withAppendedId(
-                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                    id
-                                )
-
-                            imageList.add(imageUri)
 
 
-                            Log.d(
-                                "cursor",
-                                "id: ${id}, dateTaken : $dateTaken, imageUri : $imageUri"
-                            )
+                            // lasttime 이후의 이미지만 추가
+                            if (dateTaken > lasttime) {
 
+                                val imageUri =
+                                    ContentUris.withAppendedId(
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                        id
+                                    )
+
+                                imageList.add(imageUri)
+
+                            }
                         }
-                        cursor.close() //사용한 cursor는 꼭 close 해줘야함
-
+                        cursor.close()
                     }
                 }
-
             } catch (e: Exception) {
-                //에러 대응 코드 작성
-                Log.d("cursor","cusor Error")
+                // 에러 대응 코드 작성
+                Log.d("cursor", "cursor Error")
             }
-        }
+
     }
+
 
     // 이미지 Uri를 Bitmap으로 변환하는 함수들
     private fun getBitmapFromUri(uri: Uri): Bitmap {
@@ -386,6 +444,64 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
         return compressedBitmapList
     }
 
+
+    fun resizeBitmapList(bitmapList: List<Bitmap>, targetWidth: Int, targetHeight: Int): List<Bitmap> {
+        val resizedBitmapList = mutableListOf<Bitmap>()
+
+        for (bitmap in bitmapList) {
+            val resizedBitmap = resizeBitmap(bitmap, targetWidth, targetHeight)
+            resizedBitmap?.let {
+                resizedBitmapList.add(it)
+            }
+        }
+
+        return resizedBitmapList
+    }
+
+    fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap? {
+        try {
+            // Calculate the inSampleSize
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, options)
+            options.inSampleSize = calculateInSampleSizes(options, targetWidth, targetHeight)
+
+            // Decode the stream again, using the calculated inSampleSize
+            options.inJustDecodeBounds = false
+            val resizedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, options)
+
+            return resizedBitmap
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    private fun calculateInSampleSizes(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
+    }
+
+
+
     // Bitmap을 Base64로 인코딩하는 함수
     private fun bitmapToBase64(bitmap: Bitmap): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
@@ -394,16 +510,8 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
         return Base64.encodeToString(byteArray, Base64.NO_WRAP)
     }
 
-    private fun stringToBitmap(base64: String) : Bitmap {
-        val encodeByte = Base64.decode(base64, Base64.NO_WRAP)
-
-        return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
-    }
-
-
-
-    private fun showDiaryMenu() {
-        val bottomSheetFragment = DiaryFragment()
+    private fun showDiaryMenu(streamId : Int) {
+        val bottomSheetFragment = DiaryFragment(streamId)
         bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
     }
@@ -507,18 +615,32 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
         recyclerView.adapter = dailyBoardStreamRVAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        dailyBoardStreamRVAdapter.setMyItemClickListener(object: DailyBoardStreamRVAdapter.MyItemClickListener{
+            override fun onStreamTypeClick(streamName: String) {
+                var layoutManager = binding.dailyBoardRv.layoutManager
+                var pos: Int = (layoutManager as? LinearLayoutManager)!!.findFirstVisibleItemPosition()
+                val diaryPhotoId = adapter.getdiaryPhotoIdByPosition(pos)
 
+                val spf = requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
+                val streamId = spf.getInt(streamName, 1)
 
+                changeDailyBoardStream(diaryPhotoId, streamId)
+
+                popupWindow.dismiss()
+            }
+
+        })
         val upBtn = customMenuView.findViewById<ImageView>(R.id.fold_up_btn_iv)
         upBtn.setOnClickListener {
             popupWindow.dismiss()
         }
     }
 
-    private fun showDailyBoard(userId : Int, page : Int) {
+    private fun showDailyBoard(jwt: String?,userId : Int, page : Int) {
         val dailyBoardService = DailyBoardService()
         dailyBoardService.setDailyBoardView(this)
-        dailyBoardService.showDailyBoard(userId, page)
+        dailyBoardService.showDailyBoard(jwt,userId, page)
+
     }
 
     override fun onShowDailyBoardSuccess(resp: showDailyBoardResponse) {
@@ -530,43 +652,44 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
             hasNext = false
         }
 
+        diaryList = resp.result.diaryList
+        val diaryList = ArrayList(diaryList)
+        initRecyclerView(diaryList)
 
+        basicSetting()
     }
 
-    private fun storeImage(diaryId : Int, images : List<String>) {
+   private fun storeImage(jwt: String?, images : ImageRequest) {
         val dailyBoardService = DailyBoardService()
         dailyBoardService.setDailyBoardView(this)
-        dailyBoardService.storeImage(diaryId, images)
+        dailyBoardService.storeImage(jwt, images)
     }
 
     override fun storeImageSuccess(resp: storeImageResponse) {
-        Log.d("storeImage", "succcess")
+        val jwt = getMyJwt()
+        val userId = getMyUserId()
+        showDailyBoard(jwt, userId, pageNum)
     }
 
-    private fun showDiaryPreview(diaryphotoId : Int, streamId : Int) {
-        val dailyBoardService = DailyBoardService()
-        dailyBoardService.setDailyBoardView(this)
-        dailyBoardService.showDiaryPreview(diaryphotoId, streamId)
+    override fun storeImageFailed() {
+        val jwt = getMyJwt()
+        val userId = getMyUserId()
+        showDailyBoard(jwt, userId, pageNum)
     }
 
-    override fun showDiaryPreviewSuccess(resp: showDiaryPreviewResponse) {
-        val detail = resp.result.detail
-        val date = resp.result.createdAt
-        val dateString = convertDateFormat(date)
-        DiaryPreviewOpen(detail, dateString)
-    }
 
     fun convertDateFormat(inputDate: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val dateTime = LocalDateTime.parse(inputDate, formatter)
-        val outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일")
-        return dateTime.format(outputFormatter)
+        val inputFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputFormatter = SimpleDateFormat("yyyy년 M월 d일", Locale.getDefault())
+
+        val date = inputFormatter.parse(inputDate)
+        return outputFormatter.format(date!!)
     }
 
-    private fun changeDailyBoardStream(diaryphotoId: Int, streamName: String) {
+    private fun changeDailyBoardStream(diaryphotoId: Int, streamId: Int) {
         val dailyBoardService = DailyBoardService()
         dailyBoardService.setDailyBoardView(this)
-        dailyBoardService.changeDailyBoardStream(diaryphotoId, streamName)
+        dailyBoardService.changeDailyBoardStream(diaryphotoId, streamId)
     }
 
     override fun changeDailyBoardStreamSuccess() {
@@ -586,13 +709,29 @@ class DailyBoardFragment : Fragment(), DailyBoardView {
         }
     }
 
-    private fun removePhoto() {
+    private fun nonRemovePhoto() {
         binding.deleteTv.visibility = VISIBLE
         binding.deletedTv.visibility = INVISIBLE
     }
 
-    private fun updateDeleteText() {
+    private fun removePhoto() {
+        binding.deleteTv.visibility = INVISIBLE
+        binding.deletedTv.visibility = VISIBLE
+    }
 
+    private fun showDiaryPreview(streamId : Int) {
+        val dailyBoardService = DailyBoardService()
+        dailyBoardService.setDailyBoardView(this)
+        dailyBoardService.showDiaryPreview(streamId)
+    }
+
+    override fun showDiaryPreviewSuccess(resp: showDiaryPreviewResponse) {
+        val detail = resp.result.detail
+        val date = resp.result.createdAt
+        val dateString = convertDateFormat(date)
+        val imageList = resp.result.imageList
+
+        DiaryPreviewOpen(detail, dateString)
     }
 
 }

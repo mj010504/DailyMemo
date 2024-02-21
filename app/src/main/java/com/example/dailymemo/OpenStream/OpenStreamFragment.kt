@@ -198,6 +198,17 @@ class OpenStreamFragment : Fragment(), OpenStreamView, MainView {
             makeMyStream(userId, "일상")
             makeMyStream(userId, "여행")
             makeMyStream(userId, "맛집")
+
+            val sharedPreferences =
+                requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            var index = 1
+            for (stream in streamList) {
+                editor.putString("stream" + index, stream.streamName)
+                editor.putInt(stream.streamName, stream.streamId)
+                editor.apply()
+                index += 1
+            }
         } else {
             val sharedPreferences =
                 requireActivity().getSharedPreferences("Streams", Context.MODE_PRIVATE)

@@ -7,17 +7,23 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
+import com.example.dailymemo.Auth.Retrofit.LoginService
+import com.example.dailymemo.MyStream.Retrofit.MyStreamService
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.AccountWithdrawalView
 import com.example.dailymemo.Setting.Dialog.BuySuccessDialog
 import com.example.dailymemo.databinding.DialogAccountWithdrawalCheckBinding
 import com.example.dailymemo.databinding.DialogMystreamDeleteBinding
 import com.example.dailymemo.databinding.DialogMystreamDeleteCheckBinding
 import com.example.dailymemo.databinding.DialogSampleBinding
+import kotlin.math.log
 
-class AccountWithdrawalCheckDialog(context: Context, navController: NavController) : Dialog(context) {
+class AccountWithdrawalCheckDialog(context: Context, navController: NavController, activity: FragmentActivity) : Dialog(context), AccountWithdrawalView {
     lateinit var binding: DialogAccountWithdrawalCheckBinding
     private var navController = navController
+    val act = activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +42,9 @@ class AccountWithdrawalCheckDialog(context: Context, navController: NavControlle
         binding.apply {
             checkBtn.setOnClickListener {
                 dismiss()
-                showAccountWithdrawalSuccessDialog()
+
+                var jwt = getMyJwt()
+                accountWithdrawal(jwt)
             }
 
             cancleBtn.setOnClickListener {
@@ -66,8 +74,24 @@ class AccountWithdrawalCheckDialog(context: Context, navController: NavControlle
         }
     }
 
+    private fun getMyJwt() : String? {
+        val spf = act.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        return spf.getString("jwt", null)
+    }
+
+
     private fun showAccountWithdrawalSuccessDialog() {
         val dialog = AccountWithdrawalDialog(context, navController)
         dialog.show()
+    }
+
+    private fun accountWithdrawal(jwt : String?) {
+        val loginService = LoginService()
+        loginService.setAccountWithdrawalView(this)
+        loginService.accountWithdrawal(jwt)
+    }
+
+    override fun success() {
+        showAccountWithdrawalSuccessDialog()
     }
 }

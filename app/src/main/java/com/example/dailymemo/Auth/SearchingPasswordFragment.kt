@@ -1,5 +1,6 @@
 package com.example.dailymemo.Auth
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,11 +8,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.example.dailymemo.Auth.Retrofit.LoginService
+import com.example.dailymemo.Auth.Retrofit.SearchingPasswordView
 import com.example.dailymemo.R
+import com.example.dailymemo.Setting.Dialog.SampleDialog
 import com.example.dailymemo.databinding.FragmentSearchingPasswordBinding
 
 
-class SearchingPasswordFragment : Fragment() {
+class SearchingPasswordFragment : Fragment(), SearchingPasswordView {
 
     lateinit var binding : FragmentSearchingPasswordBinding
     override fun onCreateView(
@@ -35,6 +40,9 @@ class SearchingPasswordFragment : Fragment() {
                     val inputText = s.toString()
                     if(inputText.isNotEmpty()) {
                         searchingPwIdBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_btn_active_layout))
+                        binding.searchingPwIdBtn.setOnClickListener {
+                            isNicknameExist2(inputText)
+                        }
                     }
                     else {
                         searchingPwIdBtn.setBackgroundDrawable(resources.getDrawable(R.drawable.point_color_25_5_btn_layout))
@@ -51,5 +59,19 @@ class SearchingPasswordFragment : Fragment() {
         return binding.root
     }
 
+    private fun isNicknameExist2(id : String) {
+        val loginService = LoginService()
+        loginService.setSearchingPasswordView(this)
+        loginService.isNicknameExist2(id)
+    }
+
+    override fun success() {
+        findNavController().navigate(R.id.searchingPasswordInputFragment)
+    }
+
+    override fun failed() {
+        val dialog = SampleDialog(requireContext(), "존재하지 않는 아이디입니다." )
+        dialog.show()
+    }
 
 }

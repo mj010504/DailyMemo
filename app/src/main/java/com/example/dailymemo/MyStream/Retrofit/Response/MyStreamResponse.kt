@@ -27,7 +27,7 @@ data class post(
     @SerializedName("isLike") val isLike : Boolean,
     @SerializedName("comments") val comments : Int,
     @SerializedName("createdAt") val createdAt : String,
-    @SerializedName("isPublic") val isPublic: Boolean
+    @SerializedName("isPublic") var isPublic: Boolean
 )
 
 data class searchMyStreamResponse(
@@ -79,7 +79,7 @@ data class makeMyStreamResult(
     @SerializedName("streamId") val streamId : Int,
     @SerializedName("userId") val userId : Int,
     @SerializedName("streamName") val streamName : String,
-    @SerializedName("isPublic") val isPublic : Boolean
+    @SerializedName("isPublic") var isPublic : Boolean
 )
 
 data class modifyMyStreamRequest(
@@ -116,7 +116,7 @@ data class diaryPublicTypeResult(
     @SerializedName("detail") val detail : String,
     @SerializedName("likes") val likes : Int,
     @SerializedName("comments") val comments : Int,
-    @SerializedName("isPublic") val isPublic : Boolean,
+    @SerializedName("isPublic") var isPublic : Boolean,
     @SerializedName("createdAt") val createdAt: String
 )
 
@@ -134,7 +134,7 @@ data class streamPublicTypeResult(
     @SerializedName("detail") val detail : String,
     @SerializedName("likes") val likes : Int,
     @SerializedName("comments") val comments : Int,
-    @SerializedName("isPublic") val isPublic : Boolean,
+    @SerializedName("isPublic") var isPublic : Boolean,
     @SerializedName("createdAt") val createdAt: String
 )
 

@@ -1,10 +1,11 @@
 package com.example.dailymemo.DailyBoard.Retrofit
 
+import android.util.Log
 import com.example.dailymemo.DailyBoard.Retrofit.Response.ChangeStreamRequest
 import com.example.dailymemo.DailyBoard.Retrofit.Response.ChangeStreamResponse
+import com.example.dailymemo.DailyBoard.Retrofit.Response.ImageRequest
 import com.example.dailymemo.DailyBoard.Retrofit.Response.onDailyBoardRemoveBtnClickResponse
 import com.example.dailymemo.DailyBoard.Retrofit.Response.showDailyBoardResponse
-import com.example.dailymemo.DailyBoard.Retrofit.Response.showDiaryPreviewRequest
 import com.example.dailymemo.DailyBoard.Retrofit.Response.showDiaryPreviewResponse
 import com.example.dailymemo.DailyBoard.Retrofit.Response.showStreamDiaryResponse
 import com.example.dailymemo.DailyBoard.Retrofit.Response.storeImageResponse
@@ -28,10 +29,11 @@ class DailyBoardService {
         this.diaryView = diaryView
     }
 
-    fun showDailyBoard(userId : Int, page : Int) {
+    fun showDailyBoard(jwt: String?,userId : Int, page : Int) {
         val dailyBoardService = getRetrofit().create(DailyBoardRetoriftinterface::class.java)
 
-        dailyBoardService.showDailyBoard(userId,page).enqueue(object: Callback<showDailyBoardResponse> {
+        dailyBoardService.showDailyBoard("Bearer "+jwt,
+            userId,page).enqueue(object: Callback<showDailyBoardResponse> {
             override fun onResponse(
                 call: Call<showDailyBoardResponse>,
                 response: Response<showDailyBoardResponse>
@@ -39,9 +41,7 @@ class DailyBoardService {
                 if(response.code() == 200) {
                     dailyBoardView.onShowDailyBoardSuccess(response.body()!!)
                 }
-                else {
 
-                }
             }
 
             override fun onFailure(call: Call<showDailyBoardResponse>, t: Throwable) {
@@ -51,10 +51,10 @@ class DailyBoardService {
         })
     }
 
-    fun changeDailyBoardStream(dailyPhotoId : Int, streamName: String) {
+    fun changeDailyBoardStream(dailyPhotoId : Int, streamId: Int) {
         val dailyBoardService = getRetrofit().create(DailyBoardRetoriftinterface::class.java)
 
-        val request = ChangeStreamRequest(dailyPhotoId, streamName)
+        val request = ChangeStreamRequest(dailyPhotoId, streamId)
         dailyBoardService.changeDailyBoardStream(request)
             .enqueue(object : Callback<ChangeStreamResponse> {
                 override fun onResponse(
@@ -65,8 +65,9 @@ class DailyBoardService {
                         dailyBoardView.changeDailyBoardStreamSuccess()
                     }
                     else {
-
+                        Log.d("streamChange", "failed")
                     }
+
                 }
 
                 override fun onFailure(call: Call<ChangeStreamResponse>, t: Throwable) {
@@ -88,9 +89,7 @@ class DailyBoardService {
                 if(response.code() == 200) {
                     dailyBoardView.onDailyBoardRemoveBtnClick(response.body()!!.result.status)
                 }
-                else {
 
-                }
             }
 
             override fun onFailure(call: Call<onDailyBoardRemoveBtnClickResponse>, t: Throwable) {
@@ -101,10 +100,10 @@ class DailyBoardService {
     }
 
 
-    fun storeImage(diaryId : Int, images: List<String>) {
+    fun storeImage(jwt : String?, images: ImageRequest) {
         val dailyBoardService = getRetrofit().create(DailyBoardRetoriftinterface::class.java)
 
-        dailyBoardService.storeImage(diaryId,images).enqueue(object: Callback<storeImageResponse>{
+        dailyBoardService.storeImage("Bearer "+jwt,images).enqueue(object: Callback<storeImageResponse>{
             override fun onResponse(
                 call: Call<storeImageResponse>,
                 response: Response<storeImageResponse>
@@ -113,7 +112,7 @@ class DailyBoardService {
                     dailyBoardView.storeImageSuccess(response.body()!!)
                 }
                 else {
-
+                    dailyBoardView.storeImageFailed()
                 }
             }
 
@@ -137,7 +136,7 @@ class DailyBoardService {
                    diaryView.writeDiarySuccess()
                 }
                 else {
-
+                    Log.d("diary", "write"+response.code()+response.message())
                 }
             }
 
@@ -160,7 +159,7 @@ class DailyBoardService {
                     diaryView.showStreamDiarySuccess(response.body()!!)
                 }
                 else {
-
+                    Log.d("diary", "show"+response.code()+response.message())
                 }
             }
 
@@ -171,11 +170,10 @@ class DailyBoardService {
         })
     }
 
-    fun showDiaryPreview(diaryPhotoId : Int, streamId : Int) {
+    fun showDiaryPreview(streamId : Int) {
         val dailyBoardService = getRetrofit().create(DailyBoardRetoriftinterface::class.java)
 
-        val request = showDiaryPreviewRequest(diaryPhotoId,streamId)
-        dailyBoardService.showDiaryPreview(request).enqueue(object : Callback<showDiaryPreviewResponse>{
+        dailyBoardService.showDiaryPreview(streamId).enqueue(object : Callback<showDiaryPreviewResponse>{
             override fun onResponse(
                 call: Call<showDiaryPreviewResponse>,
                 response: Response<showDiaryPreviewResponse>

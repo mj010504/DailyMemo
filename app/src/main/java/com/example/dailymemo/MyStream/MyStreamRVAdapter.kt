@@ -37,7 +37,7 @@ class MyStreamRVAdapter(activity : FragmentActivity,listSize: Int, postList : Ar
 
 
     interface MyItemClickListener {
-        fun onMenuClick()
+        fun onMenuClick(isPublic: Boolean)
     }
 
     private lateinit var mitemClickListener : MyItemClickListener
@@ -64,10 +64,15 @@ class MyStreamRVAdapter(activity : FragmentActivity,listSize: Int, postList : Ar
         return ViewHolder(binding)
     }
 
+    fun updateIsPublic(pos: Int, isPublic: Boolean) {
+        postList[pos].isPublic = isPublic
+        notifyItemChanged(pos)
+    }
+
     override fun onBindViewHolder(holder: MyStreamRVAdapter.ViewHolder, position: Int) {
         holder.bind(position)
-        holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick() }
-        holder.binding.menuBarLayout.setOnClickListener { mitemClickListener.onMenuClick() }
+        holder.binding.menuBarIv.setOnClickListener { mitemClickListener.onMenuClick(postList[position].isPublic) }
+        holder.binding.menuBarLayout.setOnClickListener { mitemClickListener.onMenuClick(postList[position].isPublic) }
     }
 
     override fun getItemCount(): Int  = postList.size

@@ -152,7 +152,7 @@ class AccountWithdrawalFragment : Fragment() {
    }
 
     private fun showAccountWithdrawalCheckDialog() {
-        val dialog = AccountWithdrawalCheckDialog(requireContext(), findNavController())
+        val dialog = AccountWithdrawalCheckDialog(requireContext(), findNavController(), requireActivity())
         dialog.show()
     }
 }

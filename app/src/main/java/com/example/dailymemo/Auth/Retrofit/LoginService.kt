@@ -2,6 +2,7 @@ package com.example.dailymemo.Auth.Retrofit
 
 import android.util.Log
 import com.example.dailymemo.Auth.SearchingIdFragment
+import com.example.dailymemo.Setting.AccountWithdrawalView
 import com.example.dailymemo.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,6 +15,11 @@ class LoginService {
     private lateinit var signupView : SignUpView
 
     private lateinit var searchingIDView : SearchingIDView
+    private lateinit var accountWithdrawalView : AccountWithdrawalView
+    private lateinit var searchingPasswordView : SearchingPasswordView
+    private lateinit var resetPwView: ResetPwView
+    private lateinit var changePwView : ChangePwView
+
 
 
     fun setLoginView(loginView: LoginView){
@@ -27,6 +33,22 @@ class LoginService {
 
     fun setSearchingIdView(searchingIdView: SearchingIdFragment){
         this.searchingIDView = searchingIdView
+    }
+
+    fun setAccountWithdrawalView(accountWithdrawalView: AccountWithdrawalView) {
+        this.accountWithdrawalView = accountWithdrawalView
+    }
+
+    fun setSearchingPasswordView(searchingPasswordView: SearchingPasswordView) {
+        this.searchingPasswordView = searchingPasswordView
+    }
+
+    fun setResetPwView(resetPwView: ResetPwView) {
+        this.resetPwView = resetPwView
+    }
+
+    fun setChangePwView(changePwView: ChangePwView) {
+        this.changePwView = changePwView
     }
 
     fun login(id : String, pw : String){
@@ -66,7 +88,25 @@ class LoginService {
                 }
             }
             override fun onFailure(call: Call<nicknameRepeatedResponse>, t: Throwable) {
-                Log.d("failed", "404 nickName")
+
+            }
+        })
+    }
+
+    fun isNicknameExist2(id : String){
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        loginService.isNicknameExist(id).enqueue(object : Callback<nicknameRepeatedResponse>{
+            override fun onResponse(call: Call<nicknameRepeatedResponse>, response: Response<nicknameRepeatedResponse> ) {
+                if(response.code() == 200){
+                  searchingPasswordView.success()
+                }
+                else {
+                    searchingPasswordView.failed()
+                }
+            }
+            override fun onFailure(call: Call<nicknameRepeatedResponse>, t: Throwable) {
+
             }
         })
     }
@@ -139,6 +179,28 @@ class LoginService {
         })
     }
 
+    fun emailVerificationRequest2(email: String){
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        loginService.emailVerificationRequest(email).enqueue(object : Callback<EmailVerifyResponse>{
+            override fun onResponse(
+                call: Call<EmailVerifyResponse>,
+                response: Response<EmailVerifyResponse>
+            ) {
+                if(response.code() == 200){
+                    resetPwView.emailVerifySuccess(response.body()!!.result!!.token, response.body()!!.result!!.code)
+                }
+                else {
+                    resetPwView.emailVerifyFailed()
+                }
+            }
+
+            override fun onFailure(call: Call<EmailVerifyResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
     fun searchingIdEmailVerificationRequest(email: String){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
@@ -175,6 +237,30 @@ class LoginService {
                 }
                 else {
                     signupView.verifyFailed()
+                }
+            }
+
+            override fun onFailure(call: Call<verifyEmailResponse>, t: Throwable) {
+
+            }
+
+
+        })
+    }
+
+    fun verifyEmail2(token : String?, code : String) {
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+        val verifyRequest = verifyRequest(token, code)
+        loginService.verifyEmail(verifyRequest).enqueue(object : Callback<verifyEmailResponse> {
+            override fun onResponse(
+                call: Call<verifyEmailResponse>,
+                response: Response<verifyEmailResponse>
+            ) {
+                if(response.code() == 200){
+                    resetPwView.verifySuccess()
+                }
+                else {
+                    resetPwView.verifyFailed()
                 }
             }
 
@@ -255,5 +341,46 @@ class LoginService {
 
             }
         })
+    }
+
+    fun accountWithdrawal(jwt : String?) {
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+        loginService.accountWithdrawal("Bearer +"+jwt).enqueue(object: Callback<AccountWithdrawalResponse>{
+            override fun onResponse(
+                call: Call<AccountWithdrawalResponse>,
+                response: Response<AccountWithdrawalResponse>
+            ) {
+                if(response.code() == 200) {
+                    accountWithdrawalView.success()
+                }
+            }
+
+            override fun onFailure(call: Call<AccountWithdrawalResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+
+    fun changePassword(jwt: String?, expw: String, newpw: String) {
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
+
+        val request = ChangePasswordRequest(expw, newpw)
+        loginService.changePassword(jwt,request).enqueue(object: Callback<AccountWithdrawalResponse>{
+            override fun onResponse(
+                call: Call<AccountWithdrawalResponse>,
+                response: Response<AccountWithdrawalResponse>
+            ) {
+                if(response.code() == 200) {
+                    changePwView.success()
+                }
+            }
+
+            override fun onFailure(call: Call<AccountWithdrawalResponse>, t: Throwable) {
+
+            }
+
+        })
+
     }
 }

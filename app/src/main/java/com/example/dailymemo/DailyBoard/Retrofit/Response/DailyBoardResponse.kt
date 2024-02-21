@@ -16,7 +16,7 @@ data class showDailyBoardResult(
     @SerializedName("hasNext") val hasNext : Boolean,
     @SerializedName("isFirst") val isFirst : Boolean,
     @SerializedName("isLast") val isLast : Boolean,
-    @SerializedName("diaryList") val diaryList : List<Diary>?
+    @SerializedName("diaryList") val diaryList : List<Diary>
 )
 
 data class Diary(
@@ -29,7 +29,7 @@ data class Diary(
 
 data class ChangeStreamRequest(
     @SerializedName("dailyPhotoId") val dailyPhotoId: Int,
-    @SerializedName("streamName") val streamName: String
+    @SerializedName("streamId") val streamId: Int
 )
 
 data class ChangeStreamResponse(
@@ -58,6 +58,10 @@ data class onDailyBoardRemoveBtnClickResult(
     @SerializedName("streamName") val streamName: String
 )
 
+data class ImageRequest(
+    val images: List<String>
+)
+
 data class storeImageResponse(
     @SerializedName("isSuccess") val isSuccess : Boolean,
     @SerializedName("code") val code : String,
@@ -68,14 +72,14 @@ data class storeImageResponse(
 data class storeImageResult(
     @SerializedName("id") val id : Int,
     @SerializedName("detail") val detail : String,
-    @SerializedName("isPublic") val isPublic: Boolean,
+    @SerializedName("isPublic") var isPublic: Boolean,
     @SerializedName("diaryPhotoList") val diaryPhotoList : List<DiaryPhoto>
 )
 
 data class DiaryPhoto(
     @SerializedName("id") val id : Int,
     @SerializedName("url") val url : String,
-    @SerializedName("status") val status : Boolean,
+    @SerializedName("status") var status : Boolean,
 )
 
 data class writeDiaryRequest(
@@ -106,13 +110,9 @@ data class showStreamDiaryResponse(
 data class showStreamDiaryResult(
     @SerializedName("streamId") val streamId : Int,
     @SerializedName("streamImg") val streamImg : String,
-    @SerializedName("detail") val detail: String
+    @SerializedName("detail") val detail: String?
 )
 
-data class showDiaryPreviewRequest(
-    @SerializedName("diaryPhotoId") val diaryPhotoId : Int,
-    @SerializedName("streamId") val streamId : Int
-)
 
 data class showDiaryPreviewResponse(
     @SerializedName("isSuccess") val isSuccess : Boolean,

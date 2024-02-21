@@ -14,14 +14,14 @@ import java.io.File
 class DailyBoardStreamRVAdapter(activity : FragmentActivity,  currentStream: String) : RecyclerView.Adapter<DailyBoardStreamRVAdapter.ViewHolder>() {
 
     val act = activity
-    val streams = arrayOf("일상", "맛집", "여행")
+    var streams = getStreamNames()
     val currentStream = currentStream
     private var isDuplicated = false
 
 
 
     interface MyItemClickListener {
-        fun onStreamTypeClick()
+        fun onStreamTypeClick(streamName: String)
     }
 
     private lateinit var mitemClickListener: MyItemClickListener
@@ -43,7 +43,7 @@ class DailyBoardStreamRVAdapter(activity : FragmentActivity,  currentStream: Str
 
     override fun onBindViewHolder(holder: DailyBoardStreamRVAdapter.ViewHolder, position: Int) {
         holder.bind(position)
-        holder.binding.streamTypeLayout.setOnClickListener { mitemClickListener.onStreamTypeClick() }
+        holder.binding.streamTypeLayout.setOnClickListener { mitemClickListener.onStreamTypeClick(holder.binding.streamNameTv.text.toString()) }
     }
 
     inner class ViewHolder(val binding: ItemDailyBoardStreamBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -73,6 +73,17 @@ class DailyBoardStreamRVAdapter(activity : FragmentActivity,  currentStream: Str
         }
 
 
+    }
+
+    private fun getStreamNames() : MutableList<String> {
+        var streams = mutableListOf<String>()
+        for(index in 1..3) {
+            val spf = act.getSharedPreferences("Streams", Context.MODE_PRIVATE)
+            val streamName = spf.getString("stream"+index, "일상")
+            streams.add(streamName!!)
+        }
+
+        return streams
     }
 
 }

@@ -70,6 +70,8 @@
             android:background="@color/main_color"
             android:gravity="start"
             android:visibility="invisible"
+            android:paddingStart="1dp"
+            android:paddingEnd="2dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="37dp"

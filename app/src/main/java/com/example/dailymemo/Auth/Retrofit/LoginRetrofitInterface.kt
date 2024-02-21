@@ -3,7 +3,10 @@ package com.example.dailymemo.Auth.Retrofit
 import retrofit2.Call
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface LoginRetrofitInterface {
 
@@ -28,4 +31,13 @@ interface LoginRetrofitInterface {
 
     @POST("users")
     fun register(@Body registerRequest: RegisterRequest) : Call<RegisterResponse>
+
+    @PUT("users/resetpassword")
+    fun resetPassword(@Body resetPasswordRequest : ResetPasswordRequest) : Call<AccountWithdrawalResponse>
+
+    @PUT("users/changepassword")
+    fun changePassword(@Header("Authroization") jwt : String?, @Body changePasswordRequest : ChangePasswordRequest) : Call<AccountWithdrawalResponse>
+
+    @DELETE("users/leave")
+    fun accountWithdrawal(@Header("Authorization") jwt : String?) : Call<AccountWithdrawalResponse>
 }

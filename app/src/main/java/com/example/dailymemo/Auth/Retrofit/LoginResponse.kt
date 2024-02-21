@@ -113,3 +113,24 @@ data class verifyRequest(
     @SerializedName("token") val token : String?,
     @SerializedName("code") val code : String
 )
+
+data class AccountWithdrawalResponse(
+    @SerializedName("isSuccess") val isSuccess: Boolean,
+    @SerializedName("code") val code: String,
+    @SerializedName("message") val message: String,
+    @SerializedName("result") val result : Boolean
+
+)
+
+data class ResetPasswordRequest(
+    @SerializedName("name") val name : String,
+    @SerializedName("nickName") val nickName : String,
+    @SerializedName("password") val password : String,
+    @SerializedName("email") val email: String,
+    @SerializedName("emailVerificationToken") val emailVerificationToken: String?
+)
+
+data class ChangePasswordRequest(
+    @SerializedName("existingPassword") val existingPassword: String,
+    @SerializedName("newPasword") val newPassword: String
+)

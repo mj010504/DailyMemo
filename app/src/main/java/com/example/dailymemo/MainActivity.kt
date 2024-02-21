@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         android.Manifest.permission.READ_MEDIA_IMAGES
     )
 
+   
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             showFinishAppDialog()

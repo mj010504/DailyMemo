@@ -68,4 +68,8 @@ dependencies {
     implementation ("de.hdodenhof:circleimageview:2.2.0")
 
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+
 }

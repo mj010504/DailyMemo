@@ -2,12 +2,16 @@ package com.example.dailymemo.OpenStream.Retrofit
 
 
 import com.example.dailymemo.OpenStream.Retrofit.Response.ChangeCommentResponse
+import com.example.dailymemo.OpenStream.Retrofit.Response.ChangeProfileRequest
+import com.example.dailymemo.OpenStream.Retrofit.Response.ChangeStreamNameReqeust
 import com.example.dailymemo.OpenStream.Retrofit.Response.DiaryResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.LikeResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.OpenStreamResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.RemoveCommentResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.ShowCommentResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.WriteCommentResponse
+import com.example.dailymemo.OpenStream.Retrofit.Response.changeProfileImageResponse
+import com.example.dailymemo.OpenStream.Retrofit.Response.changeStreamNameResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -46,4 +50,11 @@ interface OpenStreamRetrofitInterface {
 
     @PUT("comments/{commentId}")
     fun changeComment(@Header("Authorization") jwt : String?,@Path("commentId", encoded = true) commentId : Int, @Body detail : String) : Call<ChangeCommentResponse>
+
+    @PUT("users/changeprofilephoto")
+    fun changeProfileImage(@Header("Authorization") jwt : String?, @Body profilePhoto : ChangeProfileRequest) : Call<changeProfileImageResponse>
+
+    @PUT("diaryPhoto/change/stream")
+    fun changeStreamName(@Header("Authorization") jwt : String?, @Body changeStreamNameRequset : ChangeStreamNameReqeust) : Call<changeStreamNameResponse>
+
 }

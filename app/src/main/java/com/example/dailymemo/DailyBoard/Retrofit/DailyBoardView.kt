@@ -7,6 +7,7 @@ import com.example.dailymemo.DailyBoard.Retrofit.Response.storeImageResponse
 interface DailyBoardView {
     fun onShowDailyBoardSuccess(resp : showDailyBoardResponse)
     fun storeImageSuccess(resp : storeImageResponse)
+    fun storeImageFailed()
     fun showDiaryPreviewSuccess(resp : showDiaryPreviewResponse)
     fun changeDailyBoardStreamSuccess()
     fun onDailyBoardRemoveBtnClick(status : Boolean)

@@ -1,13 +1,20 @@
 package com.example.dailymemo.OpenStream.Retrofit
 
 import android.util.Log
+import com.example.dailymemo.DailyBoard.Retrofit.Response.ChangeStreamRequest
 import com.example.dailymemo.OpenStream.Retrofit.Response.ChangeCommentResponse
+import com.example.dailymemo.OpenStream.Retrofit.Response.ChangeProfileRequest
+import com.example.dailymemo.OpenStream.Retrofit.Response.ChangeStreamNameReqeust
 import com.example.dailymemo.OpenStream.Retrofit.Response.DiaryResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.LikeResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.OpenStreamResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.RemoveCommentResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.ShowCommentResponse
 import com.example.dailymemo.OpenStream.Retrofit.Response.WriteCommentResponse
+import com.example.dailymemo.OpenStream.Retrofit.Response.changeProfileImageResponse
+import com.example.dailymemo.OpenStream.Retrofit.Response.changeStreamNameResponse
+import com.example.dailymemo.Setting.SettingView
+import com.example.dailymemo.Setting.StreamNameView
 import com.example.dailymemo.WatchStream.Comment.CommentView
 import com.example.dailymemo.WatchStream.WatchStreamView
 import com.example.dailymemo.getRetrofit
@@ -19,6 +26,8 @@ class OpenStreamService {
     private lateinit var openStreamView: OpenStreamView
     private lateinit var watchStreamView : WatchStreamView
     private lateinit var commentView : CommentView
+    private lateinit var settingView : SettingView
+    private lateinit var streamNameView : StreamNameView
 
     fun setOpenStreamView(openStreamView: OpenStreamView) {
         this.openStreamView = openStreamView
@@ -30,6 +39,14 @@ class OpenStreamService {
 
     fun setCommentView(commentView: CommentView) {
         this.commentView = commentView
+    }
+
+    fun setSettingView(settingView: SettingView) {
+        this.settingView = settingView
+    }
+
+    fun setStreamNameVIew(streamNameView: StreamNameView) {
+        this.streamNameView = streamNameView
     }
 
     fun showOpenStream(jwt : String?, page : Int) {
@@ -194,4 +211,51 @@ class OpenStreamService {
             }
         })
     }
+
+    fun changeProfileImage(jwt: String?, profileRequest: ChangeProfileRequest) {
+        val openStreamService = getRetrofit().create(OpenStreamRetrofitInterface::class.java)
+
+        openStreamService.changeProfileImage("Bearer "+jwt, profileRequest).enqueue(object : Callback<changeProfileImageResponse>{
+            override fun onResponse(
+                call: Call<changeProfileImageResponse>,
+                response: Response<changeProfileImageResponse>
+            ) {
+                if(response.code() == 200) {
+                    settingView.changeProfileSuccess()
+                }
+                else {
+                    Log.d("changeProfile", response.code().toString()+response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<changeProfileImageResponse>, t: Throwable) {
+
+            }
+
+        } )
+    }
+
+    fun changeStreamName(jwt: String?, keyword: String, streamId : Int) {
+        val openStreamService = getRetrofit().create(OpenStreamRetrofitInterface::class.java)
+        val request = ChangeStreamNameReqeust(keyword, streamId)
+        openStreamService.changeStreamName("Bearer "+ jwt, request).enqueue(object : Callback<changeStreamNameResponse>{
+            override fun onResponse(
+                call: Call<changeStreamNameResponse>,
+                response: Response<changeStreamNameResponse>
+            ) {
+                if(response.code() == 200) {
+                    streamNameView.changeStreamNameSuccess(keyword)
+                }
+                else {
+                    Log.d("changeStreamName", response.code().toString()+response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<changeStreamNameResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
 }
